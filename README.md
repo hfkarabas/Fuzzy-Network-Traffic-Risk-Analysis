@@ -187,6 +187,16 @@ deterministic error examples are versioned. No extra dependencies were required.
 
 ## TASK 03
 
+TASK 02B is complete: membership and rule refinements failed the preregistered
+internal-validation selection rule, so the original scoring model remains the
+recommended baseline. New Sensitive/Balanced/Conservative alert policies are saved
+separately; they reduce alerts at a substantial recall cost and do not improve
+score ranking. Use `PolicyRiskModel` for the new policies. All old model artifacts
+and metrics remain unchanged. See [TASK02B workflow](docs/task02b_workflow.md),
+[experimental integrity](reports/fuzzy/evaluation_integrity.md),
+[candidate comparison](reports/fuzzy/candidate_comparison.md) and
+[final decision](reports/fuzzy/task02b_final_report.md).
+
 Integrate the engine into a local web interface with validated physical-unit inputs,
 explicit invalid-input status, model identity, score/category, rule evidence and
 measurement caveats. Zero integer direction ratio does not imply no responses.

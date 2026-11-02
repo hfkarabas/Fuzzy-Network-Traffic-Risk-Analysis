@@ -1,0 +1,41 @@
+{
+  "A_refit": {
+    "resamples": 500,
+    "groups": 24956,
+    "paired_balanced_accuracy_difference_95": [
+      0.0,
+      0.0
+    ],
+    "candidate_balanced_accuracy_95": [
+      0.5186972327020928,
+      0.5360066566705828
+    ],
+    "scope": "conditional fitted-fold internal validation; no host/day or model-selection uncertainty"
+  },
+  "B_membership": {
+    "resamples": 500,
+    "groups": 24956,
+    "paired_balanced_accuracy_difference_95": [
+      -0.019838857225786117,
+      -0.008683863269010744
+    ],
+    "candidate_balanced_accuracy_95": [
+      0.5056607374841843,
+      0.5200641790801473
+    ],
+    "scope": "conditional fitted-fold internal validation; no host/day or model-selection uncertainty"
+  },
+  "C_rules": {
+    "resamples": 500,
+    "groups": 24956,
+    "paired_balanced_accuracy_difference_95": [
+      -0.044521647200861235,
+      -0.028293827948761324
+    ],
+    "candidate_balanced_accuracy_95": [
+      0.48813075839870007,
+      0.49344302158420505
+    ],
+    "scope": "conditional fitted-fold internal validation; no host/day or model-selection uncertainty"
+  }
+}

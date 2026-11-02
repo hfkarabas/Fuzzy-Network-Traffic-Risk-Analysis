@@ -1,0 +1,20 @@
+{
+  "version": "task02b-v2-protocol-1",
+  "seed": 20261104,
+  "data_status": "internal development validation only; no untouched independent holdout",
+  "exposure_policy": "Exclude every Friday source row and every original observation group or coarse five-input signature linked to Friday or TASK02 grouped-test rows. Read exposed features only for exclusion signatures, never exposed labels/scores/errors.",
+  "signature": "round(log1p(x)/0.10) for rate, volume, mean size, response std; exact exported integer direction ratio. Original groups must map to one signature or preparation fails.",
+  "design_fraction": 0.2,
+  "maximum_sample_rows": 60000,
+  "sampling": "uniform deterministic source-row hash sampling without label stratification after exclusions; all rows retain original IDs and source days",
+  "folds": 3,
+  "roles": "design signatures excluded from comparison; rotate remaining signature groups through train, policy calibration, assessment, one distinct bucket per role",
+  "candidate_budget": ["A_frozen: unchanged grouped TASK02 configuration, contextual only", "A_refit: TASK02 architecture fitted on each training fold, fair baseline", "B_membership: benign-reference training anchors with original rules", "C_rules: B memberships plus predeclared design-evidence rule refinement", "D_optional: at most one six/seven-input candidate only if training-only feature audit justifies it"],
+  "policies": {"Sensitive": 0.10, "Balanced": 0.05, "Conservative": 0.01},
+  "policy_objective": "On calibration only, maximize observation-signature-group-weighted recall subject to estimated FPR cap; ties prefer lower FPR then higher threshold; always include threshold 100 (no alerts)",
+  "selection": "Among A_refit/B/C/(optional D), maximize mean assessment Balanced-policy group-weighted balanced accuracy subject to mean FPR <= 0.075. Replace baseline only if balanced accuracy improves by >=0.02 and paired group-bootstrap 95% lower bound on improvement >0; otherwise preserve original TASK02 recommended model. Frozen A is contextual, not a leakage-clean refit.",
+  "uncertainty": "500 paired bootstrap resamples of signature groups, conditional on fitted folds; not selection-adjusted, not host/session uncertainty",
+  "risk_categories": [25, 50, 75],
+  "holdout_claim": "None. Assessment folds participate in candidate selection and are internal validation. Earlier full-data EDA, baseline fitting and prior summaries preclude an independent test claim.",
+  "search_limit": "No post-assessment rule/membership/feature search. Retain all candidate outcomes including failures."
+}

@@ -1,0 +1,314 @@
+{
+  "A_frozen_fold0": {
+    "Sensitive": {
+      "threshold": 49.632522849397134,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09790027979170614,
+      "calibration_recall": 0.28581089559961276,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 51.809236850031304,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04770294961441745,
+      "calibration_recall": 0.22421574770412528,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 59.465890915130174,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.009891703682114441,
+      "calibration_recall": 0.07730082491293086,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "A_refit_fold0": {
+    "Sensitive": {
+      "threshold": 45.93122657556411,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09734112281552866,
+      "calibration_recall": 0.15970369680019028,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 51.31291170389141,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04976238237159084,
+      "calibration_recall": 0.10400749667612473,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 65.32003929273085,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.007379209165156971,
+      "calibration_recall": 0.04827004010752315,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "B_membership_fold0": {
+    "Sensitive": {
+      "threshold": 43.41435183945916,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09699814548813405,
+      "calibration_recall": 0.15970369680019028,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 50.22037856501277,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.049999858382725665,
+      "calibration_recall": 0.07453695216603358,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 65.32003929273085,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.0068595465478923975,
+      "calibration_recall": 0.04827004010752314,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "C_rules_fold0": {
+    "Sensitive": {
+      "threshold": 34.929310786612525,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.0963766289978882,
+      "calibration_recall": 0.05548991790138351,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 38.74590266043434,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04920165660260998,
+      "calibration_recall": 0.02970464006616817,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 100.0,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.0,
+      "calibration_recall": 0.0,
+      "nontrivial_recall_feasible": false
+    }
+  },
+  "A_frozen_fold1": {
+    "Sensitive": {
+      "threshold": 49.77553133382043,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09897431615291359,
+      "calibration_recall": 0.2452813266708015,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 51.75669844734189,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.049886909582680876,
+      "calibration_recall": 0.17422800800744884,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 59.90933147471633,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.009994586710526068,
+      "calibration_recall": 0.045279392655437616,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "A_refit_fold1": {
+    "Sensitive": {
+      "threshold": 49.18754232398687,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09085791480953667,
+      "calibration_recall": 0.1409085007489472,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 54.16443841474666,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.041244834577169535,
+      "calibration_recall": 0.10079775634221555,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 65.80177136755475,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.008632517302563099,
+      "calibration_recall": 0.024386715214097465,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "B_membership_fold1": {
+    "Sensitive": {
+      "threshold": 43.30838599320446,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09704404246555094,
+      "calibration_recall": 0.1383617868183608,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 50.09476335703615,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04990793652916623,
+      "calibration_recall": 0.07278390310576767,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 65.32003929273085,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.00962016002150163,
+      "calibration_recall": 0.027370472875036137,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "C_rules_fold1": {
+    "Sensitive": {
+      "threshold": 33.34555937503922,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09941540298310488,
+      "calibration_recall": 0.01833634030022011,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 47.99983449323825,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.008957479202792447,
+      "calibration_recall": 0.0025467139305861263,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 47.99983449323825,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.008957479202792447,
+      "calibration_recall": 0.0025467139305861263,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "A_frozen_fold2": {
+    "Sensitive": {
+      "threshold": 49.8109272953776,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09983408827274709,
+      "calibration_recall": 0.28437653770398585,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 51.72391927122134,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.049937372504473505,
+      "calibration_recall": 0.2353145885512916,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 59.84937321343455,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.009705846146891255,
+      "calibration_recall": 0.06385266656132735,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "A_refit_fold2": {
+    "Sensitive": {
+      "threshold": 46.15328715129125,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09977171117576832,
+      "calibration_recall": 0.1681635694113574,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 52.02393902045065,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04989484266562458,
+      "calibration_recall": 0.10363726360058008,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 65.32003929273085,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.009576555436790342,
+      "calibration_recall": 0.03694683117465691,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "B_membership_fold2": {
+    "Sensitive": {
+      "threshold": 43.48487488497258,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.0953273430160496,
+      "calibration_recall": 0.1564154535005655,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 50.77003187675644,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04676889951022438,
+      "calibration_recall": 0.08199599744912138,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 62.4520165874579,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.009321376403696463,
+      "calibration_recall": 0.03694683117465691,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "C_rules_fold2": {
+    "Sensitive": {
+      "threshold": 34.75461354019754,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09272568115049289,
+      "calibration_recall": 0.06624877393303612,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 40.709540606366,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.029111674692128105,
+      "calibration_recall": 0.007949852871964319,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 100.0,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.0,
+      "calibration_recall": 0.0,
+      "nontrivial_recall_feasible": false
+    }
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "fold": 0,
+    "metrics": {
+      "rows": 14157,
+      "weight": 8215.0,
+      "threshold": 25.0,
+      "confusion_matrix": {
+        "tn": 989.7333333333333,
+        "fp": 6847.9011923218895,
+        "fn": 29.8,
+        "tp": 347.5654743447767
+      },
+      "precision": 0.04830339579709123,
+      "recall": 0.9210314614718211,
+      "f1": 0.09179273166838084,
+      "false_positive_rate": 0.8737204024896029,
+      "false_negative_rate": 0.07896853852817888,
+      "balanced_accuracy": 0.523655529491109,
+      "accuracy": 0.16278743854876568,
+      "roc_auc": 0.6358272890442714,
+      "pr_auc_average_precision": 0.11886896137851986,
+      "pr_auc_trapezoid": 0.12263968484791737
+    }
+  },
+  {
+    "fold": 1,
+    "metrics": {
+      "rows": 15626,
+      "weight": 8422.0,
+      "threshold": 25.0,
+      "confusion_matrix": {
+        "tn": 1024.111111111111,
+        "fp": 6993.911598698885,
+        "fn": 38.8888888888889,
+        "tp": 365.08840130111446
+      },
+      "precision": 0.049611142995123585,
+      "recall": 0.9037349627485292,
+      "f1": 0.09405886109250197,
+      "false_positive_rate": 0.8722738575112642,
+      "false_negative_rate": 0.09626503725147079,
+      "balanced_accuracy": 0.5157305526186324,
+      "accuracy": 0.16494888534934996,
+      "roc_auc": 0.6676344853310552,
+      "pr_auc_average_precision": 0.1397004668911897,
+      "pr_auc_trapezoid": 0.142092983360004
+    }
+  },
+  {
+    "fold": 2,
+    "metrics": {
+      "rows": 16175,
+      "weight": 8319.0,
+      "threshold": 25.0,
+      "confusion_matrix": {
+        "tn": 1014.8547619047619,
+        "fp": 6911.482368508684,
+        "fn": 47.34375,
+        "tp": 345.31911958655377
+      },
+      "precision": 0.04758558163028833,
+      "recall": 0.8794290123488131,
+      "f1": 0.0902858300763962,
+      "false_positive_rate": 0.871964219385679,
+      "false_negative_rate": 0.12057098765118693,
+      "balanced_accuracy": 0.503732396481567,
+      "accuracy": 0.16350208937267888,
+      "roc_auc": 0.6114259817252432,
+      "pr_auc_average_precision": 0.09654078595205656,
+      "pr_auc_trapezoid": 0.09871007478821388
+    }
+  }
+]

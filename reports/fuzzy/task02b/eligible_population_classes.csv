@@ -1,0 +1,16 @@
+capture_day,label,rows
+Monday,BENIGN,75780
+Thursday,BENIGN,74829
+Thursday,Infiltration,26
+Thursday,Web Attack � Brute Force,20
+Thursday,Web Attack � Sql Injection,7
+Thursday,Web Attack � XSS,15
+Tuesday,BENIGN,55831
+Tuesday,FTP-Patator,581
+Tuesday,SSH-Patator,263
+Wednesday,BENIGN,45773
+Wednesday,DoS GoldenEye,2695
+Wednesday,DoS Hulk,40499
+Wednesday,DoS Slowhttptest,946
+Wednesday,DoS slowloris,647
+Wednesday,Heartbleed,4

@@ -1,0 +1,881 @@
+[
+  {
+    "case": "zero",
+    "synthetic": true,
+    "result": {
+      "status": "ok",
+      "risk_score": 27.43739236709072,
+      "risk_level": "Medium",
+      "alert": false,
+      "activated_rules": [
+        {
+          "id": "R01",
+          "strength": 1.0,
+          "consequent": "Low",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "sparse"
+              },
+              {
+                "feature": "volume",
+                "term": "few"
+              }
+            ]
+          },
+          "reason_key": "rules.R01",
+          "rationale_en": "Sparse small flows alone provide little evidence of abnormal load; low-rate scans may evade this."
+        },
+        {
+          "id": "R19",
+          "strength": 1.0,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "volume",
+                "term": "few"
+              },
+              {
+                "feature": "size",
+                "term": "small"
+              },
+              {
+                "feature": "balance",
+                "term": "forward"
+              }
+            ]
+          },
+          "reason_key": "rules.R19",
+          "rationale_en": "Small forward-only exchanges merit context, including scanning, but are not definitive."
+        }
+      ],
+      "membership_degrees": {
+        " Flow Packets/s": {
+          "sparse": 1.0,
+          "moderate": 0.0,
+          "intensive": 0.0
+        },
+        " Total Fwd Packets": {
+          "few": 1.0,
+          "moderate": 0.0,
+          "many": 0.0
+        },
+        " Packet Length Mean": {
+          "small": 1.0,
+          "medium": 0.0,
+          "large": 0.0
+        },
+        " Bwd Packet Length Std": {
+          "uniform": 1.0,
+          "variable": 0.0,
+          "highly_variable": 0.0
+        },
+        " Down/Up Ratio": {
+          "forward": 1.0,
+          "balanced": 0.0,
+          "backward": 0.0
+        }
+      },
+      "explanation_data": {
+        "message_key": "prediction.ok",
+        "dominant_rules": [
+          "R01",
+          "R19"
+        ],
+        "invalid_features": [],
+        "outside_training_range": [
+          " Flow Packets/s",
+          " Total Fwd Packets"
+        ],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": "risk.medium"
+      },
+      "explanation": "Medium risk (27.44/100). Strongest behavior rules: R01 -> Low (1.00), R19 -> Medium (1.00). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "sparse",
+    "synthetic": true,
+    "result": {
+      "status": "ok",
+      "risk_score": 13.165,
+      "risk_level": "Low",
+      "alert": false,
+      "activated_rules": [
+        {
+          "id": "R01",
+          "strength": 1.0,
+          "consequent": "Low",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "sparse"
+              },
+              {
+                "feature": "volume",
+                "term": "few"
+              }
+            ]
+          },
+          "reason_key": "rules.R01",
+          "rationale_en": "Sparse small flows alone provide little evidence of abnormal load; low-rate scans may evade this."
+        },
+        {
+          "id": "R18",
+          "strength": 0.8954088046055266,
+          "consequent": "Low",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "sparse"
+              },
+              {
+                "feature": "size",
+                "term": "medium"
+              },
+              {
+                "feature": "balance",
+                "term": "balanced"
+              }
+            ]
+          },
+          "reason_key": "rules.R18",
+          "rationale_en": "Sparse balanced transactions provide weak evidence of abnormal resource load."
+        }
+      ],
+      "membership_degrees": {
+        " Flow Packets/s": {
+          "sparse": 1.0,
+          "moderate": 0.0,
+          "intensive": 0.0
+        },
+        " Total Fwd Packets": {
+          "few": 1.0,
+          "moderate": 0.0,
+          "many": 0.0
+        },
+        " Packet Length Mean": {
+          "small": 0.0,
+          "medium": 0.8954088046055266,
+          "large": 0.10459119539447329
+        },
+        " Bwd Packet Length Std": {
+          "uniform": 1.0,
+          "variable": 0.0,
+          "highly_variable": 0.0
+        },
+        " Down/Up Ratio": {
+          "forward": 0.0,
+          "balanced": 1.0,
+          "backward": 0.0
+        }
+      },
+      "explanation_data": {
+        "message_key": "prediction.ok",
+        "dominant_rules": [
+          "R01",
+          "R18"
+        ],
+        "invalid_features": [],
+        "outside_training_range": [],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": "risk.low"
+      },
+      "explanation": "Low risk (13.16/100). Strongest behavior rules: R01 -> Low (1.00), R18 -> Low (0.90). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "benign_like_bulk",
+    "synthetic": true,
+    "result": {
+      "status": "ok",
+      "risk_score": 53.20026684922051,
+      "risk_level": "High",
+      "alert": true,
+      "activated_rules": [
+        {
+          "id": "R06",
+          "strength": 0.5240498986247707,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "moderate"
+              },
+              {
+                "feature": "volume",
+                "term": "many"
+              }
+            ]
+          },
+          "reason_key": "rules.R06",
+          "rationale_en": "Large packet volume increases load concern without implying an attack."
+        },
+        {
+          "id": "R09",
+          "strength": 0.47595010137522914,
+          "consequent": "High",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "volume",
+                "term": "many"
+              }
+            ]
+          },
+          "reason_key": "rules.R09",
+          "rationale_en": "High intensity and volume jointly support sustained-load concern."
+        },
+        {
+          "id": "R21",
+          "strength": 0.47595010137522914,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "size",
+                "term": "large"
+              },
+              {
+                "feature": "balance",
+                "term": "backward"
+              }
+            ]
+          },
+          "reason_key": "rules.R21",
+          "rationale_en": "Fast backward-heavy payload transfer can be an ordinary download."
+        },
+        {
+          "id": "R22",
+          "strength": 0.28997849818060945,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "volume",
+                "term": "many"
+              },
+              {
+                "feature": "variation",
+                "term": "uniform"
+              },
+              {
+                "feature": "balance",
+                "term": "backward"
+              }
+            ]
+          },
+          "reason_key": "rules.R22",
+          "rationale_en": "Large uniform directional transfer is ambiguous without application context."
+        }
+      ],
+      "membership_degrees": {
+        " Flow Packets/s": {
+          "sparse": 0.0,
+          "moderate": 0.5240498986247707,
+          "intensive": 0.47595010137522914
+        },
+        " Total Fwd Packets": {
+          "few": 0.0,
+          "moderate": 0.0,
+          "many": 1.0
+        },
+        " Packet Length Mean": {
+          "small": 0.0,
+          "medium": 0.0,
+          "large": 1.0
+        },
+        " Bwd Packet Length Std": {
+          "uniform": 0.28997849818060945,
+          "variable": 0.7100215018193905,
+          "highly_variable": 0.0
+        },
+        " Down/Up Ratio": {
+          "forward": 0.0,
+          "balanced": 0.0,
+          "backward": 1.0
+        }
+      },
+      "explanation_data": {
+        "message_key": "prediction.ok",
+        "dominant_rules": [
+          "R06",
+          "R09",
+          "R21"
+        ],
+        "invalid_features": [],
+        "outside_training_range": [
+          " Total Fwd Packets"
+        ],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": "risk.high"
+      },
+      "explanation": "High risk (53.20/100). Strongest behavior rules: R06 -> Medium (0.52), R09 -> High (0.48), R21 -> Medium (0.48). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "small_packet_burst",
+    "synthetic": true,
+    "result": {
+      "status": "ok",
+      "risk_score": 43.333333333333336,
+      "risk_level": "Medium",
+      "alert": false,
+      "activated_rules": [
+        {
+          "id": "R07",
+          "strength": 1.0,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "volume",
+                "term": "few"
+              }
+            ]
+          },
+          "reason_key": "rules.R07",
+          "rationale_en": "A tiny duration can inflate rate for a few packets; avoid critical risk from rate alone."
+        }
+      ],
+      "membership_degrees": {
+        " Flow Packets/s": {
+          "sparse": 0.0,
+          "moderate": 0.0,
+          "intensive": 1.0
+        },
+        " Total Fwd Packets": {
+          "few": 1.0,
+          "moderate": 0.0,
+          "many": 0.0
+        },
+        " Packet Length Mean": {
+          "small": 0.0,
+          "medium": 0.96675341265087,
+          "large": 0.033246587349129976
+        },
+        " Bwd Packet Length Std": {
+          "uniform": 1.0,
+          "variable": 0.0,
+          "highly_variable": 0.0
+        },
+        " Down/Up Ratio": {
+          "forward": 1.0,
+          "balanced": 0.0,
+          "backward": 0.0
+        }
+      },
+      "explanation_data": {
+        "message_key": "prediction.ok",
+        "dominant_rules": [
+          "R07"
+        ],
+        "invalid_features": [],
+        "outside_training_range": [],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": "risk.medium"
+      },
+      "explanation": "Medium risk (43.33/100). Strongest behavior rules: R07 -> Medium (1.00). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "asymmetric",
+    "synthetic": true,
+    "result": {
+      "status": "ok",
+      "risk_score": 52.470445423635475,
+      "risk_level": "High",
+      "alert": true,
+      "activated_rules": [
+        {
+          "id": "R22",
+          "strength": 1.0,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "volume",
+                "term": "many"
+              },
+              {
+                "feature": "variation",
+                "term": "uniform"
+              },
+              {
+                "feature": "balance",
+                "term": "backward"
+              }
+            ]
+          },
+          "reason_key": "rules.R22",
+          "rationale_en": "Large uniform directional transfer is ambiguous without application context."
+        },
+        {
+          "id": "R09",
+          "strength": 0.5564136723997023,
+          "consequent": "High",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "volume",
+                "term": "many"
+              }
+            ]
+          },
+          "reason_key": "rules.R09",
+          "rationale_en": "High intensity and volume jointly support sustained-load concern."
+        },
+        {
+          "id": "R06",
+          "strength": 0.44358632760029776,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "moderate"
+              },
+              {
+                "feature": "volume",
+                "term": "many"
+              }
+            ]
+          },
+          "reason_key": "rules.R06",
+          "rationale_en": "Large packet volume increases load concern without implying an attack."
+        },
+        {
+          "id": "R21",
+          "strength": 0.10459119539447329,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "size",
+                "term": "large"
+              },
+              {
+                "feature": "balance",
+                "term": "backward"
+              }
+            ]
+          },
+          "reason_key": "rules.R21",
+          "rationale_en": "Fast backward-heavy payload transfer can be an ordinary download."
+        }
+      ],
+      "membership_degrees": {
+        " Flow Packets/s": {
+          "sparse": 0.0,
+          "moderate": 0.44358632760029776,
+          "intensive": 0.5564136723997023
+        },
+        " Total Fwd Packets": {
+          "few": 0.0,
+          "moderate": 0.0,
+          "many": 1.0
+        },
+        " Packet Length Mean": {
+          "small": 0.0,
+          "medium": 0.8954088046055266,
+          "large": 0.10459119539447329
+        },
+        " Bwd Packet Length Std": {
+          "uniform": 1.0,
+          "variable": 0.0,
+          "highly_variable": 0.0
+        },
+        " Down/Up Ratio": {
+          "forward": 0.0,
+          "balanced": 0.0,
+          "backward": 1.0
+        }
+      },
+      "explanation_data": {
+        "message_key": "prediction.ok",
+        "dominant_rules": [
+          "R22",
+          "R09",
+          "R06"
+        ],
+        "invalid_features": [],
+        "outside_training_range": [
+          " Down/Up Ratio"
+        ],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": "risk.high"
+      },
+      "explanation": "High risk (52.47/100). Strongest behavior rules: R22 -> Medium (1.00), R09 -> High (0.56), R06 -> Medium (0.44). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "extreme_finite",
+    "synthetic": true,
+    "result": {
+      "status": "ok",
+      "risk_score": 54.0266106442577,
+      "risk_level": "High",
+      "alert": true,
+      "activated_rules": [
+        {
+          "id": "R09",
+          "strength": 1.0,
+          "consequent": "High",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "volume",
+                "term": "many"
+              }
+            ]
+          },
+          "reason_key": "rules.R09",
+          "rationale_en": "High intensity and volume jointly support sustained-load concern."
+        },
+        {
+          "id": "R14",
+          "strength": 1.0,
+          "consequent": "High",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "volume",
+                "term": "many"
+              },
+              {
+                "feature": "size",
+                "term": "large"
+              },
+              {
+                "feature": "variation",
+                "term": "highly_variable"
+              }
+            ]
+          },
+          "reason_key": "rules.R14",
+          "rationale_en": "Large varied responses at high volume can produce resource pressure; benign transfers overlap."
+        },
+        {
+          "id": "R21",
+          "strength": 1.0,
+          "consequent": "Medium",
+          "antecedent": {
+            "all": [
+              {
+                "feature": "rate",
+                "term": "intensive"
+              },
+              {
+                "feature": "size",
+                "term": "large"
+              },
+              {
+                "feature": "balance",
+                "term": "backward"
+              }
+            ]
+          },
+          "reason_key": "rules.R21",
+          "rationale_en": "Fast backward-heavy payload transfer can be an ordinary download."
+        }
+      ],
+      "membership_degrees": {
+        " Flow Packets/s": {
+          "sparse": 0.0,
+          "moderate": 0.0,
+          "intensive": 1.0
+        },
+        " Total Fwd Packets": {
+          "few": 0.0,
+          "moderate": 0.0,
+          "many": 1.0
+        },
+        " Packet Length Mean": {
+          "small": 0.0,
+          "medium": 0.0,
+          "large": 1.0
+        },
+        " Bwd Packet Length Std": {
+          "uniform": 0.0,
+          "variable": 0.0,
+          "highly_variable": 1.0
+        },
+        " Down/Up Ratio": {
+          "forward": 0.0,
+          "balanced": 0.0,
+          "backward": 1.0
+        }
+      },
+      "explanation_data": {
+        "message_key": "prediction.ok",
+        "dominant_rules": [
+          "R09",
+          "R14",
+          "R21"
+        ],
+        "invalid_features": [],
+        "outside_training_range": [
+          " Flow Packets/s",
+          " Total Fwd Packets",
+          " Packet Length Mean",
+          " Bwd Packet Length Std",
+          " Down/Up Ratio"
+        ],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": "risk.high"
+      },
+      "explanation": "High risk (54.03/100). Strongest behavior rules: R09 -> High (1.00), R14 -> High (1.00), R21 -> Medium (1.00). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "missing",
+    "synthetic": true,
+    "result": {
+      "status": "invalid_input",
+      "risk_score": null,
+      "risk_level": null,
+      "alert": null,
+      "activated_rules": [],
+      "membership_degrees": {},
+      "explanation_data": {
+        "message_key": "prediction.invalid_input",
+        "dominant_rules": [],
+        "invalid_features": [
+          " Flow Packets/s"
+        ],
+        "outside_training_range": [],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": null
+      },
+      "explanation": "Insufficient valid numerical input; no risk score was produced.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "negative",
+    "synthetic": true,
+    "result": {
+      "status": "invalid_input",
+      "risk_score": null,
+      "risk_level": null,
+      "alert": null,
+      "activated_rules": [],
+      "membership_degrees": {},
+      "explanation_data": {
+        "message_key": "prediction.invalid_input",
+        "dominant_rules": [],
+        "invalid_features": [
+          " Flow Packets/s"
+        ],
+        "outside_training_range": [],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": null
+      },
+      "explanation": "Insufficient valid numerical input; no risk score was produced.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "infinity",
+    "synthetic": true,
+    "result": {
+      "status": "invalid_input",
+      "risk_score": null,
+      "risk_level": null,
+      "alert": null,
+      "activated_rules": [],
+      "membership_degrees": {},
+      "explanation_data": {
+        "message_key": "prediction.invalid_input",
+        "dominant_rules": [],
+        "invalid_features": [
+          " Flow Packets/s"
+        ],
+        "outside_training_range": [],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": null
+      },
+      "explanation": "Insufficient valid numerical input; no risk score was produced.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  },
+  {
+    "case": "nan",
+    "synthetic": true,
+    "result": {
+      "status": "invalid_input",
+      "risk_score": null,
+      "risk_level": null,
+      "alert": null,
+      "activated_rules": [],
+      "membership_degrees": {},
+      "explanation_data": {
+        "message_key": "prediction.invalid_input",
+        "dominant_rules": [],
+        "invalid_features": [
+          " Flow Packets/s"
+        ],
+        "outside_training_range": [],
+        "measurement_caveat_keys": [
+          "measurement.integer_direction_ratio",
+          "measurement.zero_variation_ambiguous",
+          "risk.not_probability"
+        ],
+        "risk_level_key": null
+      },
+      "explanation": "Insufficient valid numerical input; no risk score was produced.",
+      "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+      "alert_policy": {
+        "name": "Balanced",
+        "threshold": 51.809236850031304,
+        "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+        "calibration_fpr_target": 0.05,
+        "target_weighting": "signature_group_weighted",
+        "target_is_not_a_guarantee": true
+      }
+    }
+  }
+]

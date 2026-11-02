@@ -1,0 +1,19 @@
+{
+  "candidate": "A_frozen",
+  "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+  "source_code_sha256": {
+    "src/fuzzy_network_risk/engine.py": "02a10504621f9c92d86ffc17d13f733aeea38f9b6878881eddd8ecfde5b6b594",
+    "src/fuzzy_network_risk/membership.py": "5d11478dc187a769243acbb84500e3a033723d0f16d2dcc49e8d8f67c501bec7",
+    "src/fuzzy_network_risk/calibration.py": "89c248f8b3b8fe4c18813a783fcb021113ff0a27f50b4603449fa3071e5a0f72",
+    "src/fuzzy_network_risk/rules.py": "fdd1cbdc4736b70f2b313eb2a3c76cbfb4408f6a9068ff69cfc4ad27aac18388",
+    "src/fuzzy_network_risk/evaluation.py": "da240af871834858d8ff3039e1a237c95ecc87062f2459777a0f0dd0370a1da7",
+    "src/fuzzy_network_risk/refinement.py": "10d97b9a74b82ccc8aa8f161e474eb5a8240538635a6f2cc1c1a091911c5e898",
+    "scripts/task02b_prepare.py": "bb0631ae9125dfa2fb08750afcf050c1f663afea4b34ff3e1e02c3be57673c19",
+    "scripts/task02b_diagnostics.py": "7ab03fc0e463473d8490cd970b006dbbbc3fb6932821c973bcb47b2cf24ee024",
+    "scripts/task02b_experiment.py": "12683b8822f372813096a03322bf8fb24d57670b24465eea83a4952f10ee560e",
+    "config/fuzzy/task02b_protocol.json": "393622240e705f1e898f8f9f6328099d7d2e48d3a6f46bfd420e38246a6398a6"
+  },
+  "rule_count": 22,
+  "feature_count": 5,
+  "evidence": "internal rotating group-role validation"
+}

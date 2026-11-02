@@ -1,0 +1,788 @@
+{
+  "version": "fuzzy-v2-B_membership",
+  "scenario": "task02b-B_membership",
+  "seed": 20261103,
+  "method": "mamdani-min-max-centroid",
+  "fit_rows": 16175,
+  "features": {
+    "rate": {
+      "column": " Flow Packets/s",
+      "unit": "packets/second",
+      "transform": "log1p",
+      "upper": 15.201805169084134,
+      "training_min": 0.027853571,
+      "training_max": 4000000.0,
+      "anchor_basis": "training_benign_p25_p75_p95_with_declared_domain_floors",
+      "raw_anchors": [
+        1.777152309125,
+        457.41078290042503,
+        80000.0
+      ],
+      "training_quantiles": {
+        "p01": 0.111242431128,
+        "p25": 1.777152309125,
+        "p50": 35.23779389,
+        "p60": 85.75479518885992,
+        "p75": 457.41078290042503,
+        "p90": 74074.07407,
+        "p95": 80000.0,
+        "p99": 568717.9487169939
+      },
+      "zero_fraction": 0.0,
+      "sets": {
+        "sparse": {
+          "kind": "trapezoid",
+          "parameters": [
+            0.0,
+            0.0,
+            1.0214260534627002,
+            6.127765688030557
+          ]
+        },
+        "moderate": {
+          "kind": "triangle",
+          "parameters": [
+            1.0214260534627002,
+            6.127765688030557,
+            11.289794413577894
+          ]
+        },
+        "intensive": {
+          "kind": "trapezoid",
+          "parameters": [
+            6.127765688030557,
+            11.289794413577894,
+            15.201805169084134,
+            15.201805169084134
+          ]
+        }
+      }
+    },
+    "volume": {
+      "column": " Total Fwd Packets",
+      "unit": "packets",
+      "transform": "log1p",
+      "upper": 9.158415299111264,
+      "training_min": 1.0,
+      "training_max": 9493.0,
+      "anchor_basis": "training_benign_p25_p75_p95_with_declared_domain_floors",
+      "raw_anchors": [
+        2.0,
+        15.0,
+        51.0
+      ],
+      "training_quantiles": {
+        "p01": 1.0,
+        "p25": 2.0,
+        "p50": 7.0,
+        "p60": 10.0,
+        "p75": 15.0,
+        "p90": 30.0,
+        "p95": 51.0,
+        "p99": 242.4099999999944
+      },
+      "zero_fraction": 0.0,
+      "sets": {
+        "few": {
+          "kind": "trapezoid",
+          "parameters": [
+            0.0,
+            0.0,
+            1.0986122886681098,
+            2.772588722239781
+          ]
+        },
+        "moderate": {
+          "kind": "triangle",
+          "parameters": [
+            1.0986122886681098,
+            2.772588722239781,
+            3.9512437185814275
+          ]
+        },
+        "many": {
+          "kind": "trapezoid",
+          "parameters": [
+            2.772588722239781,
+            3.9512437185814275,
+            9.158415299111264,
+            9.158415299111264
+          ]
+        }
+      }
+    },
+    "size": {
+      "column": " Packet Length Mean",
+      "unit": "bytes",
+      "transform": "identity",
+      "upper": 2336.0,
+      "training_min": 0.0,
+      "training_max": 2336.0,
+      "anchor_basis": "training_benign_p25_p75_p95_with_declared_domain_floors",
+      "raw_anchors": [
+        23.0,
+        382.23514455,
+        971.6307972381594
+      ],
+      "training_quantiles": {
+        "p01": 0.0,
+        "p25": 23.0,
+        "p50": 160.59166665,
+        "p60": 247.20384615383995,
+        "p75": 382.23514455,
+        "p90": 803.3130188600002,
+        "p95": 971.6307972381594,
+        "p99": 1366.5493219899984
+      },
+      "zero_fraction": 0.02507587801705449,
+      "sets": {
+        "small": {
+          "kind": "trapezoid",
+          "parameters": [
+            0.0,
+            0.0,
+            23.0,
+            382.23514455
+          ]
+        },
+        "medium": {
+          "kind": "triangle",
+          "parameters": [
+            23.0,
+            382.23514455,
+            971.6307972381594
+          ]
+        },
+        "large": {
+          "kind": "trapezoid",
+          "parameters": [
+            382.23514455,
+            971.6307972381594,
+            2336.0,
+            2336.0
+          ]
+        }
+      }
+    },
+    "variation": {
+      "column": " Bwd Packet Length Std",
+      "unit": "bytes",
+      "transform": "log1p",
+      "upper": 8.81235794827759,
+      "training_min": 0.0,
+      "training_max": 6715.738331,
+      "anchor_basis": "training_benign_p25_p75_p95_with_declared_domain_floors",
+      "raw_anchors": [
+        201.0861768863,
+        751.6405232,
+        1091.3678208
+      ],
+      "training_quantiles": {
+        "p01": 0.0,
+        "p25": 0.0,
+        "p50": 250.48097999325,
+        "p60": 470.1188920763195,
+        "p75": 678.585077325,
+        "p90": 895.8634246400001,
+        "p95": 1028.26950077679,
+        "p99": 1372.2893494391915
+      },
+      "zero_fraction": 0.3005492123139182,
+      "sets": {
+        "uniform": {
+          "kind": "trapezoid",
+          "parameters": [
+            0.0,
+            0.0,
+            5.3086942246745235,
+            6.6235877209829725
+          ]
+        },
+        "variable": {
+          "kind": "triangle",
+          "parameters": [
+            5.3086942246745235,
+            6.6235877209829725,
+            6.996102931824041
+          ]
+        },
+        "highly_variable": {
+          "kind": "trapezoid",
+          "parameters": [
+            6.6235877209829725,
+            6.996102931824041,
+            8.81235794827759,
+            8.81235794827759
+          ]
+        }
+      }
+    },
+    "balance": {
+      "column": " Down/Up Ratio",
+      "unit": "dimensionless",
+      "transform": "identity",
+      "upper": 28.0,
+      "training_min": 0.0,
+      "training_max": 28.0,
+      "anchor_basis": "domain_backward_forward_ratio_0_1_2",
+      "raw_anchors": [
+        0.0,
+        1.0,
+        2.0
+      ],
+      "training_quantiles": {
+        "p01": 0.0,
+        "p25": 0.0,
+        "p50": 1.0,
+        "p60": 1.0,
+        "p75": 1.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 3.0
+      },
+      "zero_fraction": 0.43871946813123286,
+      "sets": {
+        "forward": {
+          "kind": "trapezoid",
+          "parameters": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "balanced": {
+          "kind": "triangle",
+          "parameters": [
+            0.0,
+            1.0,
+            2.0
+          ]
+        },
+        "backward": {
+          "kind": "trapezoid",
+          "parameters": [
+            1.0,
+            2.0,
+            28.0,
+            28.0
+          ]
+        }
+      }
+    }
+  },
+  "rules": [
+    {
+      "id": "R01",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "sparse"
+          },
+          {
+            "feature": "volume",
+            "term": "few"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Sparse small flows alone provide little evidence of abnormal load; low-rate scans may evade this."
+    },
+    {
+      "id": "R02",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "sparse"
+          },
+          {
+            "feature": "volume",
+            "term": "moderate"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Modest traffic at a low packet rate has weak load evidence."
+    },
+    {
+      "id": "R03",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "sparse"
+          },
+          {
+            "feature": "volume",
+            "term": "many"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "Large low-rate flows merit context but may be legitimate long sessions."
+    },
+    {
+      "id": "R04",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "volume",
+            "term": "few"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Few packets at ordinary intensity can be routine transactions."
+    },
+    {
+      "id": "R05",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "volume",
+            "term": "moderate"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Ordinary rate and volume form a conservative low-load baseline."
+    },
+    {
+      "id": "R06",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "volume",
+            "term": "many"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "Large packet volume increases load concern without implying an attack."
+    },
+    {
+      "id": "R07",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "intensive"
+          },
+          {
+            "feature": "volume",
+            "term": "few"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "A tiny duration can inflate rate for a few packets; avoid critical risk from rate alone."
+    },
+    {
+      "id": "R08",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "intensive"
+          },
+          {
+            "feature": "volume",
+            "term": "moderate"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "Intensive activity with nontrivial volume supports load concern."
+    },
+    {
+      "id": "R09",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "intensive"
+          },
+          {
+            "feature": "volume",
+            "term": "many"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "High intensity and volume jointly support sustained-load concern."
+    },
+    {
+      "id": "R10",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "intensive"
+          },
+          {
+            "feature": "size",
+            "term": "small"
+          },
+          {
+            "feature": "balance",
+            "term": "forward"
+          }
+        ]
+      },
+      "consequent": "Critical",
+      "weight": 1.0,
+      "rationale": "Small intensive forward-dominated traffic can resemble repeated request/control floods."
+    },
+    {
+      "id": "R11",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "intensive"
+          },
+          {
+            "feature": "size",
+            "term": "small"
+          },
+          {
+            "feature": "variation",
+            "term": "uniform"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "Intensive small packets with uniform responses can resemble repetitive traffic."
+    },
+    {
+      "id": "R12",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "size",
+            "term": "small"
+          },
+          {
+            "feature": "balance",
+            "term": "forward"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "Small forward-heavy transactions warrant investigation; legitimate one-way traffic overlaps."
+    },
+    {
+      "id": "R13",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "volume",
+            "term": "many"
+          },
+          {
+            "feature": "size",
+            "term": "small"
+          },
+          {
+            "feature": "balance",
+            "term": "forward"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "Many small forward packets can indicate repeated requests."
+    },
+    {
+      "id": "R14",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "volume",
+            "term": "many"
+          },
+          {
+            "feature": "size",
+            "term": "large"
+          },
+          {
+            "feature": "variation",
+            "term": "highly_variable"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "Large varied responses at high volume can produce resource pressure; benign transfers overlap."
+    },
+    {
+      "id": "R15",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "sparse"
+          },
+          {
+            "feature": "size",
+            "term": "large"
+          },
+          {
+            "feature": "variation",
+            "term": "highly_variable"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "Large varied responses at sparse rate are ambiguous rather than inherently safe."
+    },
+    {
+      "id": "R16",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "size",
+            "term": "large"
+          },
+          {
+            "feature": "variation",
+            "term": "highly_variable"
+          }
+        ]
+      },
+      "consequent": "High",
+      "weight": 1.0,
+      "rationale": "Varied large responses at ordinary intensity may still describe costly transactions."
+    },
+    {
+      "id": "R17",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "size",
+            "term": "medium"
+          },
+          {
+            "feature": "balance",
+            "term": "balanced"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Balanced medium-size transactions provide a routine-traffic counter-hypothesis."
+    },
+    {
+      "id": "R18",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "sparse"
+          },
+          {
+            "feature": "size",
+            "term": "medium"
+          },
+          {
+            "feature": "balance",
+            "term": "balanced"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Sparse balanced transactions provide weak evidence of abnormal resource load."
+    },
+    {
+      "id": "R19",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "volume",
+            "term": "few"
+          },
+          {
+            "feature": "size",
+            "term": "small"
+          },
+          {
+            "feature": "balance",
+            "term": "forward"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "Small forward-only exchanges merit context, including scanning, but are not definitive."
+    },
+    {
+      "id": "R20",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "moderate"
+          },
+          {
+            "feature": "variation",
+            "term": "variable"
+          },
+          {
+            "feature": "balance",
+            "term": "balanced"
+          }
+        ]
+      },
+      "consequent": "Low",
+      "weight": 1.0,
+      "rationale": "Ordinary intensity with varied balanced exchanges supports a benign counter-hypothesis."
+    },
+    {
+      "id": "R21",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "rate",
+            "term": "intensive"
+          },
+          {
+            "feature": "size",
+            "term": "large"
+          },
+          {
+            "feature": "balance",
+            "term": "backward"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "Fast backward-heavy payload transfer can be an ordinary download."
+    },
+    {
+      "id": "R22",
+      "antecedent": {
+        "all": [
+          {
+            "feature": "volume",
+            "term": "many"
+          },
+          {
+            "feature": "variation",
+            "term": "uniform"
+          },
+          {
+            "feature": "balance",
+            "term": "backward"
+          }
+        ]
+      },
+      "consequent": "Medium",
+      "weight": 1.0,
+      "rationale": "Large uniform directional transfer is ambiguous without application context."
+    }
+  ],
+  "output": {
+    "grid_points": 201,
+    "sets": {
+      "Low": {
+        "kind": "trapezoid",
+        "parameters": [
+          0.0,
+          0.0,
+          15.0,
+          35.0
+        ]
+      },
+      "Medium": {
+        "kind": "triangle",
+        "parameters": [
+          20.0,
+          45.0,
+          65.0
+        ]
+      },
+      "High": {
+        "kind": "triangle",
+        "parameters": [
+          50.0,
+          70.0,
+          85.0
+        ]
+      },
+      "Critical": {
+        "kind": "trapezoid",
+        "parameters": [
+          75.0,
+          90.0,
+          100.0,
+          100.0
+        ]
+      }
+    }
+  },
+  "risk_level_thresholds": [
+    25.0,
+    50.0,
+    75.0
+  ],
+  "alert_threshold": 50.0,
+  "calibration": {
+    "state": "training_only_uncalibrated",
+    "candidates": [
+      25.0,
+      35.0,
+      45.0,
+      55.0,
+      65.0,
+      75.0
+    ]
+  },
+  "policies": {
+    "invalid": "abstain",
+    "no_rule": "abstain",
+    "extreme": "saturate_transformed_domain_shoulders",
+    "risk_score": "behavioral_index_not_attack_probability",
+    "meaningful_activation": 0.1
+  },
+  "reference_rows": 13838
+}

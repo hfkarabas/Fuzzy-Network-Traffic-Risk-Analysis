@@ -1,0 +1,62 @@
+{
+  "experiment": "task02b-v2-1",
+  "seed": 20261104,
+  "candidates": [
+    "A_frozen",
+    "A_refit",
+    "B_membership",
+    "C_rules"
+  ],
+  "design_rows": 14042,
+  "B_changes": "Training-BENIGN p25/p75/p95 reference anchors, explicit packet-size 16/64/256-byte and volume 2/4/16 floors, unchanged 22 rules",
+  "C_changes": "B memberships, 18 explicit rules. Remove broad small/uniform and few/small/forward concern; demote sparse-many and intensive-few baselines; require volume corroboration for critical and varied-large response patterns.",
+  "design_evidence": "R06/R07/R10/R11/R19 co-activate frequently on benign design flows; sparse-rate benign and attack score distributions overlap. Co-activation is association, not a causal attribution.",
+  "D_decision": "Not implemented: duration rank correlation 0.965 with existing inputs; IAT 0.966-0.999; bytes/s algebraically tied to rate/size. Low-redundancy flags and segment size have unstable cross-day associations or collection-artifact concerns. Five inputs are not proven sufficient, but adding a feature is not yet defensible.",
+  "supplemental_stress": "After selection only: leave Wednesday out of sampled non-design panel; remove all its signature groups from other days; use other groups in two deterministic buckets for train/calibration. Not used for selection; internal scenario-shift validation only.",
+  "selection_protocol": {
+    "version": "task02b-v2-protocol-1",
+    "seed": 20261104,
+    "data_status": "internal development validation only; no untouched independent holdout",
+    "exposure_policy": "Exclude every Friday source row and every original observation group or coarse five-input signature linked to Friday or TASK02 grouped-test rows. Read exposed features only for exclusion signatures, never exposed labels/scores/errors.",
+    "signature": "round(log1p(x)/0.10) for rate, volume, mean size, response std; exact exported integer direction ratio. Original groups must map to one signature or preparation fails.",
+    "design_fraction": 0.2,
+    "maximum_sample_rows": 60000,
+    "sampling": "uniform deterministic source-row hash sampling without label stratification after exclusions; all rows retain original IDs and source days",
+    "folds": 3,
+    "roles": "design signatures excluded from comparison; rotate remaining signature groups through train, policy calibration, assessment, one distinct bucket per role",
+    "candidate_budget": [
+      "A_frozen: unchanged grouped TASK02 configuration, contextual only",
+      "A_refit: TASK02 architecture fitted on each training fold, fair baseline",
+      "B_membership: benign-reference training anchors with original rules",
+      "C_rules: B memberships plus predeclared design-evidence rule refinement",
+      "D_optional: at most one six/seven-input candidate only if training-only feature audit justifies it"
+    ],
+    "policies": {
+      "Sensitive": 0.1,
+      "Balanced": 0.05,
+      "Conservative": 0.01
+    },
+    "policy_objective": "On calibration only, maximize observation-signature-group-weighted recall subject to estimated FPR cap; ties prefer lower FPR then higher threshold; always include threshold 100 (no alerts)",
+    "selection": "Among A_refit/B/C/(optional D), maximize mean assessment Balanced-policy group-weighted balanced accuracy subject to mean FPR <= 0.075. Replace baseline only if balanced accuracy improves by >=0.02 and paired group-bootstrap 95% lower bound on improvement >0; otherwise preserve original TASK02 recommended model. Frozen A is contextual, not a leakage-clean refit.",
+    "uncertainty": "500 paired bootstrap resamples of signature groups, conditional on fitted folds; not selection-adjusted, not host/session uncertainty",
+    "risk_categories": [
+      25,
+      50,
+      75
+    ],
+    "holdout_claim": "None. Assessment folds participate in candidate selection and are internal validation. Earlier full-data EDA, baseline fitting and prior summaries preclude an independent test claim.",
+    "search_limit": "No post-assessment rule/membership/feature search. Retain all candidate outcomes including failures."
+  },
+  "code_sha256": {
+    "src/fuzzy_network_risk/engine.py": "02a10504621f9c92d86ffc17d13f733aeea38f9b6878881eddd8ecfde5b6b594",
+    "src/fuzzy_network_risk/membership.py": "5d11478dc187a769243acbb84500e3a033723d0f16d2dcc49e8d8f67c501bec7",
+    "src/fuzzy_network_risk/calibration.py": "89c248f8b3b8fe4c18813a783fcb021113ff0a27f50b4603449fa3071e5a0f72",
+    "src/fuzzy_network_risk/rules.py": "fdd1cbdc4736b70f2b313eb2a3c76cbfb4408f6a9068ff69cfc4ad27aac18388",
+    "src/fuzzy_network_risk/evaluation.py": "da240af871834858d8ff3039e1a237c95ecc87062f2459777a0f0dd0370a1da7",
+    "src/fuzzy_network_risk/refinement.py": "10d97b9a74b82ccc8aa8f161e474eb5a8240538635a6f2cc1c1a091911c5e898",
+    "scripts/task02b_prepare.py": "bb0631ae9125dfa2fb08750afcf050c1f663afea4b34ff3e1e02c3be57673c19",
+    "scripts/task02b_diagnostics.py": "7ab03fc0e463473d8490cd970b006dbbbc3fb6932821c973bcb47b2cf24ee024",
+    "scripts/task02b_experiment.py": "12683b8822f372813096a03322bf8fb24d57670b24465eea83a4952f10ee560e",
+    "config/fuzzy/task02b_protocol.json": "393622240e705f1e898f8f9f6328099d7d2e48d3a6f46bfd420e38246a6398a6"
+  }
+}

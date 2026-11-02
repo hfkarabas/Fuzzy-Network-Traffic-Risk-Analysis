@@ -1,0 +1,25 @@
+{
+  "input_multiplier_0.999": {
+    "mean_absolute_change": 0.012045339681117208,
+    "p95": 0.03883326845485513,
+    "max": 0.1418869335538453,
+    "category_changed_fraction": 0.00021364477994587666
+  },
+  "input_multiplier_1.001": {
+    "mean_absolute_change": 0.011475405555831972,
+    "p95": 0.04524356443546782,
+    "max": 0.13887770498810958,
+    "category_changed_fraction": 0.00021364477994587666
+  },
+  "transformed_membership_coordinates_0.99": {
+    "mean_absolute_change": 0.4638015200470392,
+    "p95": 2.5667567518845047,
+    "max": 7.4665719719612405
+  },
+  "transformed_membership_coordinates_1.01": {
+    "mean_absolute_change": 0.4014442015695342,
+    "p95": 1.1356222430061922,
+    "max": 4.381409557697715
+  },
+  "near_membership_anchors_max_change_at_2ppm": 5.176939987450169e-05
+}

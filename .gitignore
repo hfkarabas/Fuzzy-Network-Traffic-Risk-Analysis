@@ -186,3 +186,5 @@ data/
 reports/figures/
 *.parquet
 pytest-cache-files-*/
+# Full design threshold curve is regenerated, not versioned.
+reports/fuzzy/task02b/design_threshold_tradeoff.csv

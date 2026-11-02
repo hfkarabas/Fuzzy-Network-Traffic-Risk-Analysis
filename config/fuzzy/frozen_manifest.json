@@ -1,0 +1,15 @@
+{
+  "version": "fuzzy-v1",
+  "seed": 20261103,
+  "models": {
+    "grouped": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+    "day": "a31f542307f1ca0c44ad6b26764d02ca4768b694c4b9e10fac44d3a6336f29de"
+  },
+  "phases": [
+    "training_memberships_and_fixed_rules",
+    "validation_threshold_only",
+    "freeze",
+    "test_once"
+  ],
+  "rule_sha256": "cc250f80f3a6088c30e9ec6f64f2c3617a9783bb728db8389d6f3f001d1fc7bc"
+}

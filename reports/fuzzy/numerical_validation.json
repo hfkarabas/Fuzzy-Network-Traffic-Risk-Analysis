@@ -1,0 +1,39 @@
+{
+  "grouped": {
+    "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+    "training_rows_checked": 256,
+    "single_batch_bitwise_identical": true,
+    "reload_and_batch_size_reproducible": true,
+    "quadrature_max_absolute_error_vs_2001_grid": 0.009646961666765819,
+    "quadrature_mean_absolute_error": 0.0020872843572037475,
+    "single_record_mean_milliseconds_100_training_flows": 0.5050310003571212,
+    "inference_features_exact": [
+      " Flow Packets/s",
+      " Total Fwd Packets",
+      " Packet Length Mean",
+      " Bwd Packet Length Std",
+      " Down/Up Ratio"
+    ]
+  },
+  "day": {
+    "model_id": "a31f542307f1ca0c44ad6b26764d02ca4768b694c4b9e10fac44d3a6336f29de",
+    "training_rows_checked": 256,
+    "single_batch_bitwise_identical": true,
+    "reload_and_batch_size_reproducible": true,
+    "quadrature_max_absolute_error_vs_2001_grid": 0.007484995046816323,
+    "quadrature_mean_absolute_error": 0.0011995969234681256,
+    "single_record_mean_milliseconds_100_training_flows": 0.5052910000085831,
+    "inference_features_exact": [
+      " Flow Packets/s",
+      " Total Fwd Packets",
+      " Packet Length Mean",
+      " Bwd Packet Length Std",
+      " Down/Up Ratio"
+    ]
+  },
+  "training_semantics_check": {
+    "rows": 1607145,
+    "floor_ratio_matches": 1607145
+  },
+  "source_artifact_integrity": "Verified separately by scripts/task02_integrity.py"
+}

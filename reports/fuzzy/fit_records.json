@@ -1,0 +1,91 @@
+{
+  "grouped": {
+    "training_rows": 8217,
+    "training_label_counts": {
+      "BENIGN": 700,
+      "DDoS": 700,
+      "PortScan": 700,
+      "Bot": 700,
+      "Web Attack � Brute Force": 700,
+      "FTP-Patator": 700,
+      "SSH-Patator": 700,
+      "DoS slowloris": 700,
+      "DoS Slowhttptest": 700,
+      "DoS Hulk": 700,
+      "DoS GoldenEye": 700,
+      "Web Attack � XSS": 467,
+      "Infiltration": 29,
+      "Web Attack � Sql Injection": 14,
+      "Heartbleed": 7
+    },
+    "validation_rows": 1753,
+    "validation_label_counts": {
+      "BENIGN": 150,
+      "DDoS": 150,
+      "PortScan": 150,
+      "Bot": 150,
+      "Web Attack � Brute Force": 150,
+      "FTP-Patator": 150,
+      "SSH-Patator": 150,
+      "DoS slowloris": 150,
+      "DoS Slowhttptest": 150,
+      "DoS Hulk": 150,
+      "DoS GoldenEye": 150,
+      "Web Attack � XSS": 94,
+      "Web Attack � Sql Injection": 4,
+      "Infiltration": 3,
+      "Heartbleed": 2
+    },
+    "training_diagnostic_rows": 8217,
+    "training_coverage": {
+      "rows": 8217,
+      "valid_scores": 8217,
+      "invalid_input": 0,
+      "no_rule_activation": 0,
+      "any_rule_fraction": 1.0,
+      "multiple_rule_fraction": 0.9300231227942072,
+      "meaningful_rule_fraction": 1.0,
+      "multiple_meaningful_rule_fraction": 0.9121333820129001,
+      "conflicting_low_high_fraction": 0.3038821954484605,
+      "outside_training_range_fraction": 0.0
+    },
+    "model_sha256": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+    "validation_abstentions": 0
+  },
+  "day": {
+    "training_rows": 1607145,
+    "training_label_counts": {
+      "BENIGN": 1345583,
+      "DoS Hulk": 226132,
+      "DoS GoldenEye": 10293,
+      "FTP-Patator": 7935,
+      "SSH-Patator": 5897,
+      "DoS slowloris": 5795,
+      "DoS Slowhttptest": 5499,
+      "Heartbleed": 11
+    },
+    "validation_rows": 422299,
+    "validation_label_counts": {
+      "BENIGN": 420083,
+      "Web Attack � Brute Force": 1507,
+      "Web Attack � XSS": 652,
+      "Infiltration": 36,
+      "Web Attack � Sql Injection": 21
+    },
+    "training_diagnostic_rows": 7011,
+    "training_coverage": {
+      "rows": 7011,
+      "valid_scores": 7011,
+      "invalid_input": 0,
+      "no_rule_activation": 0,
+      "any_rule_fraction": 1.0,
+      "multiple_rule_fraction": 0.8583654257595208,
+      "meaningful_rule_fraction": 1.0,
+      "multiple_meaningful_rule_fraction": 0.8519469405220368,
+      "conflicting_low_high_fraction": 0.4682641563257738,
+      "outside_training_range_fraction": 0.0
+    },
+    "model_sha256": "a31f542307f1ca0c44ad6b26764d02ca4768b694c4b9e10fac44d3a6336f29de",
+    "validation_abstentions": 0
+  }
+}

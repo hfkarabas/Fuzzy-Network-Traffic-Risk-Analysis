@@ -1,0 +1,11 @@
+{
+  "python": "3.14.7",
+  "numpy": "2.5.4",
+  "pandas": "3.1.0",
+  "seed": 20261103,
+  "no_test_driven_rule_updates": true,
+  "models": {
+    "grouped": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+    "day": "a31f542307f1ca0c44ad6b26764d02ca4768b694c4b9e10fac44d3a6336f29de"
+  }
+}

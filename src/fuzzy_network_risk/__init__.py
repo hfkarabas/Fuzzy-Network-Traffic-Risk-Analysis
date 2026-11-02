@@ -1,1 +1,1 @@
-"""Dataset foundations; fuzzy inference is intentionally not implemented yet."""
+"""Reproducible network-flow preparation and explainable Mamdani risk inference."""

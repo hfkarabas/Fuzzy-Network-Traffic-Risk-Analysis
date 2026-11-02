@@ -1,0 +1,84 @@
+{
+  "scenario": "grouped",
+  "source_row_id": 1694363,
+  "actual_label": "BENIGN",
+  "error_type": "false_positive",
+  "inputs": {
+    " Flow Packets/s": 0.4292773,
+    " Total Fwd Packets": 14.0,
+    " Packet Length Mean": 73.74074074,
+    " Bwd Packet Length Std": 236.1033897,
+    " Down/Up Ratio": 0.0
+  },
+  "prediction": {
+    "status": "ok",
+    "risk_score": 43.333333333333336,
+    "risk_level": "Medium",
+    "alert": true,
+    "activated_rules": [
+      {
+        "id": "R03",
+        "strength": 1.0,
+        "consequent": "Medium",
+        "antecedent": {
+          "all": [
+            {
+              "feature": "rate",
+              "term": "sparse"
+            },
+            {
+              "feature": "volume",
+              "term": "many"
+            }
+          ]
+        },
+        "reason_key": "rules.R03",
+        "rationale_en": "Large low-rate flows merit context but may be legitimate long sessions."
+      }
+    ],
+    "membership_degrees": {
+      " Flow Packets/s": {
+        "sparse": 1.0,
+        "moderate": 0.0,
+        "intensive": 0.0
+      },
+      " Total Fwd Packets": {
+        "few": 0.0,
+        "moderate": 0.0,
+        "many": 1.0
+      },
+      " Packet Length Mean": {
+        "small": 0.0,
+        "medium": 0.9266330805966225,
+        "large": 0.07336691940337743
+      },
+      " Bwd Packet Length Std": {
+        "uniform": 0.6307088470348396,
+        "variable": 0.36929115296516035,
+        "highly_variable": 0.0
+      },
+      " Down/Up Ratio": {
+        "forward": 1.0,
+        "balanced": 0.0,
+        "backward": 0.0
+      }
+    },
+    "explanation_data": {
+      "message_key": "prediction.ok",
+      "dominant_rules": [
+        "R03"
+      ],
+      "invalid_features": [],
+      "outside_training_range": [],
+      "measurement_caveat_keys": [
+        "measurement.integer_direction_ratio",
+        "measurement.zero_variation_ambiguous",
+        "risk.not_probability"
+      ],
+      "risk_level_key": "risk.medium"
+    },
+    "explanation": "Medium risk (43.33/100). Strongest behavior rules: R03 -> Medium (1.00). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+    "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b"
+  },
+  "possible_error_reason": "Large low-rate flows merit context but may be legitimate long sessions. These hypotheses overlap benign/attack behavior; their aggregated score falls on the wrong side of the frozen alert threshold. This is a possible explanation, not a verified attack mechanism."
+}

@@ -3,8 +3,8 @@
 A university Fuzzy Logic project: numerical network-flow characteristics will feed
 interpretable membership functions and IF–THEN rules to produce a 0–100 risk score,
 Low/Medium/High/Critical categories and explanations. The fuzzy inference engine is
-the central planned algorithm. No conventional classifier, fuzzy engine or web UI
-has been implemented in TASK 01.
+the central algorithm. TASK 02 implements a working, explainable Mamdani engine.
+No conventional classifier, neural network or web UI is included.
 
 Dataset: [c01dsnap/CIC-IDS2017](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017).
 Verified source: **2,830,743 records, 79 columns, one train split, 15 labels**.
@@ -120,19 +120,78 @@ verifies source integrity. See:
 - [Preprocessing report](reports/dataset/preprocessing_report.md)
 - [Validation results](reports/dataset/validation.json)
 
-## TASK 02
+## Fuzzy engine (TASK 02 complete)
 
-Use train rows of development_v1.parquet to design overlapping linguistic sets
-and interpretable rules; use validation for decisions and reserve test for final
-checks. Exact inputs are in config; labels and metadata must never enter inference.
-Keep risk severity distinct from attack labels. Decide how unavailable inputs
-produce an explanation/abstention and how to validate risk scores without severity
-ground truth. Implement and test the fuzzy engine before building the local web UI.
-Current partitions prevent identical cleaned observations crossing, but unavailable
-fine-grained session metadata and near-duplicate flows prevent claims of independent
-evaluation. Original CSV file/day origins were recovered with exact verification
-against every source row. Use source_sessions.parquet for a stricter temporal stress
-test: Monday–Wednesday train, Thursday validation, Friday test. All duplicate groups
-spanning nominal temporal partitions are quarantined in that alternative manifest.
-Attack categories differ across days, so report class coverage and unseen-category
-limitations alongside the class-preserving development evaluation.
+The five-input Mamdani system uses 22 hand-written rules, minimum AND/implication,
+maximum OR/aggregation and centroid defuzzification. Three overlapping memberships
+per input are derived from the appropriate training partition. Rate, volume and
+response variation use log1p; size and directional ratio retain physical coordinates.
+Separate frozen configurations represent grouped-development and day-based protocols.
+
+Risk categories are Low [0,25), Medium [25,50), High [50,75), Critical [75,100].
+Binary alerts use a separate validation-selected threshold: 25 grouped, 75 day.
+Invalid or missing input produces explicit abstention; no silent zero substitution.
+Scores express behavioral rule output, not attack probability or calibrated severity.
+
+```powershell
+# Offline single-record CLI; preserves exact column names including leading spaces.
+./.venv/Scripts/python scripts/score_flow.py --input config/fuzzy/example_flow.json
+# Standalone numerical validation and source/output integrity checks:
+./.venv/Scripts/python scripts/validate_fuzzy.py
+./.venv/Scripts/python scripts/task02_integrity.py
+# Complete experiment replay, using existing TASK 01 outputs (no download):
+./.venv/Scripts/python scripts/run_fuzzy.py all
+```
+
+Replay refits from training, calibrates only six alert thresholds on validation,
+freezes JSON configurations, evaluates each test once, validates numerical behavior
+on training records and regenerates reports/figures. Individual `fit`, `evaluate`
+and `report` phases are also supported. Scores/parameters are deterministic; wall
+timings can vary. `report` reuses saved predictions and does not refit or rescore
+the complete test set. No test-driven parameter search is performed.
+
+Python API (run with `PYTHONPATH=src`, or from an installed package):
+
+```python
+from fuzzy_network_risk.engine import MamdaniRiskEngine
+engine = MamdaniRiskEngine.load("config/fuzzy/grouped_v1.json")
+record = {" Flow Packets/s": 100000.0, " Total Fwd Packets": 100.0,
+          " Packet Length Mean": 6.0, " Bwd Packet Length Std": 0.0,
+          " Down/Up Ratio": 0.0}
+prediction = engine.predict_one(record)
+batch = engine.predict_batch([record, record])
+```
+
+Only these five columns are accepted; explicitly select them from labeled frames.
+For large files, stream outer batches (the evaluation script uses 8,192 rows).
+The centroid workspace is capped internally at 2,048 rows by default. Structured
+membership/rule strengths, consequents and translation keys support a future
+Turkish interface; English explanation text is separate. See [API details](docs/fuzzy_api.md).
+
+Actual evaluation exposes major detection weaknesses: grouped test recall 88.75%
+but false-positive rate 76%; day test recall 0.00626% at the frozen threshold 75.
+These are unsuitable operational alert settings. The engine is ready for an
+educational local UI integration, with those limitations visible. Do not present
+high grouped F1 as real-world detection effectiveness: its test is 91.43% attack.
+
+- [System design](reports/fuzzy/fuzzy_system_design.md)
+- [Rule analysis](reports/fuzzy/rule_base_analysis.md)
+- [Model evaluation](reports/fuzzy/model_evaluation.md)
+- [Error analysis](reports/fuzzy/error_analysis.md)
+- [Machine-readable metrics](reports/fuzzy/metrics.json)
+
+Original source and TASK 01 outputs/reports are SHA256-protected and unchanged.
+Generated predictions live in ignored `data/fuzzy_v1/`, with figures in ignored
+`reports/figures/fuzzy/`. Small model configurations, metrics, test results and
+deterministic error examples are versioned. No extra dependencies were required.
+
+## TASK 03
+
+Integrate the engine into a local web interface with validated physical-unit inputs,
+explicit invalid-input status, model identity, score/category, rule evidence and
+measurement caveats. Zero integer direction ratio does not imply no responses.
+Full-original-feature groups are disjoint across partitions, but selected-input
+patterns can overlap; within-day sessions, near-duplicates and category shift
+remain concerns. The current tests have now been examined. Any future scientific
+rule revision must use training/validation and a newly reserved final evaluation,
+rather than optimizing repeatedly against the reported test results.

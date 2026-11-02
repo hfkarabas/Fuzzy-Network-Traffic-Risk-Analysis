@@ -179,3 +179,10 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+# Project datasets and generated artifacts
+data/
+.tmp/
+.cache/
+reports/figures/
+*.parquet
+pytest-cache-files-*/

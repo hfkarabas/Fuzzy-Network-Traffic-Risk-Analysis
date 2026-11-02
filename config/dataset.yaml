@@ -1,0 +1,14 @@
+dataset_id: c01dsnap/CIC-IDS2017
+source_revision: 4e9edfa727f800b6f595bc2ee7420527156562b2
+pipeline_version: v1
+seed: 20261103
+batch_size: 65536
+development_per_class: 1000
+label: ' Label'
+inputs:
+  - ' Flow Packets/s'
+  - ' Total Fwd Packets'
+  - ' Packet Length Mean'
+  - ' Bwd Packet Length Std'
+  - ' Down/Up Ratio'
+split_percentages: [70, 15, 15]

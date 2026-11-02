@@ -1,0 +1,29 @@
+capture_day,temporal_partition,Label,rows
+Friday,quarantine,BENIGN,35093
+Friday,quarantine,DDoS,5
+Friday,quarantine,PortScan,1053
+Friday,test,BENIGN,379229
+Friday,test,Bot,1966
+Friday,test,DDoS,128022
+Friday,test,PortScan,157877
+Monday,quarantine,BENIGN,2927
+Monday,train,BENIGN,526991
+Thursday,quarantine,BENIGN,36357
+Thursday,validation,BENIGN,420395
+Thursday,validation,Infiltration,36
+Thursday,validation,Web Attack � Brute Force,1507
+Thursday,validation,Web Attack � Sql Injection,21
+Thursday,validation,Web Attack � XSS,652
+Tuesday,quarantine,BENIGN,19555
+Tuesday,train,BENIGN,412519
+Tuesday,train,FTP-Patator,7938
+Tuesday,train,SSH-Patator,5897
+Wednesday,quarantine,BENIGN,33014
+Wednesday,quarantine,DoS Hulk,4343
+Wednesday,quarantine,DoS slowloris,1
+Wednesday,train,BENIGN,407017
+Wednesday,train,DoS GoldenEye,10293
+Wednesday,train,DoS Hulk,226730
+Wednesday,train,DoS Slowhttptest,5499
+Wednesday,train,DoS slowloris,5795
+Wednesday,train,Heartbleed,11

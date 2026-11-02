@@ -1,0 +1,80 @@
+Exact column (JSON string),Arrow type
+""" Destination Port""",int64
+""" Flow Duration""",int64
+""" Total Fwd Packets""",int64
+""" Total Backward Packets""",int64
+"""Total Length of Fwd Packets""",int64
+""" Total Length of Bwd Packets""",int64
+""" Fwd Packet Length Max""",int64
+""" Fwd Packet Length Min""",int64
+""" Fwd Packet Length Mean""",double
+""" Fwd Packet Length Std""",double
+"""Bwd Packet Length Max""",int64
+""" Bwd Packet Length Min""",int64
+""" Bwd Packet Length Mean""",double
+""" Bwd Packet Length Std""",double
+"""Flow Bytes/s""",double
+""" Flow Packets/s""",double
+""" Flow IAT Mean""",double
+""" Flow IAT Std""",double
+""" Flow IAT Max""",int64
+""" Flow IAT Min""",int64
+"""Fwd IAT Total""",int64
+""" Fwd IAT Mean""",double
+""" Fwd IAT Std""",double
+""" Fwd IAT Max""",int64
+""" Fwd IAT Min""",int64
+"""Bwd IAT Total""",int64
+""" Bwd IAT Mean""",double
+""" Bwd IAT Std""",double
+""" Bwd IAT Max""",int64
+""" Bwd IAT Min""",int64
+"""Fwd PSH Flags""",int64
+""" Bwd PSH Flags""",int64
+""" Fwd URG Flags""",int64
+""" Bwd URG Flags""",int64
+""" Fwd Header Length""",int64
+""" Bwd Header Length""",int64
+"""Fwd Packets/s""",double
+""" Bwd Packets/s""",double
+""" Min Packet Length""",int64
+""" Max Packet Length""",int64
+""" Packet Length Mean""",double
+""" Packet Length Std""",double
+""" Packet Length Variance""",double
+"""FIN Flag Count""",int64
+""" SYN Flag Count""",int64
+""" RST Flag Count""",int64
+""" PSH Flag Count""",int64
+""" ACK Flag Count""",int64
+""" URG Flag Count""",int64
+""" CWE Flag Count""",int64
+""" ECE Flag Count""",int64
+""" Down/Up Ratio""",int64
+""" Average Packet Size""",double
+""" Avg Fwd Segment Size""",double
+""" Avg Bwd Segment Size""",double
+""" Fwd Header Length.1""",int64
+"""Fwd Avg Bytes/Bulk""",int64
+""" Fwd Avg Packets/Bulk""",int64
+""" Fwd Avg Bulk Rate""",int64
+""" Bwd Avg Bytes/Bulk""",int64
+""" Bwd Avg Packets/Bulk""",int64
+"""Bwd Avg Bulk Rate""",int64
+"""Subflow Fwd Packets""",int64
+""" Subflow Fwd Bytes""",int64
+""" Subflow Bwd Packets""",int64
+""" Subflow Bwd Bytes""",int64
+"""Init_Win_bytes_forward""",int64
+""" Init_Win_bytes_backward""",int64
+""" act_data_pkt_fwd""",int64
+""" min_seg_size_forward""",int64
+"""Active Mean""",double
+""" Active Std""",double
+""" Active Max""",int64
+""" Active Min""",int64
+"""Idle Mean""",double
+""" Idle Std""",double
+""" Idle Max""",int64
+""" Idle Min""",int64
+""" Label""",string

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fuzzy-network-risk"
+version = "0.1.0"
+requires-python = ">=3.12"
+description = "Reproducible CIC-IDS2017 preparation for interpretable fuzzy risk analysis"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "scripts"]
+testpaths = ["tests"]

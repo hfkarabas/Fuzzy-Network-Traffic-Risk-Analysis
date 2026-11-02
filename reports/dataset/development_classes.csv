@@ -1,0 +1,46 @@
+ Label,partition,count
+BENIGN,test,150
+BENIGN,train,700
+BENIGN,validation,150
+Bot,test,150
+Bot,train,700
+Bot,validation,150
+DDoS,test,150
+DDoS,train,700
+DDoS,validation,150
+DoS GoldenEye,test,150
+DoS GoldenEye,train,700
+DoS GoldenEye,validation,150
+DoS Hulk,test,150
+DoS Hulk,train,700
+DoS Hulk,validation,150
+DoS Slowhttptest,test,150
+DoS Slowhttptest,train,700
+DoS Slowhttptest,validation,150
+DoS slowloris,test,150
+DoS slowloris,train,700
+DoS slowloris,validation,150
+FTP-Patator,test,150
+FTP-Patator,train,700
+FTP-Patator,validation,150
+Heartbleed,test,2
+Heartbleed,train,7
+Heartbleed,validation,2
+Infiltration,test,4
+Infiltration,train,29
+Infiltration,validation,3
+PortScan,test,150
+PortScan,train,700
+PortScan,validation,150
+SSH-Patator,test,150
+SSH-Patator,train,700
+SSH-Patator,validation,150
+Web Attack � Brute Force,test,150
+Web Attack � Brute Force,train,700
+Web Attack � Brute Force,validation,150
+Web Attack � Sql Injection,test,3
+Web Attack � Sql Injection,train,14
+Web Attack � Sql Injection,validation,4
+Web Attack � XSS,test,91
+Web Attack � XSS,train,467
+Web Attack � XSS,validation,94

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "all_source_rows_verified": 2830743,
+  "all_numeric_cells_compared_to_cleaning_rules": 220797954,
+  "all_labels_preserved": true,
+  "all_group_ids_and_partitions_recomputed": true,
+  "fuzzy_output_matches_eligible_cleaned_rows": true,
+  "development_sample_is_subset": true,
+  "manifest_matches": true,
+  "groups_crossing_partitions": 0,
+  "development_label_count": 15,
+  "source_cache_sha256_unchanged": true,
+  "selected_inputs": [
+    " Flow Packets/s",
+    " Total Fwd Packets",
+    " Packet Length Mean",
+    " Bwd Packet Length Std",
+    " Down/Up Ratio"
+  ],
+  "source_file_and_day_recovery_verified": true,
+  "temporal_nonquarantine_groups_crossing_partitions": 0,
+  "development_sample_exactly_reproduced_from_full_fuzzy_output": true
+}

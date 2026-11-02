@@ -1,0 +1,191 @@
+{
+  "version": "web-catalog-v1",
+  "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+  "source_artifact": "data/fuzzy_v2/internal_development.parquet",
+  "source_sha256": "6d075afbb8a88c76d0cec5aa8783bd93997e2cd78adad7d9fbf3bb3ab4d9f187",
+  "scope": "TASK02B eligible design bucket only; curated illustrations, not performance estimates",
+  "selection": "lowest SHA256(web-catalog-v1|source_row_id), unique rows within declared categories; policy contrast additionally bounded by Balanced/Conservative thresholds",
+  "unavailable_categories": [],
+  "examples": [
+    {
+      "id": "low",
+      "title": "Düşük risk örneği",
+      "source_row_id": 899965,
+      "source_day": "Monday",
+      "observation_group_id": "6097262337365377307",
+      "signature": "16:16:43:27:1",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 3.8104274252,
+        " Total Fwd Packets": 4.0,
+        " Packet Length Mean": 71.2222222222,
+        " Bwd Packet Length Std": 13.2790561914,
+        " Down/Up Ratio": 1.0
+      },
+      "risk_score": 14.469972448151545,
+      "risk_level": "Low",
+      "alert": false,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "medium",
+      "title": "Orta risk örneği",
+      "source_row_id": 1502229,
+      "source_day": "Thursday",
+      "observation_group_id": "569318864444864545",
+      "signature": "55:36:64:62:1",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 238.0415843,
+        " Total Fwd Packets": 37.0,
+        " Packet Length Mean": 614.5394737,
+        " Bwd Packet Length Std": 492.8085397,
+        " Down/Up Ratio": 1.0
+      },
+      "risk_score": 37.82472562998316,
+      "risk_level": "Medium",
+      "alert": false,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "high",
+      "title": "Yüksek risk örneği",
+      "source_row_id": 1384548,
+      "source_day": "Thursday",
+      "observation_group_id": "12888539212031329997",
+      "signature": "106:11:11:0:0",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 41666.66667,
+        " Total Fwd Packets": 2.0,
+        " Packet Length Mean": 2.0,
+        " Bwd Packet Length Std": 0.0,
+        " Down/Up Ratio": 0.0
+      },
+      "risk_score": 63.99149823933494,
+      "risk_level": "High",
+      "alert": true,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "critical",
+      "title": "Kritik risk örneği",
+      "source_row_id": 1356622,
+      "source_day": "Thursday",
+      "observation_group_id": "16365391526735905742",
+      "signature": "132:16:0:0:0",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 555555.5556,
+        " Total Fwd Packets": 4.0,
+        " Packet Length Mean": 0.0,
+        " Bwd Packet Length Std": 0.0,
+        " Down/Up Ratio": 0.0
+      },
+      "risk_score": 79.50125,
+      "risk_level": "Critical",
+      "alert": true,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "benign",
+      "title": "BENIGN etiketli akış",
+      "source_row_id": 962493,
+      "source_day": "Monday",
+      "observation_group_id": "5565456723933993868",
+      "signature": "37:21:43:45:0",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 40.1782306311,
+        " Total Fwd Packets": 7.0,
+        " Packet Length Mean": 72.1818181818,
+        " Bwd Packet Length Std": 91.7986928012,
+        " Down/Up Ratio": 0.0
+      },
+      "risk_score": 37.263038108407656,
+      "risk_level": "Medium",
+      "alert": false,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "attack",
+      "title": "Saldırı etiketli akış",
+      "source_row_id": 2424072,
+      "source_day": "Wednesday",
+      "observation_group_id": "12622785942668730742",
+      "signature": "2:24:66:75:0",
+      "dataset_label": "DoS Hulk",
+      "features": {
+        " Flow Packets/s": 0.186046211,
+        " Total Fwd Packets": 10.0,
+        " Packet Length Mean": 700.7647059,
+        " Bwd Packet Length Std": 1754.831473,
+        " Down/Up Ratio": 0.0
+      },
+      "risk_score": 43.333333333333336,
+      "risk_level": "Medium",
+      "alert": false,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "false-positive",
+      "title": "Yanlış alarm örneği",
+      "source_row_id": 1387726,
+      "source_day": "Thursday",
+      "observation_group_id": "17122130557244045289",
+      "signature": "106:11:11:0:0",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 40816.32653,
+        " Total Fwd Packets": 2.0,
+        " Packet Length Mean": 2.0,
+        " Bwd Packet Length Std": 0.0,
+        " Down/Up Ratio": 0.0
+      },
+      "risk_score": 63.94059164528807,
+      "risk_level": "High",
+      "alert": true,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "false-negative",
+      "title": "Kaçırılan saldırı örneği",
+      "source_row_id": 2422395,
+      "source_day": "Wednesday",
+      "observation_group_id": "10249499293032104885",
+      "signature": "1:18:67:75:1",
+      "dataset_label": "DoS Hulk",
+      "features": {
+        " Flow Packets/s": 0.156621304,
+        " Total Fwd Packets": 5.0,
+        " Packet Length Mean": 851.9285714,
+        " Bwd Packet Length Std": 1729.380148,
+        " Down/Up Ratio": 1.0
+      },
+      "risk_score": 22.376406870969255,
+      "risk_level": "Low",
+      "alert": false,
+      "reference_policy": "Balanced"
+    },
+    {
+      "id": "policy-contrast",
+      "title": "Politika karşılaştırma örneği",
+      "source_row_id": 1674387,
+      "source_day": "Thursday",
+      "observation_group_id": "9746993233805205329",
+      "signature": "63:33:60:68:0",
+      "dataset_label": "BENIGN",
+      "features": {
+        " Flow Packets/s": 518.613723,
+        " Total Fwd Packets": 26.0,
+        " Packet Length Mean": 388.8085106,
+        " Bwd Packet Length Std": 899.9799998,
+        " Down/Up Ratio": 0.0
+      },
+      "risk_score": 53.274634837391,
+      "risk_level": "High",
+      "alert": true,
+      "reference_policy": "Balanced"
+    }
+  ]
+}

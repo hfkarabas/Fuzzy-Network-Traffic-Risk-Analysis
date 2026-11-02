@@ -3,8 +3,9 @@
 A university Fuzzy Logic project: numerical network-flow characteristics will feed
 interpretable membership functions and IF–THEN rules to produce a 0–100 risk score,
 Low/Medium/High/Critical categories and explanations. The fuzzy inference engine is
-the central algorithm. TASK 02 implements a working, explainable Mamdani engine.
-No conventional classifier, neural network or web UI is included.
+the central algorithm. TASK 02 implements a working, explainable Mamdani engine;
+TASK 03 adds a Turkish local web application around its frozen configuration.
+No conventional classifier or neural network is included.
 
 Dataset: [c01dsnap/CIC-IDS2017](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017).
 Verified source: **2,830,743 records, 79 columns, one train split, 15 labels**.
@@ -185,7 +186,7 @@ Generated predictions live in ignored `data/fuzzy_v1/`, with figures in ignored
 `reports/figures/fuzzy/`. Small model configurations, metrics, test results and
 deterministic error examples are versioned. No extra dependencies were required.
 
-## TASK 03
+## Local web application (TASK 03 complete)
 
 TASK 02B is complete: membership and rule refinements failed the preregistered
 internal-validation selection rule, so the original scoring model remains the
@@ -197,11 +198,30 @@ and metrics remain unchanged. See [TASK02B workflow](docs/task02b_workflow.md),
 [candidate comparison](reports/fuzzy/candidate_comparison.md) and
 [final decision](reports/fuzzy/task02b_final_report.md).
 
-Integrate the engine into a local web interface with validated physical-unit inputs,
-explicit invalid-input status, model identity, score/category, rule evidence and
-measurement caveats. Zero integer direction ratio does not imply no responses.
-Full-original-feature groups are disjoint across partitions, but selected-input
-patterns can overlap; within-day sessions, near-duplicates and category shift
-remain concerns. The current tests have now been examined. Any future scientific
-rule revision must use training/validation and a newly reserved final evaluation,
-rather than optimizing repeatedly against the reported test results.
+The FastAPI + React/TypeScript/Vite dashboard provides five Turkish sections,
+validated manual analysis, a risk gauge, frozen policy switching, actual Python
+membership curves/degrees, activated-rule evidence, nine real eligible examples,
+and separate historical/internal evaluation panels. Model/policy parameters and
+previous data/report artifacts remain unchanged. No fuzzy inference runs in JavaScript.
+
+```powershell
+# First installation/build with existing .venv and Node.js:
+.\scripts\start-web.ps1 -Install -Build
+# Later offline starts:
+.\scripts\start-web.ps1
+# Optional development frontend + API:
+.\scripts\start-web.ps1 -Dev
+```
+
+Production-like local UI: **http://127.0.0.1:8000**. Development UI:
+**http://127.0.0.1:5173**. Offline API documentation: **http://127.0.0.1:8000/docs**.
+The model loads once at startup. Runtime uses only a small tracked example catalog,
+frozen JSON and recorded metrics; it never loads the full dataset or needs internet.
+Builds/node_modules are ignored. See [web application guide](docs/web_application.md)
+for manual commands, strict API behavior, tests and troubleshooting.
+
+The UI is an educational demonstration, not a reliable IDS. Zero integer direction
+ratio does not prove no response. Policy targets are group-weighted estimates, not
+per-flow guarantees; both 4.91% grouped FPR and 15.71% raw-flow FPR remain visible
+in the internal-validation view. Future scientific revisions need training/validation
+work and a newly reserved evaluation, not optimization against exposed tests.

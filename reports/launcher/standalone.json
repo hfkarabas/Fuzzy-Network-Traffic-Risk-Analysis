@@ -1,0 +1,17 @@
+{
+  "backend": {
+    "ready": true,
+    "only_requested_service": true,
+    "owned_tree_stopped": true
+  },
+  "frontend": {
+    "ready": true,
+    "only_requested_service": true,
+    "owned_tree_stopped": true
+  },
+  "powershell_fallback": {
+    "ready": true,
+    "only_requested_service": true,
+    "owned_tree_stopped": true
+  }
+}

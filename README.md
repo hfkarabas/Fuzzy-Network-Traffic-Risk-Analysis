@@ -7,6 +7,31 @@ the central algorithm. TASK 02 implements a working, explainable Mamdani engine;
 TASK 03 adds a Turkish local web application around its frozen configuration.
 No conventional classifier or neural network is included.
 
+## Quick Start — one command
+
+With **Python 3.12+**, **Node.js 24.15+ (or 22.22.2+) with npm 10+**, and
+**GNU Make** installed:
+
+```sh
+make
+```
+
+First run creates `.venv` when needed, installs the pinned Python dependencies and
+locked npm dependencies, then starts FastAPI and Vite. Later runs verify and reuse
+healthy installations. Open **http://127.0.0.1:5173**; API **http://127.0.0.1:8000**.
+Press **Ctrl+C** to stop both owned services. Ordinary web startup needs no dataset,
+Git LFS download, preprocessing or training.
+
+Commands: `make setup`, `make run`, `make backend`, `make frontend`, `make test`,
+`make build`, `make check`, `make help`. Existing PowerShell startup remains available.
+On Windows GNU Make is a separate prerequisite; on macOS install Xcode Command Line
+Tools for Make and use native Intel/arm64 Python and Node. No system software is
+installed automatically. [Windows/macOS setup, local Make installation, fallback
+commands and troubleshooting](docs/launcher.md).
+
+Native Windows execution was validated; native Intel/Apple Silicon macOS and Linux
+execution remains unverified. POSIX branches have code inspection and mocked tests.
+
 Dataset: [c01dsnap/CIC-IDS2017](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017).
 Verified source: **2,830,743 records, 79 columns, one train split, 15 labels**.
 TASK 01 supplies full-data profiling, cleaning, a five-input fuzzy-ready export,

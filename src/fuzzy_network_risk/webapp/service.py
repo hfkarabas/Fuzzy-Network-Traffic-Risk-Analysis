@@ -1,10 +1,10 @@
 """Small cached data access, Python inference adapter and display serialization."""
 from pathlib import Path
 import csv
-import hashlib
 import json
 import numpy as np
 from ..engine import MamdaniRiskEngine
+from ..config_integrity import frozen_text_matches
 from ..policy import PolicyRiskModel
 from ..membership import membership
 from .content import FEATURES,TERMS,LEVELS,POLICIES,condition_text
@@ -22,7 +22,7 @@ class WebService:
         manifest=read_json(config/'selected_manifest.json')
         self.manifest=manifest
         for filename,key in [('selected_v4.json','model_sha256'),('selected_policies.json','policy_sha256')]:
-            if hashlib.sha256((config/filename).read_bytes()).hexdigest()!=manifest[key]:
+            if not frozen_text_matches((config/filename).read_bytes(),manifest[key]):
                 raise ValueError('Frozen configuration content hash mismatch')
         if self.engine.model_id!=manifest['model_id']: raise ValueError('Frozen model identity mismatch')
         self.models={name:PolicyRiskModel(self.engine,self.policy_config,name) for name in POLICIES}

@@ -1,0 +1,3 @@
+Python dependencies verified; no installation needed.
+Frontend dependencies verified; no installation needed.
+Project dependencies ready.

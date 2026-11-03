@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "baseline_commit": "ca49a972c1b29f1edd75a4b85ece09d5d5ee64ae",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "architecture": "AMD64",
+  "python": "3.14.7",
+  "python_tests_passed": 202,
+  "frontend_tests_passed": 15,
+  "failed_tests": 0,
+  "typescript_and_production_build": "PASS",
+  "fresh_unicode_path_python_and_npm_setup": "PASS",
+  "repeated_setup_skips_installation": true,
+  "native_default_make_smoke": "PASS",
+  "native_standalone_targets_and_powershell_fallback": "PASS",
+  "native_macos_intel_arm_and_linux": "NOT RUN; POSIX process behavior tested with mocks only",
+  "historical_raw_hashes_verified": 176,
+  "historical_mismatches": [],
+  "prior_tracked_files_compared": 346,
+  "intentional_preexisting_changes": [
+    ".gitignore",
+    "README.md",
+    "src/fuzzy_network_risk/webapp/service.py"
+  ],
+  "archive": {
+    "path": "datasets/cic_ids2017_v1.parquet",
+    "bytes": 276625347,
+    "sha256": "010d70b93517a13293c5128bc1b27cf0b2fdadd9352b64b1ac441b36b4110bf8"
+  },
+  "source_sha256": {
+    "Makefile": "077b23a35c561d68907fe3f25dc89760caa6b520f79c6f15cb3ff3b9a4e5b0be",
+    "scripts/dev.py": "470439a592e69d6507da3fbb3b505018507b9ba748a0e7c8913e3d7dd3475dd6",
+    "scripts/smoke_launcher.py": "f3d920ac993b4ad9764606df2e11f37bc90a8cf7e1a329cf49d036f492fdf5d7",
+    "scripts/validate_launcher.py": "690269821be597ffd23f6bcea60642195940e0bab1b8f934d4ca3dde27880b9e",
+    "src/fuzzy_network_risk/config_integrity.py": "bd53301545006ae4f89888ca2cd1aa8709d9e232e6fcfe0b692fbdb77f974690",
+    "src/fuzzy_network_risk/webapp/service.py": "0488203470aa44cc8492621f7a5df6787767bf0920bf5f34353a7d42fbfb271f",
+    "tests/test_launcher.py": "6b07da26c38d58cbbd8a43e845b0735c501ef036d7cc87e9c530d37ceb2a4674"
+  },
+  "remote_git_operations": "None",
+  "scope": "Evidence logs are from actual commands; this validator rechecks them and file preservation, not reruns installations or tests."
+}

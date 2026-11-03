@@ -198,3 +198,5 @@ reports/web/screenshots/
 !/datasets/cic_ids2017_v1.parquet
 # Local scratch outputs used to verify archive reconstruction.
 reports/lfs/screenshots/
+# Optional explicitly installed GNU Make tool; never a project runtime dependency.
+.tools/

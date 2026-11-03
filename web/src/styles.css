@@ -74,3 +74,35 @@
 .tabs { flex-wrap:wrap; row-gap:0; }
 .tabs button { max-width:100%; overflow-wrap:anywhere; }
 .rule-description { min-width:0; overflow-wrap:anywhere; }
+
+/* TASK09B: restrained SOC hierarchy; existing dark palette and risk colors. */
+body { background:#0d1420; background-image:none; }
+.card { border-color:#29384b; box-shadow:none; }
+.brand-mark { background:#173039; box-shadow:none; }
+.brand { margin-bottom:24px; }
+.brand>div:nth-child(2)>span { letter-spacing:1.2px; }
+.sidebar-model { margin-top:24px; padding:16px 13px; background:#111e2c; border:1px solid #29384b; border-radius:7px; box-shadow:none; }
+.sidebar-tail { padding-top:18px; }
+.service-status { display:inline-flex; align-items:center; gap:8px; color:#b9cbd9; font-size:11px; }
+main .page-title { margin:22px 0; }
+main .page-title h1 { font-size:24px; line-height:1.35; letter-spacing:-.3px; font-weight:650; }
+main .page-title p { margin-top:7px; font-size:12px; color:#96a9bf; }
+.overview-links { margin-top:22px; }
+.overview-links h2 { margin-top:12px; font-size:17px; }
+.overview-links .primary-button { margin-top:18px; }
+.overview-stats strong { font-size:28px; }
+.primary-button { background:#17444b; box-shadow:none; }
+.primary-button:hover:not(:disabled) { background:#20545b; }
+.status-dot { box-shadow:none; }
+.result-content .score-note { font-size:11px; margin:14px 0; }
+.learning-copy { padding-top:16px; }
+.model-comparison { margin-top:22px; padding:20px 24px; }
+.model-comparison>summary { cursor:pointer; color:#cbd8e5; font-size:13px; font-weight:600; }
+.model-comparison>.footnote { margin:15px 0; }
+.model-comparison .rule-list { margin-top:15px; }
+.system-api-link { margin:20px 23px; }
+.live-controls h2,.live-summary h2,.live-results h2 { font-size:16px; }
+.live-metrics>span { padding:10px 12px; border:1px solid #29384b; border-radius:6px; font-size:12px; }
+.live-metrics>span>b { margin-left:6px; color:#dce7f2; }
+.page-footer { border-top:1px solid #263447; padding-top:18px; }
+@media(max-width:720px) { .service-status { font-size:10px; max-width:160px; }.overview-links>.card { padding:20px; }main .page-title h1 { font-size:22px; }.model-comparison { padding:18px 16px; }.sidebar-model { margin-top:20px; } }

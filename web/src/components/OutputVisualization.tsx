@@ -62,8 +62,8 @@ export default function OutputVisualization({ result }: { result: Analysis | nul
     return () => controller.abort()
   }, [key])
   if (!key) return null
-  return localize(<Card className="output-visualization"><div className="card-heading"><h2>Bulanık çıktı ve durulaştırma</h2><span className="tiny-label">PYTHON · CENTROID</span></div><div className="output-body">
+  return localize(<Card className="output-visualization"><div className="card-heading"><h2>Bulanık çıktı ve durulaştırma</h2><span className="tiny-label">CENTROID</span></div><div className="output-body">
     {state.key === key && state.output ? <OutputChart output={state.output} /> : state.key === key && state.error ? <p role="status">Çıktı grafiği alınamadı: {state.error} Mevcut risk sonucu değiştirilmedi.</p> : <p role="status">Çıktı kümesi sunucudan alınıyor…</p>}
-    <p className="footnote">Kesikli eğriler modelin çıktı üyelikleri; dolgu etkin kurallarla oluşan birleşik kümedir. Beyaz çizgi, aynı Python motorunun ağırlık merkeziyle ürettiği kesin puandır. Grafik bir saldırı olasılığı göstermez.</p>
+    <p className="footnote">Kesikli: çıktı üyelikleri · Dolgu: birleşik çıktı · Beyaz: ağırlık merkezi.</p>
   </div></Card>)
 }

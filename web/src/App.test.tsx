@@ -45,10 +45,10 @@ describe('actual-response UI integration', () => {
     installAPI(); render(<App />)
     const expected = fixture.analyses['policy-contrast'].Balanced
     await screen.findByText('Alarm üretildi')
-    expect(screen.getByRole('heading', { name: 'Trafiği ölçün. Kararı anlayın.' })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'Risk Analizi' })).toBeVisible()
     expect(screen.getByRole('img', { name: /Risk puanı/ })).toHaveAccessibleName(`Risk puanı ${new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 2 }).format(expected.risk_score!)} / 100`)
     expect(screen.getAllByRole('img', { name: /sunucudan alınan üyelik/ })).toHaveLength(5)
-    expect(screen.getByText(/Puan bir/)).toHaveTextContent('saldırı olasılığı değildir')
+    expect(screen.getByText('Risk puanı saldırı olasılığı değildir.')).toHaveTextContent('saldırı olasılığı değildir')
   })
   it('switches policy through HTTP without changing the fuzzy score', async () => {
     const server = installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
@@ -64,7 +64,7 @@ describe('actual-response UI integration', () => {
     await userEvent.click(screen.getByRole('tab', { name: /Etkin kurallar/ }))
     const first = fixture.analyses['policy-contrast'].Balanced.activated_rules[0]
     expect(screen.getByText(first.text_tr)).toBeVisible()
-    expect(screen.getByText(first.reason_key)).toBeVisible()
+    expect(screen.getByText(first.id)).toBeVisible()
   })
   it('resets and rejects missing/negative input without sending a prediction', async () => {
     const server = installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
@@ -77,16 +77,16 @@ describe('actual-response UI integration', () => {
   })
   it('filters real error examples and keeps historical labels separate', async () => {
     installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
-    await userEvent.click(screen.getByRole('link', { name: 'Veri Örnekleri' }))
+    await userEvent.click(screen.getByRole('link', { name: 'Kayıtlı Trafik' }))
     await userEvent.click(screen.getByRole('button', { name: 'Hatalı kararlar' }))
-    expect(screen.getByRole('heading', { name: 'Yanlış alarm örneği' })).toBeVisible()
-    expect(screen.getByRole('heading', { name: 'Kaçırılan saldırı örneği' })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'Yanlış alarm kaydı' })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'Kaçırılan saldırı kaydı' })).toBeVisible()
     expect(screen.getAllByRole('button', { name: 'Analizde aç' })).toHaveLength(2)
   })
   it('distinguishes historical tests from group-weighted internal validation', async () => {
     installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
     await userEvent.click(screen.getByRole('link', { name: 'Model Performansı' }))
-    await userEvent.click(screen.getByRole('button', { name: 'TASK 02B · İç doğrulama' }))
+    await userEvent.click(screen.getByRole('button', { name: 'İç doğrulama' }))
     expect(screen.getByText('İÇ DOĞRULAMA · BAĞIMSIZ TEST DEĞİL')).toBeVisible()
     expect(screen.getByText('Grup ağırlıklı oran ile akış bazındaki oran aynı değildir.')).toBeVisible()
     expect(screen.getByText('15,708%')).toBeVisible()
@@ -96,12 +96,12 @@ describe('actual-response UI integration', () => {
     await screen.findByRole('heading', { name: 'Yerel sunucuya bağlanılamadı' })
     expect(screen.getByRole('button', { name: 'Yeniden dene' })).toBeVisible()
   })
-  it('shows TASK04 negative findings and identifies reused validation', async () => {
+  it('keeps recorded model metrics accessible without development framing', async () => {
     installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
     await userEvent.click(screen.getByRole('link', { name: 'Model Performansı' }))
-    expect(screen.getByRole('heading', { name: 'TASK 04 · Bilimsel aday karşılaştırması' })).toBeVisible()
-    expect(screen.getByText(/Hiçbir aday terfi ölçütünü geçmedi/)).toBeVisible()
-    expect(screen.getByText(/Yeniden kullanılan iç doğrulama/)).toBeVisible()
+    expect(screen.getByText('Kayıtlı değerlendirmeler; canlı ortam başarısını göstermez.')).toBeVisible()
+    await userEvent.click(screen.getByText('Kayıtlı model karşılaştırması'))
+    expect(screen.getByText('Grup ağırlıklı oranlar · dengeli politika · kaydedilmiş sonuçlar')).toBeVisible()
     expect(screen.getByText('D_combined')).toBeVisible()
   })
   it('rejects malformed API prediction data rather than drawing a fake score', async () => {
@@ -126,7 +126,7 @@ describe('actual-response UI integration', () => {
   })
   it('explains all six inference steps through the risk score', async () => {
     installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
-    await userEvent.click(screen.getByRole('tab', { name: 'Nasıl çalışır?' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'İşlem akışı' }))
     expect(screen.getByText('06')).toBeVisible()
     expect(screen.getByText('0–100 · dilsel seviye')).toBeVisible()
   })

@@ -34,8 +34,8 @@ execution remains unverified. POSIX branches have code inspection and mocked tes
 
 Dataset: [c01dsnap/CIC-IDS2017](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017).
 
-Interface languages: **Türkçe / English**. Use the full-width globe button above
-the sidebar research notice; Turkish is the initial default and your selection
+Interface languages: **Türkçe / English**. Use the full-width globe button at the bottom of
+the sidebar; Turkish is the initial default and your selection
 is remembered locally. [Localization behavior and development guide](docs/localization.md).
 
 ## Optional live monitoring (TASK 07)

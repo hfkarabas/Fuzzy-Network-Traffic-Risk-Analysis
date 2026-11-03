@@ -462,12 +462,81 @@ export const english = {
   "Eğitim amaçlı, dondurulmuş Mamdani çıkarımı. Puan saldırı olasılığı değildir.": "Educational frozen Mamdani inference. Scores are not attack probabilities.",
   "Minimum kırpma": "Minimum clipping",
   "Kart sonuçları": "Card results use the",
-  "akış": "flows"
+  "akış": "flows",
+  "Güvenlik Özeti": "Security Overview",
+  "Risk Analizi": "Risk Analysis",
+  "Kayıtlı Trafik": "Recorded Traffic",
+  "Sistem Bilgileri": "System Information",
+  "Ağ Güvenliği": "Network Security",
+  "RİSK MOTORU": "RISK ENGINE",
+  "Analiz motoru hazır": "Analysis engine ready",
+  "Servis bağlantısı yok": "Service unavailable",
+  "Servis yükleniyor": "Loading service",
+  "Kayıtlı değerlendirmeler; canlı ortam başarısını göstermez.": "Recorded evaluations; not verified live-deployment performance.",
+  "Gruplu değerlendirme": "Grouped evaluation",
+  "Gün bazlı değerlendirme": "Day-based evaluation",
+  "İç doğrulama": "Internal validation",
+  "KAYITLI TEST": "RECORDED TEST",
+  "Akış ağırlıklı sonuçlar": "Flow-weighted results",
+  "Grup ağırlıklı sonuçlar · üç kat ortalaması": "Group-weighted results · three-fold mean",
+  "Akış bazlı FPR:": "Flow-weighted FPR:",
+  "Duyarlılık:": "Recall:",
+  ". Katlara ayrı eşikler uygulanmıştır.": ". Separate thresholds were applied per fold.",
+  "Kat eşikleriyle birleştirilmiş ham akış sayıları": "Pooled raw flow counts using fold-specific thresholds",
+  "Değerlendirme kapsamı": "Evaluation scope",
+  "Kayıtlı sonuçlar canlı yakalama performansını doğrulamaz.": "Recorded results do not establish live capture performance.",
+  "Trafik dağılımı, senaryo değişimi ve kayıt bağımlılıkları sonuçları etkiler.": "Traffic distribution, scenario shifts and record dependencies affect these results.",
+  "Grup ağırlıklı oranlar ham akış matrisiyle doğrudan karşılaştırılmamalıdır.": "Group-weighted rates should not be directly compared with the raw flow matrix.",
+  "Kayıtlı model karşılaştırması": "Recorded model comparison",
+  "Grup ağırlıklı oranlar · dengeli politika · kaydedilmiş sonuçlar": "Group-weighted rates · balanced policy · recorded results",
+  "Analiz motoru ve trafik kayıtları": "Analysis engine and traffic records",
+  "Girdi ölçümü": "Input measurements",
+  "Risk kuralı": "Risk rules",
+  "Trafik kaydı": "Traffic records",
+  "Arayüz seçin ve yetkili izlemeyi başlatın.": "Select an interface and start authorized monitoring.",
+  "İzleme panelini aç": "Open monitoring",
+  "Kayıtlı akışları risk, ölçüm ve kurallarıyla inceleyin.": "Inspect recorded flows, risk scores, measurements and rules.",
+  "Trafik kayıtlarını aç": "Open traffic records",
+  "Kayıtlı trafik örneklerinden seçilmiş analizler.": "Analyses selected from recorded traffic samples.",
+  "Trafik kaydı seçin": "Select a traffic record",
+  "Kayıt No.": "Record ID",
+  "KAYIT #": "RECORD #",
+  "Kayıt etiketi": "Recorded label",
+  "AKIŞ GİRDİLERİ": "FLOW INPUTS",
+  "Analiz yapılandırması": "Analysis configuration",
+  "Alarm politikaları": "Alert policies",
+  "Üyelik fonksiyonları": "Membership functions",
+  "Risk puanı · 0–100": "Risk score · 0–100",
+  "Risk puanı saldırı olasılığı değildir.": "A risk score is not an attack probability.",
+  "Baskın kurallar:": "Dominant rules:",
+  "Model": "Model",
+  "Kural ve üyelik analizi": "Rule and membership analysis",
+  "İşlem akışı": "Processing stages",
+  "Etkinlik gücüne göre sıralı": "Sorted by activation strength",
+  "AND: minimum · OR: maksimum · Birleştirme: maksimum · Durulaştırma: ağırlık merkezi": "AND: minimum · OR: maximum · Aggregation: maximum · Defuzzification: centroid",
+  "IPv4 TCP/UDP akışlarını izleyin.": "Monitor IPv4 TCP/UDP flows.",
+  "Yetkili arayüzü seçin. Yakalama yalnızca Başlat ile açılır.": "Select an authorized interface. Capture starts only when you select Start.",
+  "Seçili kaynağı izlemeye yetkiliyim.": "I am authorized to monitor the selected source.",
+  "Sonuçlar akış sonlandığında güncellenir. Sayfa değişiminde izleme devam eder; Durdur ile sonlandırın.": "Results update when flows finalize. Monitoring continues across pages; use Stop to end it.",
+  "AKIŞ DETAYI": "FLOW DETAILS",
+  "Akış ayrıntısı ·": "Flow details ·",
+  "Yalnızca gözlemlenen bölüm puanlandı; tam bağlantı verisi olmayabilir.": "Only the observed segment was scored; full connection data may be unavailable.",
+  "Tam değer için ölçümün üzerine gelin.": "Hover over a measurement for its full value.",
+  "Kesikli: çıktı üyelikleri · Dolgu: birleşik çıktı · Beyaz: ağırlık merkezi.": "Dashed: output memberships · Fill: aggregate · White: centroid.",
+  "Analiz ediliyor…": "Analyzing…",
+  "Ölçümleri girin veya bir trafik kaydı seçin.": "Enter measurements or select a traffic record.",
+  "kural": "rules"
 } as const
 
 export const labels = {
-  "ui.switchToEnglish": { "tr": "İngilizceye geç", "en": "Switch to English" },
-  "ui.switchToTurkish": { "tr": "Türkçeye geç", "en": "Switch to Turkish" },
+  "ui.switchToEnglish": {
+    "tr": "İngilizceye geç",
+    "en": "Switch to English"
+  },
+  "ui.switchToTurkish": {
+    "tr": "Türkçeye geç",
+    "en": "Switch to Turkish"
+  },
   "risk.low": {
     "tr": "Düşük",
     "en": "Low"
@@ -587,5 +656,41 @@ export const labels = {
   "replay_completed": {
     "tr": "Sentetik replay tamamlandı",
     "en": "Synthetic replay completed"
+  },
+  "Düşük risk örneği": {
+    "tr": "Düşük risk kaydı",
+    "en": "Low-risk record"
+  },
+  "Orta risk örneği": {
+    "tr": "Orta risk kaydı",
+    "en": "Medium-risk record"
+  },
+  "Yüksek risk örneği": {
+    "tr": "Yüksek risk kaydı",
+    "en": "High-risk record"
+  },
+  "Kritik risk örneği": {
+    "tr": "Kritik risk kaydı",
+    "en": "Critical-risk record"
+  },
+  "Politika karşılaştırma örneği": {
+    "tr": "Politika karşılaştırma kaydı",
+    "en": "Policy comparison record"
+  },
+  "Yanlış alarm örneği": {
+    "tr": "Yanlış alarm kaydı",
+    "en": "False-alarm record"
+  },
+  "Kaçırılan saldırı örneği": {
+    "tr": "Kaçırılan saldırı kaydı",
+    "en": "Missed-attack record"
+  },
+  "Veri kümesinin dışa aktardığı tam sayı geri/ileri paket oranı.": {
+    "tr": "Tam sayı geri/ileri paket oranı.",
+    "en": "Integer backward/forward packet ratio."
+  },
+  "TASK 04 · korunan Mamdani v1": {
+    "tr": "Mamdani v1",
+    "en": "Mamdani v1"
   }
 } as const

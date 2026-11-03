@@ -1,7 +1,7 @@
 # Turkish / English interface
 
 Turkish is the default for a new visitor, regardless of browser language. Use the
-globe button **directly above the sidebar's research notice**: it displays **English**
+globe button **at the bottom of the sidebar**: it displays **English**
 in Turkish mode and **Türkçe** in English mode. It uses the same full-width row,
 padding, radius and typography as sidebar navigation. The responsive sidebar and
 all existing route hashes remain unchanged.

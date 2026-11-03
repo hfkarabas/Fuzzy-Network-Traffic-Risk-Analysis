@@ -44,7 +44,7 @@ it('keeps a prominent partial-segment warning and reason while allowing valid gr
   api(); render(<LiveFlowDetail flow={{ ...flow, provisional: true, finalization: 'monitoring_stopped' }} data={data} policy="Balanced" onClose={() => {}} />)
   expect(screen.getAllByText('Kısmi akış tahmini')).toHaveLength(2)
   expect(screen.getByText('İzleme durduruldu')).toBeVisible()
-  expect(screen.getByText(/Puan deneyseldir/)).toBeVisible()
+  expect(screen.getByText(/tam bağlantı verisi olmayabilir/)).toBeVisible()
   await screen.findByTestId('output-centroid')
 })
 

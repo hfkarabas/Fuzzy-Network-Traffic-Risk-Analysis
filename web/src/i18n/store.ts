@@ -9,7 +9,7 @@ let language: Language = readLanguage()
 function documentLanguage() {
   if (typeof document !== 'undefined') {
     document.documentElement.lang = language
-    document.title = language === 'tr' ? 'Bulanık Ağ Trafiği Risk Analizi' : 'Fuzzy Network Traffic Risk Analysis'
+    document.title = 'Fuzzy Network Security'
   }
 }
 documentLanguage()

@@ -47,7 +47,7 @@ it('preserves historical score, category and exact selected policy threshold', (
   expect(screen.getByRole('img', { name: /Risk puanı/ })).toBeVisible()
   expect(screen.getByText('Alarm üretildi')).toBeVisible()
   expect(screen.getByText('Yüksek risk')).toBeVisible()
-  expect(screen.getByText(analysis.explanation_tr)).toBeVisible()
+  expect(screen.getByText('Baskın kurallar: ' + analysis.activated_rules.slice(0, 3).map(r => r.id).join(' · '))).toBeVisible()
 })
 
 it('draws the actual aggregate, four output curves and exact backend centroid marker', () => {

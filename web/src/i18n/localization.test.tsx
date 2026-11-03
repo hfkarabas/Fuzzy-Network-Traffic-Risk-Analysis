@@ -53,21 +53,21 @@ function untranslated() {
 beforeEach(() => { localStorage.clear(); act(() => setLanguage('tr')); window.location.hash = '#analysis' })
 afterEach(() => { cleanup(); act(() => setLanguage('tr')); localStorage.clear(); vi.unstubAllGlobals() })
 
-it('defaults to Turkish, places a navigation-sized language action directly above the corrected notice and persists selection', async () => {
+it('defaults to Turkish, places a navigation-sized language action at the sidebar footer without an information box and persists selection', async () => {
   const mock = installAPI(); const { unmount } = render(<App />)
   await screen.findByText('Alarm üretildi')
   await screen.findByTestId('output-centroid')
   expect(document.documentElement.lang).toBe('tr')
   const button = screen.getByRole('button', { name: 'İngilizceye geç' })
   expect(button).toHaveTextContent('English')
-  expect(button.parentElement?.lastElementChild).toHaveClass('sidebar-bottom')
-  expect(button.nextElementSibling).toHaveTextContent('Canlı yakalama isteğe bağlıdır')
+  expect(button.parentElement).toHaveClass('sidebar-tail')
+  expect(document.querySelector('.sidebar-bottom')).toBeNull()
   expect(screen.queryByText('Yerel çalışır. Paket yakalamaz.')).not.toBeInTheDocument()
   const before = mock.mock.calls.filter(([url]) => String(url) === '/api/analyze').length
   const allBefore = mock.mock.calls.length
   fireEvent.click(button)
   expect(document.documentElement.lang).toBe('en')
-  expect(screen.getByRole('heading', { name: 'Measure traffic. Understand the decision.' })).toBeVisible()
+  expect(screen.getByRole('heading', { name: 'Risk Analysis' })).toBeVisible()
   expect(screen.getByRole('button', { name: 'Switch to Turkish' })).toHaveTextContent('Türkçe')
   expect(localStorage.getItem(LANGUAGE_KEY)).toBe('en')
   expect(readLanguage()).toBe('en')
@@ -75,21 +75,22 @@ it('defaults to Turkish, places a navigation-sized language action directly abov
   expect(mock.mock.calls).toHaveLength(allBefore)
   unmount(); render(<App />)
   await screen.findByText('Alert raised')
-  expect(screen.getByRole('heading', { name: 'Measure traffic. Understand the decision.' })).toBeVisible()
+  expect(screen.getByRole('heading', { name: 'Risk Analysis' })).toBeVisible()
 })
 
 it('translates every route, visible backend metadata and accessible labels without reloading', async () => {
   installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
   fireEvent.click(screen.getByRole('button', { name: 'İngilizceye geç' }))
   const routes = [
-    ['Overview', /More than a score/], ['Dataset Examples', /Real flows. Different outcomes/],
-    ['Model Performance', /A working engine with visible limitations/], ['About the System', /A transparent engineering experiment/],
-    ['Live Traffic', /^Live Traffic$/], ['Traffic Analysis', /Measure traffic. Understand the decision/],
+    ['Security Overview', /^Security Overview$/], ['Recorded Traffic', /^Recorded Traffic$/],
+    ['Model Performance', /^Model Performance$/], ['System Information', /^System Information$/],
+    ['Live Traffic', /^Live Traffic$/], ['Risk Analysis', /^Risk Analysis$/],
   ] as const
   for (const [link, heading] of routes) {
     fireEvent.click(screen.getByRole('link', { name: link }))
     await screen.findByRole('heading', { name: heading })
     await waitFor(() => expect(untranslated()).toEqual([]))
+    expect(document.body.textContent).not.toMatch(/TASK\s*\d|CIC-IDS2017|FUZZY NETWORK LAB|Eğitim amaçlı|Educational research|Deneysel bir karar|experimental decision/i)
     fireEvent.click(screen.getByRole('button', { name: 'Switch to Turkish' }))
     expect(document.documentElement.lang).toBe('tr')
     fireEvent.click(screen.getByRole('button', { name: 'İngilizceye geç' }))
@@ -108,7 +109,7 @@ it('localizes memberships, rules, centroid output and live detail while preservi
   expect(untranslated()).toEqual([])
   fireEvent.click(screen.getByRole('link', { name: 'Live Traffic' }))
   fireEvent.click((await screen.findAllByRole('button', { name: 'Inspect flow' }))[0])
-  await screen.findByRole('heading', { name: 'Flow explanation · UDP' })
+  await screen.findByRole('heading', { name: 'Flow details · UDP' })
   await screen.findByTestId('output-centroid')
   expect(screen.getAllByRole('img', { name: /membership functions from the server/ })).toHaveLength(5)
   expect(screen.getByRole('heading', { name: 'Policy comparison' })).toBeVisible()
@@ -117,7 +118,7 @@ it('localizes memberships, rules, centroid output and live detail while preservi
   expect([...select.options].map(o => o.value)).toEqual(['Sensitive', 'Balanced', 'Conservative'])
   const before = mock.mock.calls.filter(([url]) => String(url) === '/api/analyze').length
   fireEvent.click(screen.getByRole('button', { name: 'Switch to Turkish' }))
-  expect(screen.getByRole('heading', { name: 'Akış açıklaması · UDP' })).toBeVisible()
+  expect(screen.getByRole('heading', { name: 'Akış ayrıntısı · UDP' })).toBeVisible()
   expect(mock.mock.calls.filter(([url]) => String(url) === '/api/analyze')).toHaveLength(before)
 })
 

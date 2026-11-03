@@ -65,7 +65,7 @@ it('labels unavailable capture and keeps explicit synthetic replay usable', asyn
   expect(screen.getByText(finished.flows[0].analysis!.activated_rules[0].text_tr)).toBeVisible()
   expect(screen.getByRole('heading', { name: 'Politika karşılaştırması' })).toBeVisible()
   const row = finished.flows[0]
-  expect(screen.getByText(row.analysis!.explanation_tr)).toBeVisible()
+  expect(screen.getByText('Baskın kurallar: ' + row.analysis!.activated_rules.slice(0, 3).map(r => r.id).join(' · '))).toBeVisible()
   fireEvent.change(screen.getByLabelText('Canlı alarm politikası'), { target: { value: 'Conservative' } })
   await waitFor(() => expect(mock.mock.calls.some(([url]) => String(url).includes('policy=Conservative'))).toBe(true))
 })
@@ -113,9 +113,9 @@ it('pins an inspected flow when polling evicts it and returns focus on close', a
   visible = { ...finished, flows: [] }
   fireEvent.click(screen.getByRole('button', { name: 'Durumu yenile' }))
   await screen.findByText('Bu oturumda henüz akış gözlemi yok.')
-  expect(screen.getByRole('heading', { name: 'Akış açıklaması · UDP' })).toBeVisible()
+  expect(screen.getByRole('heading', { name: 'Akış ayrıntısı · UDP' })).toBeVisible()
   expect(screen.getAllByRole('img', { name: /sunucudan alınan üyelik/ })).toHaveLength(5)
   fireEvent.click(screen.getByRole('button', { name: 'Akış ayrıntısını kapat' }))
-  expect(screen.queryByRole('heading', { name: 'Akış açıklaması · UDP' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('heading', { name: 'Akış ayrıntısı · UDP' })).not.toBeInTheDocument()
   expect(screen.getByRole('heading', { name: 'Son akışlar · en fazla 50 gösterilir' })).toHaveFocus()
 })

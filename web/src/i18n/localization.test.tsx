@@ -84,13 +84,13 @@ it('translates every route, visible backend metadata and accessible labels witho
   const routes = [
     ['Security Overview', /^Security Overview$/], ['Recorded Traffic', /^Recorded Traffic$/],
     ['Model Performance', /^Model Performance$/], ['System Information', /^System Information$/],
-    ['Live Traffic', /^Live Traffic$/], ['Risk Analysis', /^Risk Analysis$/],
+    ['Live Traffic', /^Live Traffic$/], ['Risk Analysis', /^Risk Analysis$/], ['Dataset Information', /^Dataset Information$/],
   ] as const
   for (const [link, heading] of routes) {
     fireEvent.click(screen.getByRole('link', { name: link }))
     await screen.findByRole('heading', { name: heading })
     await waitFor(() => expect(untranslated()).toEqual([]))
-    expect(document.body.textContent).not.toMatch(/TASK\s*\d|CIC-IDS2017|FUZZY NETWORK LAB|Eğitim amaçlı|Educational research|Deneysel bir karar|experimental decision/i)
+    if (link !== 'Dataset Information') expect(document.body.textContent).not.toMatch(/TASK\s*\d|CIC-IDS2017|FUZZY NETWORK LAB|Eğitim amaçlı|Educational research|Deneysel bir karar|experimental decision/i)
     fireEvent.click(screen.getByRole('button', { name: 'Switch to Turkish' }))
     expect(document.documentElement.lang).toBe('tr')
     fireEvent.click(screen.getByRole('button', { name: 'İngilizceye geç' }))

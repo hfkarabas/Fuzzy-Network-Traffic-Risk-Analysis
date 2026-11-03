@@ -100,6 +100,7 @@ describe('actual-response UI integration', () => {
     installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
     await userEvent.click(screen.getByRole('link', { name: 'Model Performansı' }))
     expect(screen.getByText('Kayıtlı değerlendirmeler; canlı ortam başarısını göstermez.')).toBeVisible()
+    await userEvent.click(screen.getByRole('link', { name: 'Veri Seti Bilgileri' }))
     await userEvent.click(screen.getByText('Kayıtlı model karşılaştırması'))
     expect(screen.getByText('Grup ağırlıklı oranlar · dengeli politika · kaydedilmiş sonuçlar')).toBeVisible()
     expect(screen.getByText('D_combined')).toBeVisible()

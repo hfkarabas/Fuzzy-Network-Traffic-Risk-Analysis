@@ -5,6 +5,7 @@ import { Activity, ArrowDownUp, ArrowRight, BookOpen, Check, ChevronDown, Chevro
 import { analyze, ApiError, loadData } from './api'
 import { formatNumber, formatFixed, locale } from './format'
 import LiveTraffic from './LiveTraffic'
+import DatasetInformation from './DatasetInformation'
 import { Badge, Card, StepPipeline, MembershipChart, ResultPanel, Evidence } from './components/FuzzyAnalysis'
 import OutputVisualization from './components/OutputVisualization'
 import type { Analysis, AppData, Confusion, Evaluation, Example, Feature, Flow, Level, Metrics, PolicyID } from './types'
@@ -14,7 +15,7 @@ const days: Record<string, string> = { Monday: 'Pazartesi', Tuesday: 'Salı', We
 const pages = [
   { id: 'live', title: 'Canlı Trafik', icon: Network },
   { id: 'overview', title: 'Güvenlik Özeti', icon: LayoutDashboard }, { id: 'analysis', title: 'Risk Analizi', icon: Activity },
-  { id: 'examples', title: 'Kayıtlı Trafik', icon: Database }, { id: 'evaluation', title: 'Model Performansı', icon: TrendingUp }, { id: 'about', title: 'Sistem Bilgileri', icon: BookOpen },
+  { id: 'examples', title: 'Kayıtlı Trafik', icon: Database }, { id: 'evaluation', title: 'Model Performansı', icon: TrendingUp }, { id: 'about', title: 'Sistem Bilgileri', icon: BookOpen }, { id: 'dataset', title: 'Veri Seti Bilgileri', icon: Database },
 ]
 const nf = { format: formatNumber }
 const percent = (v: number) => `${new Intl.NumberFormat(locale(), { maximumFractionDigits: 3 }).format(v * 100)}%`
@@ -33,7 +34,7 @@ function EvaluationPage({ evaluation }: { evaluation: Evaluation }) {
     <div className="metric-grid">{metricNames.map(([key, title]) => <Card key={key}><small>{title}</small><strong className={key === 'false_positive_rate' || key === 'false_negative_rate' ? 'amber-text' : ''}>{key === 'roc_auc' || key === 'f1' || key === 'pr_auc_average_precision' ? formatFixed(metrics[key] ?? 0, 4) : percent(metrics[key] ?? 0)}</strong></Card>)}</div>
     {!historic && <div className="important-note"><TriangleAlert size={20} /><div><b>Grup ağırlıklı oran ile akış bazındaki oran aynı değildir.</b><p>Akış bazlı FPR: <strong>{percent(internal.pooled_row_fpr)}</strong> · Duyarlılık: <strong>{percent(internal.pooled_row_recall)}</strong>. Katlara ayrı eşikler uygulanmıştır.</p></div></div>}
     <div className="evaluation-bottom"><Card><div className="card-heading"><h2>Karışıklık matrisi</h2><span className="tiny-label">HAM AKIŞ SAYILARI</span></div><div className="matrix"><span /><span>Alarm yok</span><span>Alarm var</span><span>BENIGN</span><div className="tn"><small>Doğru negatif</small><b>{nf.format(confusion.tn)}</b></div><div className="fp"><small>Yanlış pozitif</small><b>{nf.format(confusion.fp)}</b></div><span>Saldırı</span><div className="fn"><small>Yanlış negatif</small><b>{nf.format(confusion.fn)}</b></div><div className="tp"><small>Doğru pozitif</small><b>{nf.format(confusion.tp)}</b></div></div><p className="footnote">{historic ? 'Akış ağırlıklı sonuçlar' : 'Kat eşikleriyle birleştirilmiş ham akış sayıları'}</p></Card><Card className="limitations"><div className="card-heading"><h2>Değerlendirme kapsamı</h2></div><div className="limitation"><p>Kayıtlı sonuçlar canlı yakalama performansını doğrulamaz.</p></div><div className="limitation"><p>Trafik dağılımı, senaryo değişimi ve kayıt bağımlılıkları sonuçları etkiler.</p></div><div className="limitation"><p>Grup ağırlıklı oranlar ham akış matrisiyle doğrudan karşılaştırılmamalıdır.</p></div></Card></div>
-    {evaluation.optimization && <details className="card model-comparison"><summary>Kayıtlı model karşılaştırması</summary><p className="footnote">Grup ağırlıklı oranlar · dengeli politika · kaydedilmiş sonuçlar</p><div className="rule-list">{evaluation.optimization.candidates.map(c => <div className="rule-row" key={c.id}><span className="rule-id">{c.id.split('_')[0]}</span><div className="rule-description"><p>{c.id}</p><small>Duyarlılık {percent(c.recall)} · FPR {percent(c.fpr)} · ROC-AUC {formatFixed(c.roc_auc, 4)}</small></div><div className="rule-strength"><b>{percent(c.balanced_accuracy)}</b><small>BA ± {percent(c.balanced_accuracy_fold_sd)} kat SS</small></div></div>)}</div></details>}
+    <a className="text-button evaluation-method-link" href="#dataset">Veri ve yöntem bilgileri <ArrowRight size={15} /></a>
   </>)
 }
 export default function App() {
@@ -92,6 +93,7 @@ export default function App() {
       <main id="main-content" tabIndex={-1}>
         {startupError ? <div className="startup-error" role="alert"><TriangleAlert size={35} /><h1>Yerel sunucuya bağlanılamadı</h1><p>{startupError}</p><button className="primary-button" onClick={() => setReload(r => r + 1)}>Yeniden dene</button><small>FastAPI sunucusunu 127.0.0.1:8000 adresinde başlatın.</small></div> : !data ? <div className="startup-loading" role="status"><LoaderCircle className="spin" size={28} /><p>Model ve yerel çalışma alanı yükleniyor…</p></div> : <>
           {activePage.id === 'live' && <LiveTraffic data={data} />}
+          {activePage.id === 'dataset' && <DatasetInformation data={data} />}
           {activePage.id === 'analysis' && <>
             <div className="page-title analysis-title"><h1>Risk Analizi</h1></div>
             <div className="analysis-grid"><Card className="input-card"><div className="card-heading"><div className="heading-icon"><SlidersHorizontal size={18} /></div><h2>Akış parametreleri</h2><span className="tiny-label">AKIŞ GİRDİLERİ</span></div>

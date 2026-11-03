@@ -1,6 +1,8 @@
+import { useI18n } from './i18n'
 import { useEffect, useRef, useState } from 'react'
 import type { Analysis, AppData, Level, PolicyID } from './types'
 import LiveFlowDetail from './components/LiveFlowDetail'
+import { locale } from './format'
 
 type Device = { id: string; name: string; description: string }
 export type LiveFlow = {
@@ -37,6 +39,8 @@ async function request<T>(path: string, signal?: AbortSignal, body?: unknown, to
 }
 
 export default function LiveTraffic({ data }: { data: AppData }) {
+  const { localize } = useI18n()
+
   const [devices, setDevices] = useState<Device[]>([])
   const [discoveryError, setDiscoveryError] = useState('')
   const [mode, setMode] = useState<'capture' | 'replay'>('capture')
@@ -84,7 +88,7 @@ export default function LiveTraffic({ data }: { data: AppData }) {
   }
   const active = snapshot?.running ?? false
   const focused = selected ? snapshot?.flows.find(flow => flow.id === selected.id) ?? selected : null
-  return <>
+  return localize(<>
     <div className="page-title"><div><span className="eyebrow">YEREL · AÇIK İZİNLE · AKIŞ TABANLI</span><h1>Canlı Trafik</h1><p>IPv4 TCP/UDP akışlarını tamamlandıktan sonra mevcut bulanık modelle değerlendirin.</p></div></div>
     <section className="card live-controls">
       <h2>Yakalama denetimi</h2>
@@ -92,7 +96,7 @@ export default function LiveTraffic({ data }: { data: AppData }) {
       <div className="live-form">
         <label>Veri kaynağı<select aria-label="Veri kaynağı" value={mode} disabled={active || busy} onChange={e => setMode(e.target.value as typeof mode)}><option value="capture">Gerçek ağ yakalama</option><option value="replay">Sentetik paket replay · gerçek trafik değil</option></select></label>
         <label>Ağ arayüzü<select aria-label="Ağ arayüzü" value={device} disabled={mode === 'replay' || active || busy} onChange={e => setDevice(e.target.value)}><option value="">Arayüz seçin</option>{devices.map(i => <option key={i.id} value={i.id}>{i.name} · {i.description || i.id}</option>)}</select></label>
-        <label>Canlı alarm politikası<select aria-label="Canlı alarm politikası" value={policy} onChange={e => setPolicy(e.target.value as PolicyID)}>{(['Sensitive', 'Balanced', 'Conservative'] as PolicyID[]).map(p => <option key={p}>{p}</option>)}</select></label>
+        <label>Canlı alarm politikası<select aria-label="Canlı alarm politikası" value={policy} onChange={e => setPolicy(e.target.value as PolicyID)}>{(['Sensitive', 'Balanced', 'Conservative'] as PolicyID[]).map(p => <option key={p} value={p}>{p}</option>)}</select></label>
       </div>
       <label className="live-consent"><input type="checkbox" checked={authorized} onChange={e => setAuthorized(e.target.checked)} disabled={active || busy} />Seçtiğim kaynağı izlemeye yetkiliyim; deneysel uyumluluk sınırlarını anlıyorum.</label>
       <div className="live-buttons"><button className="primary-button" disabled={busy || active || !authorized || !snapshot || (mode === 'capture' && (!device || !!discoveryError))} onClick={() => { void command('start') }}>İzlemeyi başlat</button><button className="secondary-button" disabled={busy || !active} onClick={() => { void command('stop') }}>İzlemeyi durdur</button><button className="secondary-button" disabled={busy} onClick={() => { setError(''); setRefresh(v => v + 1) }}>Durumu yenile</button></div>
@@ -102,8 +106,8 @@ export default function LiveTraffic({ data }: { data: AppData }) {
       <p className="source-note">Tamamlanan gözlemlenmiş akışlar; anlık paket saldırı tespiti değildir. CICFlowMeter sürüm eşdeğerliği doğrulanmamıştır. İzleme sayfalar arasında devam eder; durdur düğmesi veya sunucu kapanışı sonlandırır. Tek backend süreci kullanın.</p>
     </section>
     <section className="card live-summary"><h2>Oturum istatistikleri</h2><div className="live-metrics"><span>İşlenen paket: <b>{snapshot?.counts.packets ?? 0}</b></span><span>Etkin akış: <b>{snapshot?.active_flows ?? 0}</b></span><span>Sonlandırılan: <b>{snapshot?.counts.finalized_flows ?? 0}</b></span><span>Analiz edilen: <b>{snapshot?.counts.ok ?? 0}</b></span><span>Yetersiz veri: <b>{snapshot?.counts.insufficient_data ?? 0}</b></span><span>Çıkarım başarısız: <b>{snapshot?.counts.inference_failed ?? 0}</b></span><span>Kuyruk kaybı: <b>{snapshot?.counts.queue_dropped_packets ?? 0}</b></span><span>Reddedilen paket: <b>{snapshot?.counts.rejected_packets ?? 0}</b></span>{(Object.keys(riskLabels) as Level[]).map(level => <span key={level}>{riskLabels[level]}: <b>{snapshot?.risk_distribution[level] ?? 0}</b></span>)}</div><p>Puanlar politika değişiminde sabit kalır; yalnızca alarm eşiği değişir. Risk puanı saldırı olasılığı değildir.</p></section>
-    <section className="card live-results"><h2 ref={tableTitle} tabIndex={-1}>Son akışlar · en fazla 50 gösterilir</h2>{!snapshot?.flows.length ? <p>{active ? 'Akış bekleniyor; TCP sonlanması veya 15 saniyelik boşta kalma süresi beklenebilir.' : 'Bu oturumda henüz akış gözlemi yok.'}</p> : <div className="live-table-wrap"><table><thead><tr><th>Zaman</th><th>Kaynak → Hedef</th><th>Protokol / süre</th><th>Risk</th><th>Sonlandırma</th><th>Açıklama</th></tr></thead><tbody>{snapshot.flows.map(flow => <tr key={flow.id}><td>{new Date(flow.ended_us / 1000).toLocaleTimeString('tr-TR')}</td><td>{flow.source}:{flow.source_port}<br />→ {flow.destination}:{flow.destination_port}</td><td>{flow.protocol} · {(flow.duration_us / 1e6).toFixed(3)} s</td><td>{flow.status === 'ok' && flow.analysis?.risk_score != null ? <><b>{flow.analysis.risk_score.toFixed(2)}</b> · {riskLabels[flow.analysis.risk_level!]}<br />{flow.analysis.alert ? 'Alarm var' : 'Alarm yok'}</> : flow.status === 'insufficient_data' ? 'Yetersiz veri · puan yok' : 'Çıkarım başarısız · puan yok'}</td><td>{flow.finalization}{flow.provisional && <b> · Kısmi akış tahmini</b>}</td><td><button className="text-button" onClick={event => { detailTrigger.current = event.currentTarget; setSelected(flow) }}>Akışı incele</button></td></tr>)}</tbody></table></div>}</section>
+    <section className="card live-results"><h2 ref={tableTitle} tabIndex={-1}>Son akışlar · en fazla 50 gösterilir</h2>{!snapshot?.flows.length ? <p>{active ? 'Akış bekleniyor; TCP sonlanması veya 15 saniyelik boşta kalma süresi beklenebilir.' : 'Bu oturumda henüz akış gözlemi yok.'}</p> : <div className="live-table-wrap"><table><thead><tr><th>Zaman</th><th>Kaynak → Hedef</th><th>Protokol / süre</th><th>Risk</th><th>Sonlandırma</th><th>Açıklama</th></tr></thead><tbody>{snapshot.flows.map(flow => <tr key={flow.id}><td>{new Date(flow.ended_us / 1000).toLocaleTimeString(locale())}</td><td>{flow.source}:{flow.source_port}<br />→ {flow.destination}:{flow.destination_port}</td><td>{flow.protocol} · {(flow.duration_us / 1e6).toFixed(3)} s</td><td>{flow.status === 'ok' && flow.analysis?.risk_score != null ? <><b>{flow.analysis.risk_score.toFixed(2)}</b> · {riskLabels[flow.analysis.risk_level!]}<br />{flow.analysis.alert ? 'Alarm var' : 'Alarm yok'}</> : flow.status === 'insufficient_data' ? 'Yetersiz veri · puan yok' : 'Çıkarım başarısız · puan yok'}</td><td>{flow.finalization}{flow.provisional && <b> · Kısmi akış tahmini</b>}</td><td><button className="text-button" onClick={event => { detailTrigger.current = event.currentTarget; setSelected(flow) }}>Akışı incele</button></td></tr>)}</tbody></table></div>}</section>
     {focused && <LiveFlowDetail flow={focused} data={data} policy={policy} onClose={() => { setSelected(null); if (detailTrigger.current?.isConnected) detailTrigger.current.focus(); else tableTitle.current?.focus() }} />}
     {!!snapshot?.errors.length && <section className="card"><h2>Yakalama / çıkarım bildirimleri</h2><ul>{snapshot.errors.map((e, index) => <li key={index}>{e.code}{e.message ? ` · ${e.message}` : ''}</li>)}</ul></section>}
-  </>
+  </>)
 }

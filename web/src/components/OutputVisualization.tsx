@@ -1,3 +1,4 @@
+import { useI18n } from '../i18n'
 import { useEffect, useState } from 'react'
 import { getJSON } from '../api'
 import { formatNumber } from '../format'
@@ -23,9 +24,11 @@ export function validateOutput(value: OutputData, model: string, score: number):
 }
 
 export function OutputChart({ output }: { output: OutputData }) {
+  const { localize } = useI18n()
+
   const points = (degrees: number[]) => degrees.map((d, i) => `${28 + output.grid[i] * 3.14},${135 - d * 105}`).join(' ')
   const x = 28 + output.centroid! * 3.14
-  return <>
+  return localize(<>
     <svg className="output-chart" viewBox="0 0 360 185" role="img" aria-label={`Çıktı üyelikleri, birleşik küme ve ağırlık merkezi: ${formatNumber(output.centroid!)} / 100`}>
       <title>Sunucunun gerçek Mamdani çıktı kümesi ve centroid sonucu</title>
       {[0, .5, 1].map(d => <g key={d}><line x1="28" x2="342" y1={135 - d * 105} y2={135 - d * 105} stroke="#33435a" /><text x="18" y={139 - d * 105} textAnchor="end" fill="#9eafc5" fontSize="11">{d}</text></g>)}
@@ -38,10 +41,12 @@ export function OutputChart({ output }: { output: OutputData }) {
       <text x="185" y="178" textAnchor="middle" fill="#b7cbe1" fontSize="11">Risk puanı (0–100)</text><text x="5" y="20" fill="#b7cbe1" fontSize="11">µ</text>
     </svg>
     <div className="output-legend">{output.curves.map(c => <span key={c.level}><i style={{ background: colors[c.level] }} />{labels[c.level]}</span>)}<span><i className="aggregate-key" />Birleşik çıktı</span><span>│ Ağırlık merkezi</span></div>
-  </>
+  </>)
 }
 
 export default function OutputVisualization({ result }: { result: Analysis | null }) {
+  const { localize } = useI18n()
+
   const valid = result?.status === 'ok' && result.risk_score !== null
   const key = valid ? JSON.stringify({ model: result.model_id, score: result.risk_score, features: result.input_values }) : ''
   const [state, setState] = useState<{ key: string; output?: OutputData; error?: string }>({ key: '' })
@@ -57,8 +62,8 @@ export default function OutputVisualization({ result }: { result: Analysis | nul
     return () => controller.abort()
   }, [key])
   if (!key) return null
-  return <Card className="output-visualization"><div className="card-heading"><h2>Bulanık çıktı ve durulaştırma</h2><span className="tiny-label">PYTHON · CENTROID</span></div><div className="output-body">
+  return localize(<Card className="output-visualization"><div className="card-heading"><h2>Bulanık çıktı ve durulaştırma</h2><span className="tiny-label">PYTHON · CENTROID</span></div><div className="output-body">
     {state.key === key && state.output ? <OutputChart output={state.output} /> : state.key === key && state.error ? <p role="status">Çıktı grafiği alınamadı: {state.error} Mevcut risk sonucu değiştirilmedi.</p> : <p role="status">Çıktı kümesi sunucudan alınıyor…</p>}
     <p className="footnote">Kesikli eğriler modelin çıktı üyelikleri; dolgu etkin kurallarla oluşan birleşik kümedir. Beyaz çizgi, aynı Python motorunun ağırlık merkeziyle ürettiği kesin puandır. Grafik bir saldırı olasılığı göstermez.</p>
-  </div></Card>
+  </div></Card>)
 }

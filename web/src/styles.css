@@ -60,3 +60,17 @@
 .live-flow-detail .rule-description { min-width:0; overflow-wrap:anywhere; }
 .live-flow-detail .analysis-grid>* { min-width:0; }
 @media(max-width:720px) { .live-flow-metadata dl,.policy-comparison-grid { grid-template-columns:1fr; } .output-body { padding:16px; } .live-input-values dl { padding:8px 16px; } .live-input-values dl>div { flex-wrap:wrap; gap:8px; } .live-input-values dd { text-align:left; } }
+
+/* TASK09A: language action occupies a full sidebar navigation-sized row. */
+.sidebar-tail { margin-top:auto; padding-top:22px; width:100%; min-width:0; }
+.sidebar-tail .sidebar-bottom { margin-top:12px; }
+.language-switcher { width:100%; display:flex; align-items:center; gap:12px; min-height:44px; padding:12px 13px; border:1px solid transparent; border-radius:7px; color:#a1aec1; background:transparent; font-family:inherit; font-size:12px; font-weight:500; text-align:left; cursor:pointer; transition:background .15s,color .15s; }
+.language-switcher:hover { background:#152333; color:#dce9f4; }
+.language-switcher:focus-visible { outline:2px solid #6ee2da; outline-offset:2px; }
+.language-switcher svg { flex-shrink:0; }
+.sidebar { overflow-y:auto; }
+.sidebar nav a span { min-width:0; overflow-wrap:anywhere; }
+.sidebar-bottom small { line-height:1.6; }
+.tabs { flex-wrap:wrap; row-gap:0; }
+.tabs button { max-width:100%; overflow-wrap:anywhere; }
+.rule-description { min-width:0; overflow-wrap:anywhere; }

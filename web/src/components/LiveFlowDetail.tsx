@@ -1,3 +1,4 @@
+import { useI18n } from '../i18n'
 import { useEffect, useRef, useState } from 'react'
 import { analyze } from '../api'
 import { formatNumber } from '../format'
@@ -17,6 +18,8 @@ const quality: Record<string, string> = {
 }
 
 export default function LiveFlowDetail({ flow, data, policy, onClose }: { flow: LiveFlow; data: AppData; policy: PolicyID; onClose: () => void }) {
+  const { localize } = useI18n()
+
   const title = useRef<HTMLHeadingElement>(null)
   const eligible = flow.status === 'ok' && flow.analysis?.status === 'ok' && flow.quality_errors.length === 0
   const compatible = flow.analysis?.model_id === data.model.model_id
@@ -34,7 +37,7 @@ export default function LiveFlowDetail({ flow, data, policy, onClose }: { flow: 
     }).catch(error => { if (!controller.signal.aborted) setFetched({ key, error: (error as Error).message }) })
     return () => controller.abort()
   }, [key, eligible, compatible, base, flow.features, flow.analysis, policy, data.model.model_id])
-  return <section className="live-flow-detail" aria-labelledby="live-detail-title">
+  return localize(<section className="live-flow-detail" aria-labelledby="live-detail-title">
     <div className="live-detail-heading"><div><span className="eyebrow">SEÇİLEN AKIŞ · BULANIK ANALİZ</span><h2 id="live-detail-title" ref={title} tabIndex={-1}>Akış açıklaması · {flow.protocol}</h2></div><button className="secondary-button" onClick={onClose}>Akış ayrıntısını kapat</button></div>
     {flow.observation_mode === 'replay' && <p className="scope-tag">SENTETİK REPLAY · GERÇEK TRAFİK DEĞİL</p>}
     {flow.provisional && <div className="important-note"><div><b>Kısmi akış tahmini</b><p>Akışın yalnızca gözlemlenen bölümü değerlendirildi. Puan deneyseldir; tamamlanmış bir bağlantıyı veya güvenliği kanıtlamaz.</p></div></div>}
@@ -53,7 +56,7 @@ export default function LiveFlowDetail({ flow, data, policy, onClose }: { flow: 
     {eligible && compatible && flow.analysis?.status === 'ok' && <><Evidence result={result ?? flow.analysis} data={data} idPrefix="live-" /><OutputVisualization result={flow.analysis} /></>}
     {eligible && compatible && <Card className="live-policy-comparison"><div className="card-heading"><h2>Politika karşılaştırması</h2><span className="tiny-label">AYNI PUAN · FARKLI ALARM EŞİĞİ</span></div><div className="policy-comparison-grid">{data.policies.map(p => {
       const decision = flow.policy_comparison[p.id]
-      return <div key={p.id} className={p.id === policy ? 'selected' : ''}><h3>{p.title} <small>{p.id}</small></h3>{decision ? <><p>Puan: <b title={String(decision.risk_score)}>{formatNumber(decision.risk_score)}</b></p><p>Eşik: {formatNumber(decision.threshold)}</p><strong>{decision.alert ? 'Alarm var' : 'Alarm yok'}</strong></> : <p>Bu politika sonucu kullanılamıyor.</p>}</div>
+      return <div key={p.id} className={p.id === policy ? 'selected' : ''}><h3>{p.title} <small data-i18n-skip>{p.id}</small></h3>{decision ? <><p>Puan: <b title={String(decision.risk_score)}>{formatNumber(decision.risk_score)}</b></p><p>Eşik: {formatNumber(decision.threshold)}</p><strong>{decision.alert ? 'Alarm var' : 'Alarm yok'}</strong></> : <p>Bu politika sonucu kullanılamıyor.</p>}</div>
     })}</div><p className="footnote">Risk kategorisi ve alarm kararı farklıdır. Hiçbir puan saldırı olasılığı değildir.</p></Card>}
-  </section>
+  </section>)
 }

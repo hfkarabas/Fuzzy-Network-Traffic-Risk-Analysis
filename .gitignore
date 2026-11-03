@@ -193,3 +193,8 @@ node_modules/
 web/dist/
 web/coverage/
 reports/web/screenshots/
+# Git LFS distribution: allow only the complete, lossless source artifact.
+/datasets/*
+!/datasets/cic_ids2017_v1.parquet
+# Local scratch outputs used to verify archive reconstruction.
+reports/lfs/screenshots/

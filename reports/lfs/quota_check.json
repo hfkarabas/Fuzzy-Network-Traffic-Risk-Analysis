@@ -1,0 +1,22 @@
+{
+  "status": "VERIFIED_BEFORE_DATASET_STAGING",
+  "checked_on": "2026-11-03",
+  "repository": "hfkarabas/Fuzzy-Network-Traffic-Risk-Analysis",
+  "owner_type": "personal account",
+  "plan_observed": "GitHub Free",
+  "evidence": "Read-only authenticated Chrome account billing overview, Git LFS tab, current month. Connector metadata identified the same repository owner but did not expose billing.",
+  "storage_usage_display": "0 GB used / 10 GB included",
+  "bandwidth_usage_display": "0 GB used / 10 GB included",
+  "documentation_included_storage_gib": 10,
+  "documentation_included_download_bandwidth_gib": 10,
+  "per_file_limit_conservative_bytes": 2000000000,
+  "selected_object_bytes": 276625347,
+  "file_size_and_current_capacity_compatible": true,
+  "billing_settings_changed": false,
+  "caveat": "UI usage is rounded and not a byte-exact balance or a quota reservation. Recheck before the user's upload; other repositories, downloads and later full-file versions consume owner-level allowance.",
+  "sources": [
+    "https://github.com/settings/billing",
+    "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage",
+    "https://docs.github.com/en/billing/concepts/product-billing/git-lfs"
+  ]
+}

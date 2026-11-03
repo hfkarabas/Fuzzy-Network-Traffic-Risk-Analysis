@@ -274,3 +274,32 @@ Reproduce the research with the existing `.venv` and local source cache:
 
 The source/cache hash registration must match; `.tmp/task05` and generated figures
 remain ignored. Research commands do not activate experimental models in the app.
+
+## Dataset distribution with Git LFS
+
+The complete parsed CIC-IDS2017 source is now distributed as the single lossless
+`datasets/cic_ids2017_v1.parquet` object: **2,830,743 rows, 79 original columns,
+15 labels, 276,625,347 bytes**. Original values/types, invalid values, row order and
+duplicates are preserved. No CSV, Arrow cache, processed projection or prediction
+copy is uploaded. This is separate from the ignored local `data/` working outputs.
+
+Install Git LFS before cloning (GitHub Desktop also supports LFS), then use the
+existing Python environment:
+
+```powershell
+git lfs install
+git clone https://github.com/hfkarabas/Fuzzy-Network-Traffic-Risk-Analysis.git
+cd Fuzzy-Network-Traffic-Risk-Analysis
+# Set up .venv/dependencies using the instructions above, then:
+.\.venv\Scripts\python.exe scripts/verify_dataset_archive.py
+# Fresh clone only: refuses to overwrite a populated data directory.
+.\.venv\Scripts\python.exe scripts/restore_dataset_archive.py
+```
+
+The offline restoration reproduces the existing v1 paths, grouping, temporal
+provenance and 11,720-row development sample without Hugging Face downloads.
+Original HF acquisition remains available and unchanged. The frozen fuzzy models
+and web application are unchanged. See [the complete LFS guide](docs/dataset_lfs.md)
+for quota evidence, exact integrity checks, storage accounting, reconstruction
+limits and research-cache reproduction. A small pointer in place of Parquet data
+means the LFS object has not been downloaded; the verifier stops explicitly.

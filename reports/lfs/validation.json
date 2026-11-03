@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "dataset_files": [
+    {
+      "path": "datasets/cic_ids2017_v1.parquet",
+      "bytes": 276625347,
+      "format": "Parquet/ZSTD9",
+      "lfs_oid": "010d70b93517a13293c5128bc1b27cf0b2fdadd9352b64b1ac441b36b4110bf8"
+    }
+  ],
+  "expected_unique_lfs_storage_bytes": 276625347,
+  "expected_unique_lfs_storage_gib": 0.25762743037194014,
+  "per_complete_object_download_bandwidth_bytes": 276625347,
+  "source_rows": 2830743,
+  "source_columns": 79,
+  "source_labels": 15,
+  "source_values_verified_bitwise": true,
+  "original_datasets_unchanged": true,
+  "offline_pipeline_compatible": true,
+  "python_tests_passed": 173,
+  "failed_tests": 0,
+  "pointer_verified": true,
+  "pointer_bytes": 134,
+  "large_ordinary_git_blobs": 0,
+  "quota_verified_on": "2026-11-03",
+  "plan": "GitHub Free",
+  "ready_for_user_github_desktop_push": true,
+  "remote_push_pull_fetch_executed": false,
+  "source_sha256": {
+    "src/fuzzy_network_risk/dataset_archive.py": "a5c875eb8cc7d2b85f96b0a1f6d9c7c0e8fec990f2895b5b02e95ca9708c6956",
+    "tests/test_dataset_archive.py": "84c7bb8e391f693b98c141620ef6fd2d6c18ca3783bef1e70095a12f555162a3",
+    "scripts/build_dataset_archive.py": "7e965a750ac7718b43b546dac48028f855645c38b2a30a497e686c001dee12a1",
+    "scripts/restore_dataset_archive.py": "ce21624c93adc746ec0db5e9975553779b6a0634bca8371bf6df1e1719b32720",
+    "scripts/verify_dataset_archive.py": "05e9c95ab2e6d0ad998161357793a1c820ce8d01fccf8ab9a2c227a498b5aa36",
+    "scripts/validate_archive_pipeline.py": "2c7828935f370a6eab176a46552c5377772203806ec3a690dea5828e53e767b4",
+    "scripts/validate_lfs_index.py": "664fc8916b4098164f889b01ca2a19b7d3ecc6d5f06a19ec458bf0c297719e9b",
+    "scripts/report_dataset_lfs.py": "ebd4fae1c68d265b3f0d05705510f41151df8e4afc67413e61e5d3a8a9f97d91"
+  },
+  "caveat": "Quota is an observed current-month snapshot, not a reservation. The user performs the eventual remote upload."
+}

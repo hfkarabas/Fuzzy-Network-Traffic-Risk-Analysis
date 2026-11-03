@@ -1,0 +1,499 @@
+{
+  "version": "cic-ids2017-source-v1",
+  "artifact": "datasets/cic_ids2017_v1.parquet",
+  "dataset_id": "c01dsnap/CIC-IDS2017",
+  "source_revision": "4e9edfa727f800b6f595bc2ee7420527156562b2",
+  "split": "train",
+  "source_fingerprint": "f36ca5b47149ef8d",
+  "rows": 2830743,
+  "columns": 79,
+  "schema": [
+    {
+      "name": " Destination Port",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Flow Duration",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Total Fwd Packets",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Total Backward Packets",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Total Length of Fwd Packets",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Total Length of Bwd Packets",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Packet Length Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Packet Length Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Packet Length Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Packet Length Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": "Bwd Packet Length Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Packet Length Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Packet Length Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Packet Length Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": "Flow Bytes/s",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Flow Packets/s",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Flow IAT Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Flow IAT Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Flow IAT Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Flow IAT Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Fwd IAT Total",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd IAT Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Fwd IAT Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Fwd IAT Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd IAT Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Bwd IAT Total",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd IAT Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Bwd IAT Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Bwd IAT Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd IAT Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Fwd PSH Flags",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd PSH Flags",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd URG Flags",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd URG Flags",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Header Length",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Header Length",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Fwd Packets/s",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Packets/s",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Min Packet Length",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Max Packet Length",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Packet Length Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Packet Length Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Packet Length Variance",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": "FIN Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " SYN Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " RST Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " PSH Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " ACK Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " URG Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " CWE Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " ECE Flag Count",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Down/Up Ratio",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Average Packet Size",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Avg Fwd Segment Size",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Avg Bwd Segment Size",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Header Length.1",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Fwd Avg Bytes/Bulk",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Avg Packets/Bulk",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Fwd Avg Bulk Rate",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Avg Bytes/Bulk",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Bwd Avg Packets/Bulk",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Bwd Avg Bulk Rate",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Subflow Fwd Packets",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Subflow Fwd Bytes",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Subflow Bwd Packets",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Subflow Bwd Bytes",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Init_Win_bytes_forward",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Init_Win_bytes_backward",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " act_data_pkt_fwd",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " min_seg_size_forward",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Active Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Active Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Active Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Active Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": "Idle Mean",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Idle Std",
+      "type": "double",
+      "nullable": true
+    },
+    {
+      "name": " Idle Max",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Idle Min",
+      "type": "int64",
+      "nullable": true
+    },
+    {
+      "name": " Label",
+      "type": "string",
+      "nullable": true
+    }
+  ],
+  "sha256": "010d70b93517a13293c5128bc1b27cf0b2fdadd9352b64b1ac441b36b4110bf8",
+  "bytes": 276625347,
+  "labels": {
+    "BENIGN": 2273097,
+    "DDoS": 128027,
+    "PortScan": 158930,
+    "Bot": 1966,
+    "Infiltration": 36,
+    "Web Attack � Brute Force": 1507,
+    "Web Attack � XSS": 652,
+    "Web Attack � Sql Injection": 21,
+    "FTP-Patator": 7938,
+    "SSH-Patator": 5897,
+    "DoS slowloris": 5796,
+    "DoS Slowhttptest": 5499,
+    "DoS Hulk": 231073,
+    "DoS GoldenEye": 10293,
+    "Heartbleed": 11
+  },
+  "compression": "ZSTD level 9",
+  "byte_stream_split": false,
+  "row_group_rows": 65536,
+  "source_files": [
+    {
+      "source_file": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "capture_day": "Friday",
+      "start_row_inclusive": 0,
+      "end_row_exclusive": 225745,
+      "rows": 225745
+    },
+    {
+      "source_file": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+      "capture_day": "Friday",
+      "start_row_inclusive": 225745,
+      "end_row_exclusive": 512212,
+      "rows": 286467
+    },
+    {
+      "source_file": "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+      "capture_day": "Friday",
+      "start_row_inclusive": 512212,
+      "end_row_exclusive": 703245,
+      "rows": 191033
+    },
+    {
+      "source_file": "Monday-WorkingHours.pcap_ISCX.csv",
+      "capture_day": "Monday",
+      "start_row_inclusive": 703245,
+      "end_row_exclusive": 1233163,
+      "rows": 529918
+    },
+    {
+      "source_file": "Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+      "capture_day": "Thursday",
+      "start_row_inclusive": 1233163,
+      "end_row_exclusive": 1521765,
+      "rows": 288602
+    },
+    {
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "capture_day": "Thursday",
+      "start_row_inclusive": 1521765,
+      "end_row_exclusive": 1692131,
+      "rows": 170366
+    },
+    {
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "capture_day": "Tuesday",
+      "start_row_inclusive": 1692131,
+      "end_row_exclusive": 2138040,
+      "rows": 445909
+    },
+    {
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "capture_day": "Wednesday",
+      "start_row_inclusive": 2138040,
+      "end_row_exclusive": 2830743,
+      "rows": 692703
+    }
+  ],
+  "row_id": "zero-based original row position; never sorted or deduplicated",
+  "preservation": "All parsed source values/types/labels, null masks, valid float bits and original Arrow schema metadata; not byte-identical original CSV text.",
+  "software": {
+    "python": "3.14.7",
+    "pyarrow": "26.0.0"
+  },
+  "source_arrow_hashes": {
+    "cic-ids2017-train-00000-of-00004.arrow": "8b0c21a9f70d22f4c97e906d74bbadc0dddece98dd7ca5976cfb86050c6c9731",
+    "cic-ids2017-train-00001-of-00004.arrow": "3745f1df941914485a135214fa599292c33d3986a90558e874e12ef4e4b9b656",
+    "cic-ids2017-train-00002-of-00004.arrow": "5f7622d85d5939a44e02dd41f4d8e05af3c389e68d368509194707d5b6b292aa",
+    "cic-ids2017-train-00003-of-00004.arrow": "09b07212df2277e9b6b9f86f3e06defaf91ef6a703988ab721e649fa0e7a1c69"
+  }
+}

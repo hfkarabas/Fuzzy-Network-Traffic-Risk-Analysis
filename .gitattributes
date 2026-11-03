@@ -2,3 +2,5 @@
 * text=auto
 # Registered experiment source hashes use LF, including on Windows checkouts.
 *.py text eol=lf
+# One canonical source artifact only; derived data and caches remain untracked.
+datasets/cic_ids2017_v1.parquet filter=lfs diff=lfs merge=lfs -text

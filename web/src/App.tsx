@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import type { FormEvent, ReactNode } from 'react'
+import type { FormEvent } from 'react'
 import { Activity, ArrowDownUp, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, CircleHelp, Database, FlaskConical, Gauge, GitBranch, LayoutDashboard, ListFilter, LoaderCircle, Network, Play, RotateCcw, ScanLine, Shield, ShieldAlert, SlidersHorizontal, Terminal, TrendingUp, TriangleAlert, X, Zap } from 'lucide-react'
 import { analyze, ApiError, loadData } from './api'
 import { formatNumber } from './format'
 import LiveTraffic from './LiveTraffic'
+import { Badge, Card, StepPipeline, MembershipChart, ResultPanel, Evidence } from './components/FuzzyAnalysis'
+import OutputVisualization from './components/OutputVisualization'
 import type { Analysis, AppData, Confusion, Evaluation, Example, Feature, Flow, Level, Metrics, PolicyID } from './types'
 
 const levels: Record<Level, string> = { Low: 'Düşük', Medium: 'Orta', High: 'Yüksek', Critical: 'Kritik' }
@@ -15,70 +17,6 @@ const pages = [
 ]
 const nf = { format: formatNumber }
 const percent = (v: number) => `${new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 3 }).format(v * 100)}%`
-const degreeText = (v: number) => v > 0 && v < .001 ? '<0,001' : v.toFixed(3).replace('.', ',')
-function Badge({ level }: { level: Level }) { return <span className={`badge ${level.toLowerCase()}`}><span />{levels[level]} risk</span> }
-function Card({ children, className = '' }: { children: ReactNode; className?: string }) { return <section className={`card ${className}`}>{children}</section> }
-function StepPipeline() {
-  const steps = [['01', 'Girdiler', 'Beş akış ölçümü'], ['02', 'Bulanıklaştırma', 'Dilsel kümelere üyelik'], ['03', 'Kurallar', 'Minimum ile etkinlik'], ['04', 'Birleştirme', 'Maksimum çıktı kümesi'], ['05', 'Durulaştırma', 'Ağırlık merkezi'], ['06', 'Risk puanı', '0–100 · dilsel seviye']]
-  return <div className="pipeline" aria-label="Bulanık çıkarım adımları">{steps.map(([n, title, body]) => <div className="step" key={n}><span className="step-no">{n}</span><div><b>{title}</b><small>{body}</small></div>{n !== '06' && <ChevronRight size={15} className="step-arrow" />}</div>)}</div>
-}
-export function MembershipChart({ feature, position }: { feature: Feature; position?: number }) {
-  const colors = ['#4ed8cf', '#7da4ff', '#e0ad67']
-  return <svg className="membership-chart" viewBox="0 0 360 130" role="img" aria-label={`${feature.title}: sunucudan alınan üyelik fonksiyonları${position !== undefined ? ' ve mevcut değer' : ''}`}>
-    {[0, .5, 1].map(v => <g key={v}><line x1="28" y1={100 - v * 78} x2="342" y2={100 - v * 78} stroke="#273345" strokeDasharray={v === .5 ? '3 4' : undefined} /><text x="18" y={104 - v * 78} textAnchor="end" fill="#8191a7" fontSize="9">{v}</text></g>)}
-    {feature.chart.curves.map((curve, i) => <polyline key={curve.term} fill="none" stroke={colors[i]} strokeWidth="2" points={curve.degrees.map((degree, j) => `${28 + feature.chart.positions[j] * 314},${100 - degree * 78}`).join(' ')} />)}
-    {position !== undefined && <g><line x1={28 + position * 314} x2={28 + position * 314} y1="14" y2="103" stroke="#f4f8fd" strokeDasharray="4 3" /><circle cx={28 + position * 314} cy="104" r="3" fill="#f4f8fd" /></g>}
-    <text x="28" y="121" fill="#8191a7" fontSize="9">0</text><text x="342" y="121" fill="#8191a7" textAnchor="end" fontSize="9">{nf.format(feature.chart.values.at(-1) ?? 0)} {feature.unit}</text>
-  </svg>
-}
-function ScoreGauge({ result }: { result: Analysis | null }) {
-  const score = result?.risk_score ?? null
-  return <div className={`gauge-wrap ${result?.risk_level?.toLowerCase() ?? ''}`}>
-    <svg viewBox="0 0 300 178" className="risk-gauge" role="img" aria-label={score === null ? 'Henüz risk puanı yok' : `Risk puanı ${nf.format(score)} / 100`}>
-      <path d="M35 145 A115 115 0 0 1 265 145" fill="none" stroke="#243142" strokeWidth="14" strokeLinecap="round" />
-      <path d="M35 145 A115 115 0 0 1 265 145" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" pathLength="100" strokeDasharray={`${score ?? 0} 100`} />
-      <text x="150" y="115" textAnchor="middle" className="gauge-number">{score === null ? '—' : score.toFixed(2).replace('.', ',')}</text><text x="150" y="137" textAnchor="middle" className="gauge-caption">RİSK PUANI / 100</text>
-      <text x="29" y="170" className="gauge-tick">0</text><text x="253" y="170" className="gauge-tick">100</text>
-    </svg>
-    <div className="gauge-status">{result?.risk_level ? <Badge level={result.risk_level} /> : <span className="muted">Analiz sonucu bekleniyor</span>}</div>
-  </div>
-}
-function ResultPanel({ result, busy, selectedPolicy, data, invalid }: { result: Analysis | null; busy: boolean; selectedPolicy: PolicyID; data: AppData; invalid: boolean }) {
-  const policy = data.policies.find(p => p.id === selectedPolicy)!
-  return <Card className="result-card"><div className="card-heading"><div className="heading-icon"><Gauge size={18} /></div><h2>Risk değerlendirmesi</h2><span className="tiny-label">MAMDANI</span></div>
-    <div className={busy ? 'result-content pending' : 'result-content'} aria-busy={busy} aria-live="polite">
-      <ScoreGauge result={busy ? null : result} />
-      <div className="risk-bands" aria-label="Risk kategorisi aralıkları">{(['Low', 'Medium', 'High', 'Critical'] as Level[]).map((level, i) => <div className={level.toLowerCase()} key={level}><b>{levels[level]}</b><span>[{i === 0 ? 0 : data.model.risk_category_cuts[i - 1]}, {i === 3 ? 100 : data.model.risk_category_cuts[i]}{i === 3 ? ']' : ')'}</span></div>)}</div>
-      {busy && <div className="computing"><LoaderCircle size={16} className="spin" /> Python motoru değerlendiriyor…</div>}
-      {result?.status === 'ok' && !busy ? <>
-        <div className={`alert-decision ${result.alert ? 'raised' : 'quiet'}`}><div>{result.alert ? <ShieldAlert size={21} /> : <Shield size={21} />}<span><b>{result.alert ? 'Alarm üretildi' : 'Alarm üretilmedi'}</b><small>{policy.title} politika · eşik {nf.format(result.alert_policy.threshold)}</small></span></div><span className="decision-symbol">{result.alert ? '!' : <Check size={17} />}</span></div>
-        <p className="score-note">Puan bir <b>saldırı olasılığı değildir.</b> Risk kategorisi ile alarm kararı farklıdır.</p>
-        <div className="result-stats"><div><strong>{result.activated_rules.length}<small> / {data.model.rule_count}</small></strong><span>etkin kural</span></div><div><strong>5<span className="cyan-dot" /></strong><span>değerlendirilen girdi</span></div></div>
-        <div className="compact-explanation"><GitBranch size={16} /><p>{result.explanation_tr}</p></div>
-        {result.explanation_data.outside_training_range.length > 0 && <p className="range-warning"><TriangleAlert size={14} />{result.explanation_data.outside_training_range.length} girdi eğitim aralığı dışında. Omuz üyelikleri doyuruldu; bu tek başına hata veya saldırı değildir.</p>}
-      </> : !busy && <div className="empty-result"><ScanLine size={28} /><h3>{invalid || result?.status === 'invalid_input' ? 'Yeterli geçerli veri yok' : 'Akışın davranışını görün'}</h3><p>{invalid || result ? 'Sistem puan ve alarm üretmekten kaçındı. Girdileri kontrol edin.' : 'Beş ölçümü girin veya gerçek bir örnek yükleyin. Sonuç Python bulanık çıkarım motorundan gelir.'}</p></div>}
-    </div><div className="result-footer"><span className="status-dot" />Dondurulmuş model · v1<span className="mono">{data.model.model_id.slice(0, 8)}</span></div>
-  </Card>
-}
-function Evidence({ result, data }: { result: Analysis | null; data: AppData }) {
-  const [tab, setTab] = useState('memberships')
-  function tabKeys(event: React.KeyboardEvent) {
-    const ids = ['memberships', 'rules', 'pipeline']; const current = ids.indexOf(tab)
-    const next = event.key === 'ArrowRight' ? ids[(current + 1) % 3] : event.key === 'ArrowLeft' ? ids[(current + 2) % 3] : event.key === 'Home' ? ids[0] : event.key === 'End' ? ids[2] : null
-    if (next) { event.preventDefault(); setTab(next); document.getElementById(`tab-${next}`)?.focus() }
-  }
-  return <Card className="evidence"><div className="card-heading"><div className="heading-icon"><GitBranch size={18} /></div><h2>Kararın arkasındaki bulanık mantık</h2><span className="tiny-label">AÇIKLANABİLİR ÇIKARIM</span></div>
-    <div className="tabs" role="tablist" aria-label="Çıkarım ayrıntıları">{[['memberships', 'Üyelik dereceleri'], ['rules', `Etkin kurallar${result?.status === 'ok' ? ` (${result.activated_rules.length})` : ''}`], ['pipeline', 'Nasıl çalışır?']].map(([id, title]) => <button key={id} role="tab" id={`tab-${id}`} tabIndex={tab === id ? 0 : -1} onKeyDown={tabKeys} aria-selected={tab === id} aria-controls={`panel-${id}`} onClick={() => setTab(id)}>{title}</button>)}</div>
-    <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="evidence-body">
-      {tab === 'memberships' && <><p className="section-intro">Her ölçüm birden fazla dilsel kümeye kısmen ait olabilir. Dereceler olasılık değildir; eğriler ve değerler Python’dan gelir.</p><div className="membership-grid">{data.model.features.map(feature => <div className="membership-box" key={feature.key}>
-        <div className="membership-heading"><h3>{feature.title}</h3><span className="mono">{result?.status === 'ok' ? nf.format(result.input_values[feature.column] as number) : '—'} <small>{feature.unit}</small></span></div>
-        <MembershipChart feature={feature} position={result?.input_positions?.[feature.column]} />
-        <div className="degree-list">{feature.chart.curves.map((curve, i) => { const degree = result?.membership_degrees?.[feature.column]?.[curve.term]; return <div className={`degree degree-${i}`} key={curve.term}><span>{curve.title}</span><div className="degree-track"><i style={{ width: `${(degree ?? 0) * 100}%` }} /></div><b title={degree?.toPrecision(15)}>{degree === undefined ? '—' : degreeText(degree)}</b></div> })}</div>
-        <small className="axis-note">{feature.chart.axis_label} · beyaz çizgi: mevcut değer</small></div>)}</div></>}
-      {tab === 'rules' && <>{result?.status === 'ok' ? <><div className="rule-summary"><span><Zap size={15} />{result.activated_rules.length} kural etkin</span><span>Güç sırasına göre · ≥ 0,5 güçlü, &lt; 0,1 zayıf</span></div><div className="rule-list">{result.activated_rules.map(rule => <div className="rule-row" key={rule.id}><span className="rule-id">{rule.id}</span><div className="rule-description"><p>{rule.text_tr}</p><small>{rule.strength >= .5 ? 'Güçlü etkinlik' : rule.strength < .1 ? 'Zayıf etkinlik' : 'Kısmi etkinlik'} · <span className="mono">{rule.reason_key}</span></small></div><div className="rule-strength"><b>{degreeText(rule.strength)}</b><div><i style={{ width: `${rule.strength * 100}%` }} /></div></div><Badge level={rule.consequent} /></div>)}</div><p className="footnote">Etkin kurallar saldırı kanıtı değildir. Farklı risk sonuçları birlikte etkinleşebilir; maksimum birleştirme ve ağırlık merkezi nihai puanı belirler.</p></> : <div className="inline-empty">Kuralları incelemek için önce bir akış analiz edin.</div>}</>}
-      {tab === 'pipeline' && <><StepPipeline /><div className="learning-copy"><h3>Kademeli değerlendirme, izlenebilir karar</h3><p>Bir paket hızı aynı anda “orta” ve “yoğun” kümelerine kısmen ait olabilir. AND için minimum, OR ve birleştirme için maksimum kullanılır. Kuralların çıktı kümeleri etkinlik gücüyle kırpılır; birleşen kümenin ağırlık merkezi 0–100 arası puanı verir.</p><p>Bu dereceler birbirinden bağımsız saldırı olasılıkları değildir. Düşük bir puan güvenli trafik garantisi vermez; yüksek puan da belirli bir saldırı türünü kanıtlamaz.</p></div></>}
-    </div></Card>
-}
 function EvaluationPage({ evaluation }: { evaluation: Evaluation }) {
   const [scenario, setScenario] = useState('grouped'); const [policy, setPolicy] = useState<PolicyID>('Balanced')
   const historic = evaluation.historical.find(h => h.id === scenario)
@@ -148,7 +86,7 @@ export default function App() {
       <main id="main-content" tabIndex={-1}>
         {startupError ? <div className="startup-error" role="alert"><TriangleAlert size={35} /><h1>Yerel sunucuya bağlanılamadı</h1><p>{startupError}</p><button className="primary-button" onClick={() => setReload(r => r + 1)}>Yeniden dene</button><small>FastAPI sunucusunu 127.0.0.1:8000 adresinde başlatın.</small></div> : !data ? <div className="startup-loading" role="status"><LoaderCircle className="spin" size={28} /><p>Model ve yerel çalışma alanı yükleniyor…</p></div> : <>
           <div className="educational-banner"><FlaskConical size={17} /><p><b>Deneysel bir karar destek aracı.</b> Eğitim amaçlıdır; operasyonel saldırı tespit sistemi değildir.</p><button onClick={() => navigate('evaluation')}>Sınırları incele <ArrowRight size={14} /></button></div>
-          {activePage.id === 'live' && <LiveTraffic />}
+          {activePage.id === 'live' && <LiveTraffic data={data} />}
           {activePage.id === 'analysis' && <>
             <div className="page-title analysis-title"><div><span className="eyebrow">AÇIKLANABİLİR BULANIK ÇIKARIM</span><h1>Trafiği ölçün. Kararı anlayın.</h1><p>Ağ akışını değerlendirin; her üyeliği ve etkin kuralı izleyin.</p></div><div className="section-stamp"><Shield size={18} /><span>5 ölçümden<br /><b>izlenebilir bir sonuca</b></span></div></div>
             <div className="analysis-grid"><Card className="input-card"><div className="card-heading"><div className="heading-icon"><SlidersHorizontal size={18} /></div><h2>Akış parametreleri</h2><span className="tiny-label">MANUEL ANALİZ</span></div>
@@ -161,7 +99,7 @@ export default function App() {
                 <div className="form-actions"><button type="submit" className="primary-button" disabled={busy}>{busy ? <LoaderCircle size={17} className="spin" /> : <Play size={16} fill="currentColor" />}{busy ? 'Değerlendiriliyor…' : 'Akışı analiz et'}<ArrowRight size={17} /></button><button type="button" className="reset-button" onClick={reset} disabled={busy} aria-label="Formu sıfırla"><RotateCcw size={17} />Sıfırla</button></div>
                 <p className="local-note"><Shield size={12} />Ölçümler yalnızca yerel Python sunucusunda işlenir.</p>
               </form></Card><ResultPanel result={result} busy={busy} selectedPolicy={policy} data={data} invalid={Object.keys(errors).length > 0} /></div>
-            <Evidence result={busy ? null : result} data={data} />
+            <Evidence result={busy ? null : result} data={data} /><OutputVisualization result={busy ? null : result} />
           </>}
           {activePage.id === 'overview' && <><div className="page-title hero-title"><span className="eyebrow">FUZZY NETWORK LAB</span><h1>Sadece bir puan değil.<br /><span>Kararın nasıl oluştuğu.</span></h1><p>Bulanık Mantık Tabanlı Ağ Trafiği Risk Analizi<br />Açıklanabilir Bulanık Çıkarım ile Ağ Akışı Değerlendirmesi</p><button className="primary-button" onClick={() => navigate('analysis')}>Bir akışı incele <ArrowRight size={18} /></button></div><div className="overview-stats">{[[nf.format(data.model.dataset.records), 'CIC-IDS2017 ağ akışı', Database], ['5', 'Yorumlanabilir girdi', SlidersHorizontal], [String(data.model.rule_count), 'Açık IF–THEN kuralı', GitBranch], ['0–100', 'Davranışsal risk puanı', Gauge]].map(([number, label, Icon]) => { const I = Icon as typeof Database; return <Card key={String(label)}><I size={21} /><strong>{String(number)}</strong><span>{String(label)}</span></Card> })}</div><Card className="overview-pipeline"><div className="card-heading"><h2>Ölçümden açıklamaya</h2><span className="tiny-label">MAMDANI ÇIKARIMI</span></div><StepPipeline /><p>Keskin bir “normal / anormal” sınırı yerine, her ölçüm dilsel kümelere kademeli olarak katılır. Gerçek Python çıkarımını, üyeliklerini ve kurallarını analiz ekranında görebilirsiniz.</p></Card><div className="overview-links"><Card><Network size={24} /><h2>Gerçek veriye dokunun</h2><p>Uygun yerel tasarım kayıtlarından seçilmiş örnekleri inceleyin. Tarihsel etiket ile model sonucunun nerede ayrıştığını görün.</p><button className="text-button" onClick={() => navigate('examples')}>Örnekleri aç <ArrowRight size={16} /></button></Card><Card><TriangleAlert size={24} /><h2>Sınırları da açıklıyoruz</h2><p>Çalışan bir çıkarım motoru, güvenilir bir saldırı dedektörü demek değildir. Yanlış alarmlar ve kaçırılan saldırılar görünür kalır.</p><button className="text-button" onClick={() => navigate('evaluation')}>Ölçülmüş sonuçları gör <ArrowRight size={16} /></button></Card></div></>}
           {activePage.id === 'examples' && <><div className="page-title"><span className="eyebrow">YEREL VERİ KATALOĞU</span><h1>Gerçek akışlar. Farklı sonuçlar.</h1><p>TASK 02B uygun tasarım kayıtlarından, sabit ve tekrar üretilebilir seçim.</p></div><div className="important-note"><Database size={21} /><p>Etiket CIC-IDS2017’nin tarihsel kaydıdır; bulanık motora girdi olmaz. Bu seçilmiş örnekler genel tespit başarısını temsil etmez. Kart sonuçları <b>Dengeli</b> politika referansıdır.</p></div><div className="example-filters" role="group" aria-label="Örnek filtresi">{[['all', 'Tüm örnekler'], ['benign', 'BENIGN'], ['attack', 'Saldırı etiketli'], ['error', 'Hatalı kararlar']].map(([id, title]) => <button aria-pressed={exampleFilter === id} className={exampleFilter === id ? 'selected' : ''} key={id} onClick={() => setExampleFilter(id)}>{title}</button>)}</div><div className="example-grid">{data.examples.filter(e => exampleFilter === 'all' || (exampleFilter === 'benign' ? e.dataset_label === 'BENIGN' : exampleFilter === 'attack' ? e.dataset_label !== 'BENIGN' : e.id.startsWith('false-'))).map(example => <Card className="example-card" key={example.id}><div className="example-card-top"><span className="mono">AKIŞ #{example.source_row_id}</span><Badge level={example.risk_level} /></div><h2>{example.title}</h2><div className="example-score">{nf.format(example.risk_score)}<span>/100</span></div><div className="example-label"><span>Tarihsel etiket</span><b>{example.dataset_label}</b></div><dl>{data.model.features.map(f => <div key={f.key}><dt>{f.title}</dt><dd>{nf.format(example.features[f.column] as number)} <small>{f.unit}</small></dd></div>)}</dl><div className="example-card-footer"><small>{days[example.source_day] ?? example.source_day} · {example.alert ? 'Alarm var' : 'Alarm yok'}</small><button className="text-button" onClick={() => loadExample(example)}>Analizde aç <ArrowRight size={15} /></button></div></Card>)}</div></>}

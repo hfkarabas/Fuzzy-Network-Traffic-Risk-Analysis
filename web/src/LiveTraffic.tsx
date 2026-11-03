@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Analysis, Level, PolicyID } from './types'
+import type { Analysis, AppData, Level, PolicyID } from './types'
+import LiveFlowDetail from './components/LiveFlowDetail'
 
 type Device = { id: string; name: string; description: string }
-type LiveFlow = {
+export type LiveFlow = {
+  observation_mode?: string
   id: string; source: string; destination: string; source_port: number; destination_port: number
   protocol: string; started_us: number; ended_us: number; duration_us: number; finalization: string
   status: string; provisional: boolean; features: Record<string, number | null>; quality_errors: string[]; analysis: Analysis | null
@@ -34,7 +36,7 @@ async function request<T>(path: string, signal?: AbortSignal, body?: unknown, to
   return data as T
 }
 
-export default function LiveTraffic() {
+export default function LiveTraffic({ data }: { data: AppData }) {
   const [devices, setDevices] = useState<Device[]>([])
   const [discoveryError, setDiscoveryError] = useState('')
   const [mode, setMode] = useState<'capture' | 'replay'>('capture')
@@ -45,7 +47,9 @@ export default function LiveTraffic() {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [refresh, setRefresh] = useState(0)
-  const [selected, setSelected] = useState('')
+  const [selected, setSelected] = useState<LiveFlow | null>(null)
+  const detailTrigger = useRef<HTMLButtonElement | null>(null)
+  const tableTitle = useRef<HTMLHeadingElement>(null)
   const token = useRef('')
   const mounted = useRef(false)
   useEffect(() => { mounted.current = true; return () => { mounted.current = false } }, [])
@@ -79,7 +83,7 @@ export default function LiveTraffic() {
     finally { if (mounted.current) setBusy(false) }
   }
   const active = snapshot?.running ?? false
-  const focused = snapshot?.flows.find(flow => flow.id === selected)
+  const focused = selected ? snapshot?.flows.find(flow => flow.id === selected.id) ?? selected : null
   return <>
     <div className="page-title"><div><span className="eyebrow">YEREL · AÇIK İZİNLE · AKIŞ TABANLI</span><h1>Canlı Trafik</h1><p>IPv4 TCP/UDP akışlarını tamamlandıktan sonra mevcut bulanık modelle değerlendirin.</p></div></div>
     <section className="card live-controls">
@@ -98,8 +102,8 @@ export default function LiveTraffic() {
       <p className="source-note">Tamamlanan gözlemlenmiş akışlar; anlık paket saldırı tespiti değildir. CICFlowMeter sürüm eşdeğerliği doğrulanmamıştır. İzleme sayfalar arasında devam eder; durdur düğmesi veya sunucu kapanışı sonlandırır. Tek backend süreci kullanın.</p>
     </section>
     <section className="card live-summary"><h2>Oturum istatistikleri</h2><div className="live-metrics"><span>İşlenen paket: <b>{snapshot?.counts.packets ?? 0}</b></span><span>Etkin akış: <b>{snapshot?.active_flows ?? 0}</b></span><span>Sonlandırılan: <b>{snapshot?.counts.finalized_flows ?? 0}</b></span><span>Analiz edilen: <b>{snapshot?.counts.ok ?? 0}</b></span><span>Yetersiz veri: <b>{snapshot?.counts.insufficient_data ?? 0}</b></span><span>Çıkarım başarısız: <b>{snapshot?.counts.inference_failed ?? 0}</b></span><span>Kuyruk kaybı: <b>{snapshot?.counts.queue_dropped_packets ?? 0}</b></span><span>Reddedilen paket: <b>{snapshot?.counts.rejected_packets ?? 0}</b></span>{(Object.keys(riskLabels) as Level[]).map(level => <span key={level}>{riskLabels[level]}: <b>{snapshot?.risk_distribution[level] ?? 0}</b></span>)}</div><p>Puanlar politika değişiminde sabit kalır; yalnızca alarm eşiği değişir. Risk puanı saldırı olasılığı değildir.</p></section>
-    <section className="card live-results"><h2>Son akışlar · en fazla 50 gösterilir</h2>{!snapshot?.flows.length ? <p>{active ? 'Akış bekleniyor; TCP sonlanması veya 15 saniyelik boşta kalma süresi beklenebilir.' : 'Bu oturumda henüz akış gözlemi yok.'}</p> : <div className="live-table-wrap"><table><thead><tr><th>Zaman</th><th>Kaynak → Hedef</th><th>Protokol / süre</th><th>Risk</th><th>Sonlandırma</th><th>Açıklama</th></tr></thead><tbody>{snapshot.flows.map(flow => <tr key={flow.id}><td>{new Date(flow.ended_us / 1000).toLocaleTimeString('tr-TR')}</td><td>{flow.source}:{flow.source_port}<br />→ {flow.destination}:{flow.destination_port}</td><td>{flow.protocol} · {(flow.duration_us / 1e6).toFixed(3)} s</td><td>{flow.status === 'ok' && flow.analysis?.risk_score != null ? <><b>{flow.analysis.risk_score.toFixed(2)}</b> · {riskLabels[flow.analysis.risk_level!]}<br />{flow.analysis.alert ? 'Alarm var' : 'Alarm yok'}</> : flow.status === 'insufficient_data' ? 'Yetersiz veri · puan yok' : 'Çıkarım başarısız · puan yok'}</td><td>{flow.finalization}{flow.provisional && <b> · Kısmi akış tahmini</b>}</td><td><button className="text-button" onClick={() => setSelected(flow.id)}>Akışı incele</button></td></tr>)}</tbody></table></div>}</section>
-    {focused && <section className="card live-explanation"><h2>Akış açıklaması · {focused.protocol}</h2><p>{focused.analysis?.explanation_tr ?? focused.quality_errors.join(', ')}</p><dl>{Object.entries(focused.features).map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value ?? 'Hesaplanamıyor'}</dd></div>)}</dl>{focused.analysis && <><h3>Üyelik dereceleri</h3><pre>{JSON.stringify(focused.analysis.membership_degrees, null, 2)}</pre><h3>Etkin kurallar</h3>{focused.analysis.activated_rules.map(rule => <p key={rule.id}><b>{rule.id}</b> ({rule.strength.toFixed(3)}) {rule.text_tr}</p>)}</>}<h3>Politika karşılaştırması</h3>{Object.entries(focused.policy_comparison).map(([name, p]) => <p key={name}>{name} · puan {p.risk_score.toFixed(2)} · eşik {p.threshold.toFixed(2)} · {p.alert ? 'Alarm var' : 'Alarm yok'}</p>)}</section>}
+    <section className="card live-results"><h2 ref={tableTitle} tabIndex={-1}>Son akışlar · en fazla 50 gösterilir</h2>{!snapshot?.flows.length ? <p>{active ? 'Akış bekleniyor; TCP sonlanması veya 15 saniyelik boşta kalma süresi beklenebilir.' : 'Bu oturumda henüz akış gözlemi yok.'}</p> : <div className="live-table-wrap"><table><thead><tr><th>Zaman</th><th>Kaynak → Hedef</th><th>Protokol / süre</th><th>Risk</th><th>Sonlandırma</th><th>Açıklama</th></tr></thead><tbody>{snapshot.flows.map(flow => <tr key={flow.id}><td>{new Date(flow.ended_us / 1000).toLocaleTimeString('tr-TR')}</td><td>{flow.source}:{flow.source_port}<br />→ {flow.destination}:{flow.destination_port}</td><td>{flow.protocol} · {(flow.duration_us / 1e6).toFixed(3)} s</td><td>{flow.status === 'ok' && flow.analysis?.risk_score != null ? <><b>{flow.analysis.risk_score.toFixed(2)}</b> · {riskLabels[flow.analysis.risk_level!]}<br />{flow.analysis.alert ? 'Alarm var' : 'Alarm yok'}</> : flow.status === 'insufficient_data' ? 'Yetersiz veri · puan yok' : 'Çıkarım başarısız · puan yok'}</td><td>{flow.finalization}{flow.provisional && <b> · Kısmi akış tahmini</b>}</td><td><button className="text-button" onClick={event => { detailTrigger.current = event.currentTarget; setSelected(flow) }}>Akışı incele</button></td></tr>)}</tbody></table></div>}</section>
+    {focused && <LiveFlowDetail flow={focused} data={data} policy={policy} onClose={() => { setSelected(null); if (detailTrigger.current?.isConnected) detailTrigger.current.focus(); else tableTitle.current?.focus() }} />}
     {!!snapshot?.errors.length && <section className="card"><h2>Yakalama / çıkarım bildirimleri</h2><ul>{snapshot.errors.map((e, index) => <li key={index}>{e.code}{e.message ? ` · ${e.message}` : ''}</li>)}</ul></section>}
   </>
 }

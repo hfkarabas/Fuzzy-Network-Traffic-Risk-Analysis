@@ -94,6 +94,11 @@ def create_app(root=ROOT,monitor_factory=Monitor):
     def analyze(body:AnalyzeRequest,request:Request):
         return request.app.state.service.analyze(body.features.model_dump(by_alias=True),body.policy)
 
+    @app.post('/api/visualization/output',tags=['Inference'])
+    def output_visualization(body:AnalyzeRequest,request:Request):
+        # Read-only diagnostics from the same engine; alert policy has no effect.
+        return request.app.state.service.engine.output_visualization(body.features.model_dump(by_alias=True))
+
     @app.get('/api/examples',tags=['Data'])
     def examples(request:Request):
         service=request.app.state.service

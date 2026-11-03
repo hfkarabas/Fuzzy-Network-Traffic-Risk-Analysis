@@ -117,7 +117,7 @@ class MamdaniRiskEngine:
                                       for term in chunks[0]['memberships'][f]} for f in self.feature_keys}
         return result
 
-    def _infer(self,x):
+    def _infer(self,x,include_output=False):
         valid=(np.isfinite(x)&(x>=0)).all(axis=1)
         safe=np.where(np.isfinite(x)&(x>=0),x,0.)
         degrees={}
@@ -143,8 +143,26 @@ class MamdaniRiskEngine:
         levels=np.full(len(x),None,dtype=object)
         ok=np.isfinite(scores)
         levels[ok]=np.asarray(LEVELS,dtype=object)[np.searchsorted(self.config['risk_level_thresholds'],scores[ok],side='right')]
-        return {'risk_score':scores,'risk_level':levels,'status':status,'rule_strengths':strengths,
+        result={'risk_score':scores,'risk_level':levels,'status':status,'rule_strengths':strengths,
                 'memberships':degrees,'out_of_training_range':outside & valid[:,None]}
+        if include_output: result['output_aggregate']=aggregate
+        return result
+
+    def output_visualization(self,record):
+        """Read-only single-record view of the actual inference grid/aggregate.
+
+        Normal prediction contracts and numerical operations remain unchanged.
+        Invalid/no-rule cases expose no misleading membership/centroid plot.
+        """
+        matrix=self._coerce(record)
+        if len(matrix)!=1: raise ValueError('Output visualization requires one record')
+        result=self._infer(matrix,include_output=True)
+        status=str(result['status'][0]); valid=status=='ok'
+        return {'status':status,'model_id':self.model_id,
+                'centroid':float(result['risk_score'][0]) if valid else None,
+                'grid':self.grid.tolist() if valid else [],
+                'curves':[{'level':level,'degrees':self.output_sets[i].tolist()} for i,level in enumerate(LEVELS)] if valid else [],
+                'aggregate':result['output_aggregate'][0].tolist() if valid else []}
 
     def predict_one(self,record):
         result=self.predict_batch(record)

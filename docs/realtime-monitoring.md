@@ -7,7 +7,7 @@ Mamdani model and its three frozen alarm policies. It is not a retrained model o
 a validated intrusion detector. Capture is opt-in and does not run on application
 startup. Offline analysis does not import Scapy or open a capture socket.
 
-The current Windows workstation has no usable Npcap provider. Actual localhost
+The initial TASK07 Windows validation had no usable Npcap provider. Actual localhost
 HTTP through Vite/FastAPI, serialized synthetic TCP/UDP packet replay, inference
 and React state handling were tested. **Actual captured traffic was not tested.**
 Linux/macOS capture paths are implemented but not natively tested. No claim of
@@ -177,6 +177,32 @@ memberships, rules/strengths, explanation and all three policy decisions. Switch
 policy does not rerun capture or change fuzzy scores. Results remain session-local
 in memory and are not exported by default. No fabricated initial observations or
 payload viewer exists.
+
+### Inspecting a flow (TASK 08)
+
+Choose **Akışı incele** in the recent-flow table. The inline detail view retains
+the chosen flow even when polling removes it from the recent list. Close it with
+**Akış ayrıntısını kapat**; keyboard focus returns to the trigger or table heading.
+Endpoints, ports, duration, finalization reason and inference eligibility appear
+above the shared historical/live risk panel. A provisional segment prominently
+retains **Kısmi akış tahmini** and its experimental-score warning.
+
+The five observed values keep their full precision internally; formatted numbers
+expose full values on hover. **Üyelik dereceleri** uses the same server-sampled
+configured curves, scaling and observed-value markers as historical analysis.
+**Etkin kurallar** shows actual backend rule descriptions, strengths, bars and
+consequents. The output plot shows the engine's real 201-point output memberships,
+max-aggregated clipped set and centroid marker; no inference runs in TypeScript.
+It is supplied by the read-only `POST /api/visualization/output` endpoint using
+the existing feature request schema. Its model ID and centroid must match the
+selected analysis before it is drawn. A loading/error state never invents a curve.
+
+Sensitive/Balanced/Conservative cards show backend alarm decisions and thresholds;
+switching policy preserves the score and membership/output curves. Unavailable or
+invalid-flow results retain available metadata and explain abstention without
+membership or centroid graphs. Neither the score nor memberships are attack
+probabilities. No capture lifecycle, model parameter or alarm threshold changes
+were made for these visualizations.
 
 ## Local monitoring API
 

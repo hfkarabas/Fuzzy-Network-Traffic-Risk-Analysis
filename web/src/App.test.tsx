@@ -4,10 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import fixture from './test-fixture.json'
 import replayFixture from './live-test-fixture.json'
+import outputs from './visualization-test-fixture.json'
 
 function installAPI() {
   const server = vi.fn(async (url: string | URL | Request, options?: RequestInit) => {
     const path = String(url)
+    if (path === '/api/visualization/output') return new Response(JSON.stringify(outputs.historical))
     if (path === '/api/analyze') {
       const body = JSON.parse(String(options?.body))
       const example = fixture.examples.examples.find(e => JSON.stringify(e.features) === JSON.stringify(body.features))

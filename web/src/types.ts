@@ -11,5 +11,6 @@ export interface Metrics { precision: number; recall: number; f1: number; false_
 export interface Confusion { tn: number; fp: number; fn: number; tp: number }
 export interface Historical { id: string; title: string; description: string; weighting: string; metrics: Metrics; confusion: Confusion; confusion_weighting: string; source: string }
 export interface Internal { id: PolicyID; metrics: Metrics; confusion: Confusion; rows: number; benign_rows: number; attack_rows: number; pooled_row_fpr: number; pooled_row_recall: number }
-export interface Evaluation { historical: Historical[]; internal: Internal[]; internal_scope: string; internal_confusion_scope: string; independent_holdout: boolean; limitations: string[]; source: string }
+export interface Optimization { version: string; selected_candidate: string; model_id: string; scope: string; conclusion: string; source: string; candidates: { id: string; precision: number; recall: number; fpr: number; balanced_accuracy: number; balanced_accuracy_fold_sd: number; roc_auc: number; benign_rows: number; attack_rows: number }[] }
+export interface Evaluation { historical: Historical[]; internal: Internal[]; internal_scope: string; internal_confusion_scope: string; independent_holdout: boolean; limitations: string[]; source: string; optimization?: Optimization; active_model_id?: string; internal_model_id?: string }
 export interface AppData { model: Model; policies: Policy[]; examples: Example[]; evaluation: Evaluation }

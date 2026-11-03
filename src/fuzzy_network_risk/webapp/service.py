@@ -1,6 +1,7 @@
 """Small cached data access, Python inference adapter and display serialization."""
 from pathlib import Path
 import csv
+import hashlib
 import json
 import numpy as np
 from ..engine import MamdaniRiskEngine
@@ -15,10 +16,14 @@ def read_json(path): return json.loads(path.read_text(encoding='utf-8'))
 class WebService:
     def __init__(self,root=ROOT):
         self.root=Path(root)
-        config=self.root/'config/fuzzy/task02b'
-        self.engine=MamdaniRiskEngine.load(config/'selected_v2.json')
+        config=self.root/'config/fuzzy/task04'
+        self.engine=MamdaniRiskEngine.load(config/'selected_v4.json')
         self.policy_config=read_json(config/'selected_policies.json')
         manifest=read_json(config/'selected_manifest.json')
+        self.manifest=manifest
+        for filename,key in [('selected_v4.json','model_sha256'),('selected_policies.json','policy_sha256')]:
+            if hashlib.sha256((config/filename).read_bytes()).hexdigest()!=manifest[key]:
+                raise ValueError('Frozen configuration content hash mismatch')
         if self.engine.model_id!=manifest['model_id']: raise ValueError('Frozen model identity mismatch')
         self.models={name:PolicyRiskModel(self.engine,self.policy_config,name) for name in POLICIES}
         self.catalog=read_json(self.root/'web/catalog/examples.json')
@@ -57,7 +62,7 @@ class WebService:
         rules=[{'id':r['id'],'conditions':condition_text(r['antecedent']),'consequent':r['consequent'],
                 'text':f"EĞER {condition_text(r['antecedent'])} İSE risk {LEVELS[r['consequent']].lower()}."} for r in self.engine.config['rules']]
         return {'title':'Bulanık Mantık Tabanlı Ağ Trafiği Risk Analizi','model_id':self.engine.model_id,
-                'model_version':'TASK 02B · korunan Mamdani v1','configuration_version':'task02b-v2-1',
+                'model_version':self.manifest['model_version'],'configuration_version':self.manifest['configuration_version'],
                 'method':'Mamdani','and':'Minimum','or':'Maksimum','implication':'Minimum kırpma','aggregation':'Maksimum',
                 'defuzzification':'Ağırlık merkezi (centroid)','output_grid_points':len(self.engine.grid),
                 'rule_count':len(rules),'features':features,'rules':rules,'terms':TERMS,'levels':LEVELS,
@@ -114,7 +119,20 @@ class WebService:
                              'rows':int(row['benign_rows'])+int(row['attack_rows']),
                              'benign_rows':int(row['benign_rows']),'attack_rows':int(row['attack_rows']),
                              'pooled_row_fpr':float(row['pooled_row_fpr']),'pooled_row_recall':float(row['pooled_row_recall'])})
-        return {'historical':scenarios,'internal':internal,'internal_scope':'İç doğrulama · üç katın imza-grubu ağırlıklı ortalaması',
+        with (self.root/'reports/fuzzy/task04/comparison.csv').open(encoding='utf-8',newline='') as handle:
+            comparisons=[row for row in csv.DictReader(handle) if row['policy']=='Balanced']
+        optimization={'version':'TASK 04','selected_candidate':self.manifest['candidate'],'model_id':self.engine.model_id,
+            'scope':'Yeniden kullanılan iç doğrulama; bağımsız test değildir. Grup ağırlıklı üç kat ortalaması.',
+            'conclusion':'Hiçbir aday terfi ölçütünü geçmedi. Puanlama modeli ve mevcut alarm politikaları aynen korundu.',
+            'source':'reports/fuzzy/task04/comparison.csv',
+            'candidates':[{'id':r['candidate'],'precision':float(r['precision']),'recall':float(r['recall']),
+                'fpr':float(r['false_positive_rate']),'balanced_accuracy':float(r['balanced_accuracy']),
+                'balanced_accuracy_fold_sd':float(r['balanced_accuracy_fold_sd']),'roc_auc':float(r['roc_auc']),
+                'benign_rows':int(r['benign_rows']),'attack_rows':int(r['attack_rows'])} for r in comparisons]}
+        return {'historical':scenarios,'internal':internal,'optimization':optimization,
+                'active_model_id':self.engine.model_id,
+                'internal_model_id':self.engine.model_id,
+                'internal_scope':'TASK 02B · korunan model · üç katın imza-grubu ağırlıklı ortalaması',
                 'internal_confusion_scope':'Ayrı kat eşikleriyle birleştirilmiş ham akış sayıları; grup ağırlıklı oranların matrisi değildir.',
                 'independent_holdout':False,'source':'reports/fuzzy/task02b/comparison_summary.csv',
                 'limitations':['Geçmiş gruplu testte yanlış alarm oranı %76’dır.',

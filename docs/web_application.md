@@ -1,6 +1,11 @@
 # TASK03 local web application
 
-The Turkish dashboard wraps the unchanged, frozen TASK02B-selected scoring model.
+The Turkish dashboard wraps the unchanged scoring model, retained again in TASK04.
+The backend now loads `config/fuzzy/task04/selected_v4.json` and its manifest/policies.
+These scoring and policy files are byte-identical to TASK02B selections. TASK04
+candidate results appear separately as reused internal validation; historical tests
+are preserved. See `reports/fuzzy/task04/scientific_report.md` for the failed
+improvement hypotheses and remaining scientific limitations.
 It is an educational demonstration, not a reliable operational IDS. No fitting,
 rule changes, policy recalibration, dataset downloads or live capture occur here.
 
@@ -14,6 +19,13 @@ cd C:\Fuzzy-Network-Traffic-Risk-Analysis
 .\scripts\start-web.ps1 -Install -Build
 # Later starts use installed packages and the built frontend, offline:
 .\scripts\start-web.ps1
+```
+
+If Windows disables scripts, run the following process-scoped command instead;
+it does not modify the saved execution policy:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-web.ps1 -Build
 ```
 
 Open **http://127.0.0.1:8000**. The PowerShell process owns the foreground backend;

@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Registered experiment source hashes use LF, including on Windows checkouts.
+*.py text eol=lf

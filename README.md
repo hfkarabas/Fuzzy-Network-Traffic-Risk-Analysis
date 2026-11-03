@@ -225,3 +225,24 @@ ratio does not prove no response. Policy targets are group-weighted estimates, n
 per-flow guarantees; both 4.91% grouped FPR and 15.71% raw-flow FPR remain visible
 in the internal-validation view. Future scientific revisions need training/validation
 work and a newly reserved evaluation, not optimization against exposed tests.
+
+## TASK04 — bounded scientific refinement
+
+Five registered candidates (frozen/refit, group-reference memberships, contextual
+rules, combined changes) were compared on the eligible, reused internal folds.
+None passed the promotion gate. The original 22-rule scoring model and all three
+policies remain byte-identical; the backend now loads the versioned TASK04 manifest.
+The existing evaluation page includes the negative candidate comparison without a
+visual redesign. No independent generalization improvement is claimed.
+
+See [scientific report](reports/fuzzy/task04/scientific_report.md),
+[registered protocol](config/fuzzy/task04/protocol.json) and
+[measured comparison](reports/fuzzy/task04/comparison.csv).
+
+If Windows blocks PowerShell scripts, use a process-scoped invocation:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-web.ps1 -Build
+```
+
+This does not change the saved execution policy. Rebuild once after this update.

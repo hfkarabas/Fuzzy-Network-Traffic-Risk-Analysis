@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "rows": 14042,
+  "seconds": 0.12528880000002118,
+  "rows_per_second": 112077.05716710213,
+  "scope": "CPU inference incl output arrays, excludes IO; one bounded run, not latency SLA",
+  "max_score_change_plus_0_1_percent": 0.13887770498810958,
+  "p99_score_change": 0.06478002165378527,
+  "near_anchor_max_change_2ppm": 5.176939987450169e-05,
+  "near_anchor_checks": 15,
+  "single_batch_policy_and_reload_consistency": true,
+  "centroid_workspace_bytes": 3293184,
+  "input_dataframe_bytes": 674016,
+  "invalid_cases_abstain": true
+}

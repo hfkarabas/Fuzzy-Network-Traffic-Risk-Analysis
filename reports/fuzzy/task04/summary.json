@@ -1,0 +1,27 @@
+{
+  "A_frozen": {
+    "balanced_accuracy": 0.5808266317793594,
+    "fpr": 0.04910164828843657,
+    "recall": 0.21075491184715545
+  },
+  "A_refit": {
+    "balanced_accuracy": 0.5264188456081441,
+    "fpr": 0.04756834185983406,
+    "recall": 0.10040603307612232
+  },
+  "B_group_membership": {
+    "balanced_accuracy": 0.5073989222637576,
+    "fpr": 0.03203331539702398,
+    "recall": 0.04683115992453928
+  },
+  "C_context_rules": {
+    "balanced_accuracy": 0.4869152579865332,
+    "fpr": 0.0286924222047181,
+    "recall": 0.00252293817778431
+  },
+  "D_combined": {
+    "balanced_accuracy": 0.48630692630559674,
+    "fpr": 0.027386147388806542,
+    "recall": 0.0
+  }
+}

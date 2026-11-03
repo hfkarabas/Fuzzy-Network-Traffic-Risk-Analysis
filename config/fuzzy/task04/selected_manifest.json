@@ -1,0 +1,12 @@
+{
+  "candidate": "A_frozen",
+  "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+  "configuration_version": "task04-v1",
+  "model_version": "TASK 04 · korunan Mamdani v1",
+  "rule_count": 22,
+  "feature_count": 5,
+  "independent_test": false,
+  "evidence": "reused internal validation; not independent final evaluation",
+  "model_sha256": "d66210e885a4f78397cd16cead77aa48b03c0c0a5e107ea27bd4a8fb0f7cc30f",
+  "policy_sha256": "c85a2b02b91ff632bbb14ad25eb8ef220e042e087189f69190b8f5a780e60041"
+}

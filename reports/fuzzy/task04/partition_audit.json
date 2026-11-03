@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "sample_rows": 60000,
+  "assessment_rows": 45958,
+  "design_rows": 14042,
+  "exposed_contamination": 0,
+  "group_overlap": 0,
+  "folds": [
+    {
+      "fold": 0,
+      "train": 16175,
+      "calibration": 15626,
+      "assessment": 14157,
+      "assessment_groups": 8215,
+      "assessment_days": {
+        "Wednesday": 4672,
+        "Monday": 3867,
+        "Tuesday": 2956,
+        "Thursday": 2662
+      },
+      "unseen_assessment_labels": []
+    },
+    {
+      "fold": 1,
+      "train": 14157,
+      "calibration": 16175,
+      "assessment": 15626,
+      "assessment_groups": 8422,
+      "assessment_days": {
+        "Wednesday": 4609,
+        "Monday": 4482,
+        "Thursday": 3471,
+        "Tuesday": 3064
+      },
+      "unseen_assessment_labels": [
+        "Heartbleed",
+        "Web Attack � Brute Force"
+      ]
+    },
+    {
+      "fold": 2,
+      "train": 15626,
+      "calibration": 14157,
+      "assessment": 16175,
+      "assessment_groups": 8319,
+      "assessment_days": {
+        "Wednesday": 4804,
+        "Monday": 4191,
+        "Thursday": 4110,
+        "Tuesday": 3070
+      },
+      "unseen_assessment_labels": []
+    }
+  ],
+  "independent_holdout": false,
+  "source_sha256": "6d075afbb8a88c76d0cec5aa8783bd93997e2cd78adad7d9fbf3bb3ab4d9f187"
+}

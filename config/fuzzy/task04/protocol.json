@@ -1,0 +1,42 @@
+{
+  "version": "task04-v1",
+  "seed": 20261104,
+  "candidates": [
+    "A_frozen",
+    "A_refit",
+    "B_group_membership",
+    "C_context_rules",
+    "D_combined"
+  ],
+  "rules": 22,
+  "features": [
+    " Flow Packets/s",
+    " Total Fwd Packets",
+    " Packet Length Mean",
+    " Bwd Packet Length Std",
+    " Down/Up Ratio"
+  ],
+  "B": "Training-only equal-signature median reference p25/p60/p90; original rules.",
+  "C": "Training-row reference; R07/R19 Low; R10/R11 require volume many. Preserve R14/R16 varied-large response hypotheses and all other rules.",
+  "D": "Exactly B plus C; no further search.",
+  "feature_enhanced": "Not registered: existing design audit finds duration/IAT/header redundant, flags unstable by day, bytes/s algebraically coupled; five inputs retained, sufficiency not established.",
+  "rationale": "Prior design-only diagnostics show R07/R10/R11/R19 frequent benign activation. Retain response-variability hypotheses lost by earlier broad demotion. Association is not causation.",
+  "population": "Existing eligible 60,000 rows; 14,042 design rows excluded from assessment. Same three group-role rotations on 45,958 rows. Reused development validation, not independent testing.",
+  "selection": "Mean Balanced-policy group-weighted BA; FPR<=0.075; >=0.02 gain over BOTH A_refit and active A_frozen; paired signature-bootstrap lower95>0 against both. Ties prefer earlier simpler candidate. Otherwise retain A_frozen and its policies verbatim.",
+  "policies": "Calibration-only maximum signature-weighted recall at FPR caps 0.10/0.05/0.01, unchanged tie rules. Report raw row rates as well.",
+  "uncertainty": "500 paired signature resamples; conditional on fitted folds, not selection-adjusted or host/day-independent.",
+  "stress": "After selection only, leave each Tuesday/Wednesday/Thursday out, remove linked signatures from training/calibration; no reselection.",
+  "limitations": "Prior TASK02B assessment reused adaptively. Original frozen memberships overlap development. No untouched holdout; no independent performance claim.",
+  "source_sha256": {
+    "src/fuzzy_network_risk/optimization.py": "c84da7ac65956a7feca2b76e1ad80175109e7c3455dd4cca93f354f41867762a",
+    "scripts/task04_experiment.py": "bdf77e01c49409293a9b10deb3c3b9c670739dfe699668626f7e0f3092a18168",
+    "src/fuzzy_network_risk/engine.py": "02a10504621f9c92d86ffc17d13f733aeea38f9b6878881eddd8ecfde5b6b594",
+    "src/fuzzy_network_risk/refinement.py": "10d97b9a74b82ccc8aa8f161e474eb5a8240538635a6f2cc1c1a091911c5e898",
+    "src/fuzzy_network_risk/calibration.py": "89c248f8b3b8fe4c18813a783fcb021113ff0a27f50b4603449fa3071e5a0f72",
+    "src/fuzzy_network_risk/rules.py": "fdd1cbdc4736b70f2b313eb2a3c76cbfb4408f6a9068ff69cfc4ad27aac18388",
+    "src/fuzzy_network_risk/membership.py": "5d11478dc187a769243acbb84500e3a033723d0f16d2dcc49e8d8f67c501bec7",
+    "src/fuzzy_network_risk/evaluation.py": "da240af871834858d8ff3039e1a237c95ecc87062f2459777a0f0dd0370a1da7",
+    "scripts/task02b_experiment.py": "12683b8822f372813096a03322bf8fb24d57670b24465eea83a4952f10ee560e"
+  },
+  "data_sha256": "6d075afbb8a88c76d0cec5aa8783bd93997e2cd78adad7d9fbf3bb3ab4d9f187"
+}

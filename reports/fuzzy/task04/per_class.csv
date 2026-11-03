@@ -1,0 +1,11 @@
+label,support,alerts,missed,alert_rate,scope
+BENIGN,39159,6151,33008,0.1570775556066294,internal OOF using fold-calibrated thresholds; not deployed-policy test
+DoS GoldenEye,320,40,280,0.125,internal OOF using fold-calibrated thresholds; not deployed-policy test
+DoS Hulk,6059,1208,4851,0.19937283380095724,internal OOF using fold-calibrated thresholds; not deployed-policy test
+DoS Slowhttptest,168,0,168,0.0,internal OOF using fold-calibrated thresholds; not deployed-policy test
+DoS slowloris,92,22,70,0.2391304347826087,internal OOF using fold-calibrated thresholds; not deployed-policy test
+FTP-Patator,118,110,8,0.9322033898305084,internal OOF using fold-calibrated thresholds; not deployed-policy test
+Heartbleed,1,1,0,1.0,internal OOF using fold-calibrated thresholds; not deployed-policy test
+Infiltration,7,0,7,0.0,internal OOF using fold-calibrated thresholds; not deployed-policy test
+SSH-Patator,31,0,31,0.0,internal OOF using fold-calibrated thresholds; not deployed-policy test
+Web Attack � Brute Force,3,0,3,0.0,internal OOF using fold-calibrated thresholds; not deployed-policy test

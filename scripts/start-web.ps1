@@ -24,8 +24,10 @@ if ($Build -or (-not $Dev -and -not (Test-Path -LiteralPath 'web/dist/index.html
 }
 $existing = $null
 try { $existing = Invoke-RestMethod -Uri 'http://127.0.0.1:8000/api/health' -TimeoutSec 2 } catch { }
-$expectedModel = (Get-Content -Raw -LiteralPath 'config/fuzzy/task02b/selected_manifest.json' | ConvertFrom-Json).model_id
+$expectedManifest = Get-Content -Raw -LiteralPath 'config/fuzzy/task04/selected_manifest.json' | ConvertFrom-Json
+$expectedModel = $expectedManifest.model_id
 if ($existing -and $existing.model_id -ne $expectedModel) { throw 'Port 8000 belongs to a different service. Stop it or use manual documented commands.' }
+if ($existing -and $existing.configuration_version -ne $expectedManifest.configuration_version) { throw 'An older application is running on port 8000. Stop its PowerShell process with Ctrl+C and run this command again.' }
 if ($Dev) {
     $ownedBackend = $null
     try {

@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "python_tests_passed": 129,
+  "frontend_tests_passed": 15,
+  "failed_tests": 0,
+  "typescript": "PASS",
+  "production_build": "PASS",
+  "live_http_direct_comparisons": 27,
+  "saved_policy_metric_rows_reproduced": 45,
+  "historical_artifacts_unchanged": 176,
+  "old_configs_reports_css_catalog_unchanged": 129,
+  "active_configuration": "task04-v1",
+  "active_model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+  "source_sha256": {
+    "scripts/task04_experiment.py": "bdf77e01c49409293a9b10deb3c3b9c670739dfe699668626f7e0f3092a18168",
+    "scripts/task04_diagnostics.py": "2427c80f86d63862b39b3358ca789f0ad0841e6da1fdedc3ebe18912f375564b",
+    "scripts/task04_validate.py": "08c0c516d751ab7f96f4ace3ff332f6304b94903fc3815ca14dc5e2e784f3108",
+    "scripts/task04_finish.py": "9fc2d22751a4b1cd8fd13975e8c00fd064a4cf1dd2201aea0418c5e1f900252d",
+    "src/fuzzy_network_risk/optimization.py": "c84da7ac65956a7feca2b76e1ad80175109e7c3455dd4cca93f354f41867762a",
+    "src/fuzzy_network_risk/webapp/service.py": "5823e71bc32e7d0f205de408a8fc60726e79e8f7d54c3a9c512993332bee3927",
+    "src/fuzzy_network_risk/webapp/api.py": "555ed89795c8a9f8d1272be6eb6fb3249eedb4e6af1683ea164eb84038115a9e",
+    "tests/test_optimization.py": "971003d03d999ad3836b3f2f4164e6288d4356e3f85c5030c3255a252952d68c",
+    "web/src/App.tsx": "1c7e191ee55416d694a2306271f4957a1ce8dd12086a4d5dea07a8aefd94a6a8",
+    "web/src/types.ts": "834e2dd21ca9d774f70b0a65491b1eafe7c80fbbc59a158c1c93a7f61df85ef5",
+    "web/src/App.test.tsx": "58a501edfca0bee3ea11fbc7fc95cbad4d4ccd8f52edf276787a9dc1a7562bb1"
+  },
+  "protocol_sha256": "f8a5329853e9c6d8b2efe99965f7395e0fc74b01a271d78e7ac8104f3555be31",
+  "environment_note": "Initial sandbox tests failed on Windows temp ACLs and Vite file access; rerun with execution permission and repository-local temp passed. Tests were not weakened.",
+  "evaluation_note": "Reused internal validation only; no independent final test and no supported model improvement."
+}

@@ -1,0 +1,34 @@
+{
+  "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+  "policies": {
+    "Sensitive": {
+      "threshold": 49.632522849397134,
+      "fpr_cap": 0.1,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.09790027979170614,
+      "calibration_recall": 0.28581089559961276,
+      "nontrivial_recall_feasible": true
+    },
+    "Balanced": {
+      "threshold": 51.809236850031304,
+      "fpr_cap": 0.05,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.04770294961441745,
+      "calibration_recall": 0.22421574770412528,
+      "nontrivial_recall_feasible": true
+    },
+    "Conservative": {
+      "threshold": 59.465890915130174,
+      "fpr_cap": 0.01,
+      "calibration_feasible": true,
+      "calibration_fpr": 0.009891703682114441,
+      "calibration_recall": 0.07730082491293086,
+      "nontrivial_recall_feasible": true
+    }
+  },
+  "default_policy": "Balanced",
+  "apply_alert": "score >= selected policy threshold; engine embedded threshold is historical metadata",
+  "training_bucket": "historical A_frozen",
+  "calibration_bucket": "1",
+  "independent_test": false
+}

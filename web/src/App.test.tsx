@@ -78,6 +78,14 @@ describe('actual-response UI integration', () => {
     await screen.findByRole('heading', { name: 'Yerel sunucuya bağlanılamadı' })
     expect(screen.getByRole('button', { name: 'Yeniden dene' })).toBeVisible()
   })
+  it('shows TASK04 negative findings and identifies reused validation', async () => {
+    installAPI(); render(<App />); await screen.findByText('Alarm üretildi')
+    await userEvent.click(screen.getByRole('link', { name: 'Model Performansı' }))
+    expect(screen.getByRole('heading', { name: 'TASK 04 · Bilimsel aday karşılaştırması' })).toBeVisible()
+    expect(screen.getByText(/Hiçbir aday terfi ölçütünü geçmedi/)).toBeVisible()
+    expect(screen.getByText(/Yeniden kullanılan iç doğrulama/)).toBeVisible()
+    expect(screen.getByText('D_combined')).toBeVisible()
+  })
   it('rejects malformed API prediction data rather than drawing a fake score', async () => {
     const original = installAPI()
     vi.stubGlobal('fetch', vi.fn(async (url: string | URL | Request, options?: RequestInit) => String(url) === '/api/analyze' ? new Response(JSON.stringify({ status: 'ok', risk_score: 900 }), { status: 200 }) : original(url, options)))

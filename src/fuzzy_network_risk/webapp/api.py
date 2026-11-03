@@ -67,7 +67,8 @@ def create_app(root=ROOT):
         return JSONResponse(status_code=500,content={'status':'error','message':'İşlem tamamlanamadı. Yerel sunucu günlüklerini kontrol edin.'})
 
     @app.get('/api/health',tags=['System'])
-    def health(request:Request): return {'status':'ok','model_loaded':True,'model_id':request.app.state.service.engine.model_id,'local_only':True}
+    def health(request:Request): return {'status':'ok','model_loaded':True,'model_id':request.app.state.service.engine.model_id,'local_only':True,
+                                        'configuration_version':request.app.state.service.model['configuration_version']}
 
     @app.get('/api/model',tags=['System'])
     def model(request:Request): return request.app.state.service.model

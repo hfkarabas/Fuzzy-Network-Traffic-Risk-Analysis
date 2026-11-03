@@ -262,23 +262,6 @@ Sources: [retained-model comparison](reports/fuzzy/task02b/comparison_summary.cs
 [partition integrity](reports/fuzzy/task02b/evaluation_integrity.md) and
 [selection decision](reports/fuzzy/task05/final_report.md).
 
-## Screenshots
-
-Current-release screenshots are not bundled; no mockups or outdated captures are
-presented as the application. The views below are available in the dashboard:
-
-| View | Content |
-|---|---|
-| Security Overview | Real configuration counts and monitoring/recorded-traffic entry points |
-| Live Traffic | Interface controls, session status and observed-flow table |
-| Flow Analysis | Selected flow metadata, risk gauge and policy comparison |
-| Membership visualizations | Five configured curves, observed markers and rule strengths |
-| Dataset Information | Class distribution, preparation and evaluation/calibration records |
-
-Genuine captures can be added under `docs/screenshots/` and linked here after
-redacting network endpoint information. Synthetic replay captures must remain
-explicitly labeled. There are no placeholder image links.
-
 ## Limitations
 
 - Historical distribution/scenario shift and duplicate dependencies limit generalization.
@@ -289,24 +272,7 @@ explicitly labeled. There are no placeholder image links.
 - Independently validated live intrusion-detection accuracy is not established.
 - Scores are not probabilities; alerts are indicators, not confirmed attacks or
   evidence of automatic blocking.
-
-## Repository structure
-
-```text
-config/                         Frozen model, policies and dataset manifest
-datasets/                       Git LFS parsed-source Parquet archive
-docs/                           Setup, capture, localization and data guides
-reports/                        Recorded evaluation and verification evidence
-scripts/                        Local launchers, preparation and verification tools
-src/fuzzy_network_risk/
-  engine.py                     Mamdani inference
-  policy.py                     Threshold-based alert policies
-  realtime/                     Capture, flow statistics and monitoring lifecycle
-  webapp/                       FastAPI and response presentation
-tests/                          Python fixtures and regression tests
-web/src/                        Seven dashboard pages, shared SVG components, i18n
-```
-
+  
 ### Verification
 
 ```powershell

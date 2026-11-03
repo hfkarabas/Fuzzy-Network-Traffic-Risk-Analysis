@@ -33,6 +33,22 @@ Native Windows execution was validated; native Intel/Apple Silicon macOS and Lin
 execution remains unverified. POSIX branches have code inspection and mocked tests.
 
 Dataset: [c01dsnap/CIC-IDS2017](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017).
+
+## Optional live monitoring (TASK 07)
+
+Open **Canlı Trafik** after `make`. Capture never starts automatically. Install the
+optional `requirements-live.txt` into the project `.venv`; Windows also requires
+Npcap and capture-specific permissions. Offline pages work without either.
+
+Select an authorized interface and explicitly start/stop monitoring, or select
+the clearly labeled synthetic packet replay to exercise the complete pipeline
+without a capture driver. IPv4 TCP/UDP flows feed the unchanged five-input model.
+Live feature compatibility is experimental, not validated against the original
+2017 exporter/PCAPs. Partial segments and insufficient data are labeled explicitly;
+the application is not a reliable operational IDS.
+
+[Dependencies, Npcap, feature mapping, API, privacy and validation](docs/realtime-monitoring.md).
+
 Verified source: **2,830,743 records, 79 columns, one train split, 15 labels**.
 TASK 01 supplies full-data profiling, cleaning, a five-input fuzzy-ready export,
 grouped evaluation manifests, a development sample and synthetic unit tests.

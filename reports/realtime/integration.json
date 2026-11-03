@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "transport": "actual localhost HTTP through Vite proxy and FastAPI",
+  "source": "explicit synthetic serialized Scapy IPv4 packets; NOT captured traffic",
+  "packets": 6,
+  "flows": 2,
+  "direct_offline_live_policy_comparisons": 6,
+  "offline_regression": "PASS",
+  "no_automatic_capture": true,
+  "owned_process_cleanup": "PASS",
+  "actual_capture": {
+    "status": "NOT RUN",
+    "reason": "Npcap kullanılamıyor. Npcap kurulumu ve yakalama izinlerini kontrol edin; çevrimdışı analiz kullanılabilir."
+  },
+  "frontend_source_served": true,
+  "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b"
+}

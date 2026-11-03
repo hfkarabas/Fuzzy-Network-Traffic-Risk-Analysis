@@ -1,0 +1,3 @@
+# Optional capture/packet-replay support; ordinary offline startup does not need it.
+-r requirements-web.txt
+scapy==2.8.0

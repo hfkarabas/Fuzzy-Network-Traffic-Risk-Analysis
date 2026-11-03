@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import fixture from './test-fixture.json'
+import replayFixture from './live-test-fixture.json'
 
 function installAPI() {
   const server = vi.fn(async (url: string | URL | Request, options?: RequestInit) => {
@@ -21,6 +22,21 @@ function installAPI() {
   return server
 }
 beforeEach(() => { window.location.hash = '#analysis' })
+
+it('opens opt-in live monitoring from existing application navigation', async () => {
+  const offline = installAPI()
+  vi.stubGlobal('fetch', vi.fn(async (url: string | URL | Request, options?: RequestInit) => {
+    if (String(url).includes('/api/live/interfaces')) return new Response(JSON.stringify({ interfaces: [], error: { message: 'Npcap eksik' } }))
+    if (String(url).includes('/api/live/status')) return new Response(JSON.stringify({ ...replayFixture, mode: null, flows: [], counts: {}, state: 'stopped' }))
+    return offline(url, options)
+  }))
+  render(<App />)
+  await screen.findByText('Alarm üretildi')
+  await userEvent.click(screen.getByRole('link', { name: 'Canlı Trafik' }))
+  expect(await screen.findByRole('heading', { name: 'Canlı Trafik' })).toBeVisible()
+  expect(screen.getByRole('button', { name: 'İzlemeyi başlat' })).toBeDisabled()
+  expect(await screen.findByText(/Npcap eksik/)).toBeVisible()
+})
 
 describe('actual-response UI integration', () => {
   it('loads a real example, its actual score and Python membership curves', async () => {

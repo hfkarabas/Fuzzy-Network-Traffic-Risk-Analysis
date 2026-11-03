@@ -200,3 +200,7 @@ reports/web/screenshots/
 reports/lfs/screenshots/
 # Optional explicitly installed GNU Make tool; never a project runtime dependency.
 .tools/
+# TASK07: packet captures and monitoring scratch output must stay local.
+*.pcap
+*.pcapng
+*.cap

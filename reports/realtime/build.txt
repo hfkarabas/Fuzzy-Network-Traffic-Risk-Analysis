@@ -1,0 +1,17 @@
+Python dependencies verified; no installation needed.
+Frontend dependencies verified; no installation needed.
++ "C:\Program Files\nodejs\node.EXE" "C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js" run build
+[command]
+[command] > fuzzy-network-risk-web@1.0.0 build
+[command] > tsc --noEmit && vite build
+[command]
+[command] vite v8.3.5 building client environment for production...
+[command] transforming...
+[command] ✓ 2048 modules transformed.
+[command] rendering chunks...
+[command] computing gzip size...
+[command] dist/index.html                   0.63 kB │ gzip:  0.42 kB
+[command] dist/assets/index-rRay9Koh.css   32.71 kB │ gzip:  8.03 kB
+[command] dist/assets/index-Blbzyzmw.js   279.65 kB │ gzip: 86.80 kB
+[command]
+[command] ✓ built in 329ms

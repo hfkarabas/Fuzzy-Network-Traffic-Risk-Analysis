@@ -1,0 +1,418 @@
+{
+  "state": "stopped",
+  "running": false,
+  "session_id": "synthetic-replay",
+  "mode": "replay",
+  "interface": null,
+  "active_flows": 0,
+  "counts": {
+    "packets": 6,
+    "finalized_flows": 2,
+    "ok": 2
+  },
+  "risk_distribution": {
+    "Low": 2,
+    "alerts": 0
+  },
+  "policy": "Balanced",
+  "flows": [
+    {
+      "source": "192.0.2.1",
+      "destination": "192.0.2.2",
+      "source_port": 45000,
+      "destination_port": 443,
+      "protocol": "UDP",
+      "started_us": 1700000000400000,
+      "ended_us": 1700000000500000,
+      "duration_us": 100000,
+      "forward_packets": 1,
+      "backward_packets": 1,
+      "forward_payload_bytes": 12,
+      "backward_payload_bytes": 24,
+      "finalization": "replay_completed",
+      "provisional": false,
+      "features": {
+        " Flow Packets/s": 20.0,
+        " Total Fwd Packets": 1,
+        " Packet Length Mean": 16.0,
+        " Bwd Packet Length Std": 0.0,
+        " Down/Up Ratio": 1
+      },
+      "compatibility_profile": "cic-legacy-v1-experimental",
+      "compatibility": "experimental_not_exporter_validated",
+      "quality_errors": [],
+      "id": "replay-udp",
+      "observed_at": 0,
+      "status": "ok",
+      "observation_mode": "replay",
+      "analysis": {
+        "status": "ok",
+        "risk_score": 17.837383028039127,
+        "risk_level": "Low",
+        "alert": false,
+        "activated_rules": [
+          {
+            "id": "R04",
+            "strength": 0.8928105235746426,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "volume",
+                  "term": "few"
+                }
+              ]
+            },
+            "reason_key": "rules.R04",
+            "rationale_en": "Few packets at ordinary intensity can be routine transactions.",
+            "conditions_tr": "Paket yoğunluğu orta VE İleri yön paket sayısı az",
+            "text_tr": "EĞER Paket yoğunluğu orta VE İleri yön paket sayısı az İSE risk düşük."
+          },
+          {
+            "id": "R17",
+            "strength": 0.8928105235746426,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "size",
+                  "term": "medium"
+                },
+                {
+                  "feature": "balance",
+                  "term": "balanced"
+                }
+              ]
+            },
+            "reason_key": "rules.R17",
+            "rationale_en": "Balanced medium-size transactions provide a routine-traffic counter-hypothesis.",
+            "conditions_tr": "Paket yoğunluğu orta VE Ortalama paket boyutu orta VE Yön dengesi dengeli",
+            "text_tr": "EĞER Paket yoğunluğu orta VE Ortalama paket boyutu orta VE Yön dengesi dengeli İSE risk düşük."
+          },
+          {
+            "id": "R07",
+            "strength": 0.10718947642535737,
+            "consequent": "Medium",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "intensive"
+                },
+                {
+                  "feature": "volume",
+                  "term": "few"
+                }
+              ]
+            },
+            "reason_key": "rules.R07",
+            "rationale_en": "A tiny duration can inflate rate for a few packets; avoid critical risk from rate alone.",
+            "conditions_tr": "Paket yoğunluğu yoğun VE İleri yön paket sayısı az",
+            "text_tr": "EĞER Paket yoğunluğu yoğun VE İleri yön paket sayısı az İSE risk orta."
+          }
+        ],
+        "membership_degrees": {
+          " Flow Packets/s": {
+            "sparse": 0.0,
+            "moderate": 0.8928105235746426,
+            "intensive": 0.10718947642535737
+          },
+          " Total Fwd Packets": {
+            "few": 1.0,
+            "moderate": 0.0,
+            "many": 0.0
+          },
+          " Packet Length Mean": {
+            "small": 0.0,
+            "medium": 0.9952912558690074,
+            "large": 0.0047087441309926585
+          },
+          " Bwd Packet Length Std": {
+            "uniform": 1.0,
+            "variable": 0.0,
+            "highly_variable": 0.0
+          },
+          " Down/Up Ratio": {
+            "forward": 0.0,
+            "balanced": 1.0,
+            "backward": 0.0
+          }
+        },
+        "explanation_data": {
+          "message_key": "prediction.ok",
+          "dominant_rules": [
+            "R04",
+            "R17",
+            "R07"
+          ],
+          "invalid_features": [],
+          "outside_training_range": [],
+          "measurement_caveat_keys": [
+            "measurement.integer_direction_ratio",
+            "measurement.zero_variation_ambiguous",
+            "risk.not_probability"
+          ],
+          "risk_level_key": "risk.low"
+        },
+        "explanation": "Low risk (17.84/100). Strongest behavior rules: R04 -> Low (0.89), R17 -> Low (0.89), R07 -> Medium (0.11). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+        "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+        "alert_policy": {
+          "name": "Balanced",
+          "threshold": 51.809236850031304,
+          "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+          "calibration_fpr_target": 0.05,
+          "target_weighting": "signature_group_weighted",
+          "target_is_not_a_guarantee": true
+        },
+        "model_version": "TASK 04 · korunan Mamdani v1",
+        "input_values": {
+          " Flow Packets/s": 20.0,
+          " Total Fwd Packets": 1,
+          " Packet Length Mean": 16.0,
+          " Bwd Packet Length Std": 0.0,
+          " Down/Up Ratio": 1
+        },
+        "risk_level_tr": "Düşük",
+        "validation_errors": [],
+        "input_positions": {
+          " Flow Packets/s": 0.2041368708696982,
+          " Total Fwd Packets": 0.08044083117206077,
+          " Packet Length Mean": 0.37802463473410236,
+          " Bwd Packet Length Std": 0.0,
+          " Down/Up Ratio": 0.16666666666666666
+        },
+        "explanation_tr": "Düşük risk: 17,84/100. R04 (0,893): Paket yoğunluğu orta VE İleri yön paket sayısı az. R17 (0,893): Paket yoğunluğu orta VE Ortalama paket boyutu orta VE Yön dengesi dengeli. R07 (0,107): Paket yoğunluğu yoğun VE İleri yön paket sayısı az. Bu davranışlar saldırı türünü veya saldırı olasılığını kanıtlamaz."
+      },
+      "policy_comparison": {
+        "Sensitive": {
+          "risk_score": 17.837383028039127,
+          "risk_level": "Low",
+          "alert": false,
+          "threshold": 49.632522849397134
+        },
+        "Balanced": {
+          "risk_score": 17.837383028039127,
+          "risk_level": "Low",
+          "alert": false,
+          "threshold": 51.809236850031304
+        },
+        "Conservative": {
+          "risk_score": 17.837383028039127,
+          "risk_level": "Low",
+          "alert": false,
+          "threshold": 59.465890915130174
+        }
+      }
+    },
+    {
+      "source": "192.0.2.1",
+      "destination": "192.0.2.2",
+      "source_port": 45000,
+      "destination_port": 443,
+      "protocol": "TCP",
+      "started_us": 1700000000000000,
+      "ended_us": 1700000000300000,
+      "duration_us": 300000,
+      "forward_packets": 2,
+      "backward_packets": 2,
+      "forward_payload_bytes": 10,
+      "backward_payload_bytes": 60,
+      "finalization": "tcp_reset",
+      "provisional": false,
+      "features": {
+        " Flow Packets/s": 13.333333333333334,
+        " Total Fwd Packets": 2,
+        " Packet Length Mean": 16.0,
+        " Bwd Packet Length Std": 14.142135623730951,
+        " Down/Up Ratio": 1
+      },
+      "compatibility_profile": "cic-legacy-v1-experimental",
+      "compatibility": "experimental_not_exporter_validated",
+      "quality_errors": [],
+      "id": "replay-tcp",
+      "observed_at": 0,
+      "status": "ok",
+      "observation_mode": "replay",
+      "analysis": {
+        "status": "ok",
+        "risk_score": 15.998872142222703,
+        "risk_level": "Low",
+        "alert": false,
+        "activated_rules": [
+          {
+            "id": "R04",
+            "strength": 0.9372111323472748,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "volume",
+                  "term": "few"
+                }
+              ]
+            },
+            "reason_key": "rules.R04",
+            "rationale_en": "Few packets at ordinary intensity can be routine transactions.",
+            "conditions_tr": "Paket yoğunluğu orta VE İleri yön paket sayısı az",
+            "text_tr": "EĞER Paket yoğunluğu orta VE İleri yön paket sayısı az İSE risk düşük."
+          },
+          {
+            "id": "R17",
+            "strength": 0.9372111323472748,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "size",
+                  "term": "medium"
+                },
+                {
+                  "feature": "balance",
+                  "term": "balanced"
+                }
+              ]
+            },
+            "reason_key": "rules.R17",
+            "rationale_en": "Balanced medium-size transactions provide a routine-traffic counter-hypothesis.",
+            "conditions_tr": "Paket yoğunluğu orta VE Ortalama paket boyutu orta VE Yön dengesi dengeli",
+            "text_tr": "EĞER Paket yoğunluğu orta VE Ortalama paket boyutu orta VE Yön dengesi dengeli İSE risk düşük."
+          },
+          {
+            "id": "R07",
+            "strength": 0.06278886765272511,
+            "consequent": "Medium",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "intensive"
+                },
+                {
+                  "feature": "volume",
+                  "term": "few"
+                }
+              ]
+            },
+            "reason_key": "rules.R07",
+            "rationale_en": "A tiny duration can inflate rate for a few packets; avoid critical risk from rate alone.",
+            "conditions_tr": "Paket yoğunluğu yoğun VE İleri yön paket sayısı az",
+            "text_tr": "EĞER Paket yoğunluğu yoğun VE İleri yön paket sayısı az İSE risk orta."
+          }
+        ],
+        "membership_degrees": {
+          " Flow Packets/s": {
+            "sparse": 0.0,
+            "moderate": 0.9372111323472748,
+            "intensive": 0.06278886765272511
+          },
+          " Total Fwd Packets": {
+            "few": 1.0,
+            "moderate": 0.0,
+            "many": 0.0
+          },
+          " Packet Length Mean": {
+            "small": 0.0,
+            "medium": 0.9952912558690074,
+            "large": 0.0047087441309926585
+          },
+          " Bwd Packet Length Std": {
+            "uniform": 1.0,
+            "variable": 0.0,
+            "highly_variable": 0.0
+          },
+          " Down/Up Ratio": {
+            "forward": 0.0,
+            "balanced": 1.0,
+            "backward": 0.0
+          }
+        },
+        "explanation_data": {
+          "message_key": "prediction.ok",
+          "dominant_rules": [
+            "R04",
+            "R17",
+            "R07"
+          ],
+          "invalid_features": [],
+          "outside_training_range": [],
+          "measurement_caveat_keys": [
+            "measurement.integer_direction_ratio",
+            "measurement.zero_variation_ambiguous",
+            "risk.not_probability"
+          ],
+          "risk_level_key": "risk.low"
+        },
+        "explanation": "Low risk (16.00/100). Strongest behavior rules: R04 -> Low (0.94), R17 -> Low (0.94), R07 -> Medium (0.06). These patterns do not establish an attack type or probability. The integer direction ratio does not establish absence of responses.",
+        "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
+        "alert_policy": {
+          "name": "Balanced",
+          "threshold": 51.809236850031304,
+          "policy_id": "61b66e32f2f8e82f793851d185a7402ac9c901332ccf01e2c24d390844d2908f",
+          "calibration_fpr_target": 0.05,
+          "target_weighting": "signature_group_weighted",
+          "target_is_not_a_guarantee": true
+        },
+        "model_version": "TASK 04 · korunan Mamdani v1",
+        "input_values": {
+          " Flow Packets/s": 13.333333333333334,
+          " Total Fwd Packets": 2,
+          " Packet Length Mean": 16.0,
+          " Bwd Packet Length Std": 14.142135623730951,
+          " Down/Up Ratio": 1
+        },
+        "risk_level_tr": "Düşük",
+        "validation_errors": [],
+        "input_positions": {
+          " Flow Packets/s": 0.1785279493066104,
+          " Total Fwd Packets": 0.1274957009345578,
+          " Packet Length Mean": 0.37802463473410236,
+          " Bwd Packet Length Std": 0.3134877746443347,
+          " Down/Up Ratio": 0.16666666666666666
+        },
+        "explanation_tr": "Düşük risk: 16,00/100. R04 (0,937): Paket yoğunluğu orta VE İleri yön paket sayısı az. R17 (0,937): Paket yoğunluğu orta VE Ortalama paket boyutu orta VE Yön dengesi dengeli. R07 (0,063): Paket yoğunluğu yoğun VE İleri yön paket sayısı az. Bu davranışlar saldırı türünü veya saldırı olasılığını kanıtlamaz."
+      },
+      "policy_comparison": {
+        "Sensitive": {
+          "risk_score": 15.998872142222703,
+          "risk_level": "Low",
+          "alert": false,
+          "threshold": 49.632522849397134
+        },
+        "Balanced": {
+          "risk_score": 15.998872142222703,
+          "risk_level": "Low",
+          "alert": false,
+          "threshold": 51.809236850031304
+        },
+        "Conservative": {
+          "risk_score": 15.998872142222703,
+          "risk_level": "Low",
+          "alert": false,
+          "threshold": 59.465890915130174
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "control_token": "test-only-token",
+  "compatibility_profile": "cic-legacy-v1-experimental",
+  "retention_limit": 200,
+  "active_limit": 4096,
+  "notice": "Tamamlanan gözlemlenmiş akışlar; deneysel CIC uyumu. Puan saldırı olasılığı değildir. Paket kaybı/offload ve eksik başlangıç sonuçları etkiler."
+}

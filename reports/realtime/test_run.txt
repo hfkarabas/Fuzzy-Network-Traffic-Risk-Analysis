@@ -1,0 +1,22 @@
+Python dependencies verified; no installation needed.
+Frontend dependencies verified; no installation needed.
++ C:\Fuzzy-Network-Traffic-Risk-Analysis\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --basetemp C:\Fuzzy-Network-Traffic-Risk-Analysis\.tmp\launcher\pytest
+[command] ........................................................................ [ 31%]
+[command] ........................................................................ [ 63%]
+[command] ........................................................................ [ 95%]
+[command] ...........                                                              [100%]
+[command] 227 passed in 4.27s
++ "C:\Program Files\nodejs\node.EXE" "C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js" test
+[command]
+[command] > fuzzy-network-risk-web@1.0.0 test
+[command] > vitest run
+[command]
+[command]
+[command]  RUN  v5.1.0 C:/Fuzzy-Network-Traffic-Risk-Analysis/web
+[command]
+[command]
+[command]  Test Files  4 passed (4)
+[command]       Tests  21 passed (21)
+[command]    Start at  12:03:15
+[command]    Duration  3.06s (environment 53%, tests 31%, setup 11%, import 3%, transform 2%, worker 1%)
+[command]

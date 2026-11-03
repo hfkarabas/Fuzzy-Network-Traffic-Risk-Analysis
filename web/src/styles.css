@@ -7,3 +7,20 @@
 @media(max-width:720px){.sidebar{visibility:hidden}.sidebar.open{visibility:visible}}
 .risk-bands{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:24px 0 4px}.risk-bands>div{border-top:2px solid #5abda0;padding-top:6px;text-align:center}.risk-bands>div.medium{border-color:#caa462}.risk-bands>div.high{border-color:#d79b6a}.risk-bands>div.critical{border-color:#d9888c}.risk-bands b{display:block;font-size:9px;color:#aebfd2;font-weight:500}.risk-bands span{font:8px Consolas,monospace;color:#8fa3bd;display:block;margin-top:3px}
 .membership-heading>.mono{overflow-wrap:anywhere;max-width:100%}
+
+/* TASK07: bounded, metadata-only live monitoring; existing pages unchanged. */
+.live-controls,.live-summary,.live-results,.live-explanation { padding:24px; margin-bottom:20px; }
+.live-controls p,.live-summary p,.live-results p { color:var(--muted,#9aabc1); line-height:1.65; }
+.live-form { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:20px 0; }
+.live-form label { display:flex; flex-direction:column; gap:8px; }
+.live-form select { background:#131e2e; color:#e9f1fa; border:1px solid #35445a; padding:10px; border-radius:8px; width:100%; }
+.live-consent { display:flex; gap:10px; align-items:flex-start; margin:18px 0; line-height:1.6; }
+.live-consent input { margin-top:5px; }
+.live-buttons { display:flex; gap:12px; flex-wrap:wrap; }
+.live-metrics { display:flex; gap:14px 24px; flex-wrap:wrap; margin:18px 0; }
+.live-table-wrap { overflow-x:auto; }
+.live-results table { border-collapse:collapse; width:100%; min-width:750px; }
+.live-results th,.live-results td { text-align:left; padding:14px 10px; border-bottom:1px solid #29374b; vertical-align:top; }
+.live-explanation dl>div { display:flex; gap:20px; padding:8px 0; overflow-wrap:anywhere; }
+.live-explanation pre { overflow:auto; max-height:320px; }
+@media(max-width:900px) { .live-form { grid-template-columns:1fr; } }

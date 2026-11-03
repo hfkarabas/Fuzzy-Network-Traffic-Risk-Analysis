@@ -1,0 +1,414 @@
+{
+  "source_row_id": 1850701,
+  "label": "BENIGN",
+  "scope": "eligible design example, no tuning or independent evaluation claim",
+  "prediction": {
+    "status": "ok",
+    "risk_score": 50.92330792487649,
+    "risk_level": "High",
+    "model_id": "06c643eded5a7fd672b9605a8224174e5f5cb2527bd4780027ae6144dba6fd7d",
+    "architecture": "C_hierarchy",
+    "membership_degrees": {
+      " Flow Packets/s": {
+        "low": 1.0,
+        "moderate": 0.0,
+        "high": 0.0
+      },
+      " Total Fwd Packets": {
+        "low": 0.0,
+        "moderate": 0.03532144359751903,
+        "high": 0.964678556402481
+      },
+      " Packet Length Mean": {
+        "low": 0.0,
+        "moderate": 0.0,
+        "high": 1.0
+      },
+      " Bwd Packet Length Std": {
+        "low": 0.0,
+        "moderate": 0.11840033348244948,
+        "high": 0.8815996665175505
+      },
+      " Down/Up Ratio": {
+        "low": 0.0,
+        "moderate": 1.0,
+        "high": 0.0
+      },
+      " Flow Duration": {
+        "low": 0.0,
+        "moderate": 0.0,
+        "high": 1.0
+      },
+      " Flow IAT Std": {
+        "low": 0.0,
+        "moderate": 0.24371569567857765,
+        "high": 0.7562843043214224
+      },
+      " SYN Flag Count": {
+        "absent": 1.0,
+        "present": 0.0
+      }
+    },
+    "layers": {
+      "intensity": {
+        "score": 42.29945563317013,
+        "activated_rules": [
+          {
+            "id": "L03",
+            "strength": 0.964678556402481,
+            "consequent": "Medium",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "low"
+                },
+                {
+                  "feature": "volume",
+                  "term": "high"
+                }
+              ]
+            },
+            "rationale_en": "Long low-rate transfers need context.",
+            "reason_key": "task05.intensity.L03"
+          },
+          {
+            "id": "L02",
+            "strength": 0.03532144359751903,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "rate",
+                  "term": "low"
+                },
+                {
+                  "feature": "volume",
+                  "term": "moderate"
+                }
+              ]
+            },
+            "rationale_en": "Low intensity with modest volume is weak load evidence.",
+            "reason_key": "task05.intensity.L02"
+          }
+        ],
+        "membership_degrees": {
+          "low": 0.3080217746731947,
+          "moderate": 0.6919782253268053,
+          "high": 0.0
+        }
+      },
+      "timing": {
+        "score": 58.995771003148214,
+        "activated_rules": [
+          {
+            "id": "T06",
+            "strength": 0.7562843043214224,
+            "consequent": "High",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "duration",
+                  "term": "high"
+                },
+                {
+                  "feature": "iat",
+                  "term": "high"
+                }
+              ]
+            },
+            "rationale_en": "Long-lived intermittent activity is a timing concern, not attack attribution.",
+            "reason_key": "task05.timing.T06"
+          },
+          {
+            "id": "T04",
+            "strength": 0.24371569567857765,
+            "consequent": "Medium",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "duration",
+                  "term": "high"
+                },
+                {
+                  "feature": "iat",
+                  "term": "moderate"
+                }
+              ]
+            },
+            "rationale_en": "Long lifetime with moderate gaps may be an idle legitimate session.",
+            "reason_key": "task05.timing.T04"
+          }
+        ],
+        "membership_degrees": {
+          "low": 0.0,
+          "moderate": 0.6401691598740714,
+          "high": 0.35983084012592853
+        }
+      },
+      "connection": {
+        "score": 13.165,
+        "activated_rules": [
+          {
+            "id": "N01",
+            "strength": 1.0,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "syn",
+                  "term": "absent"
+                }
+              ]
+            },
+            "rationale_en": "Absence of exported SYN evidence is not proof of a safe connection.",
+            "reason_key": "task05.connection.N01"
+          },
+          {
+            "id": "N02",
+            "strength": 1.0,
+            "consequent": "Low",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "balance",
+                  "term": "moderate"
+                }
+              ]
+            },
+            "rationale_en": "Exported directional balance counters a forward-heavy hypothesis.",
+            "reason_key": "task05.connection.N02"
+          }
+        ],
+        "membership_degrees": {
+          "low": 1.0,
+          "moderate": 0.0,
+          "high": 0.0
+        }
+      },
+      "structure": {
+        "score": 62.895833302178914,
+        "activated_rules": [
+          {
+            "id": "P06",
+            "strength": 0.8815996665175505,
+            "consequent": "High",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "size",
+                  "term": "high"
+                },
+                {
+                  "feature": "variation",
+                  "term": "high"
+                }
+              ]
+            },
+            "rationale_en": "Joint large size and high response variability; benign transfers overlap.",
+            "reason_key": "task05.structure.P06"
+          },
+          {
+            "id": "P04",
+            "strength": 0.11840033348244948,
+            "consequent": "Medium",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "size",
+                  "term": "high"
+                },
+                {
+                  "feature": "variation",
+                  "term": "moderate"
+                }
+              ]
+            },
+            "rationale_en": "Large responses may simply be payload transfer.",
+            "reason_key": "task05.structure.P04"
+          }
+        ],
+        "membership_degrees": {
+          "low": 0.0,
+          "moderate": 0.4841666679128434,
+          "high": 0.5158333320871565
+        }
+      },
+      "final": {
+        "score": 50.92330792487649,
+        "activated_rules": [
+          {
+            "id": "F02",
+            "strength": 0.6919782253268053,
+            "consequent": "Medium",
+            "antecedent": {
+              "any": [
+                {
+                  "feature": "intensity",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "timing",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "connection",
+                  "term": "moderate"
+                },
+                {
+                  "feature": "structure",
+                  "term": "moderate"
+                }
+              ]
+            },
+            "rationale_en": "Any moderate module is ambiguous behavioral evidence.",
+            "reason_key": "task05.final.F02"
+          },
+          {
+            "id": "F03",
+            "strength": 0.5158333320871565,
+            "consequent": "Medium",
+            "antecedent": {
+              "any": [
+                {
+                  "feature": "intensity",
+                  "term": "high"
+                },
+                {
+                  "feature": "timing",
+                  "term": "high"
+                },
+                {
+                  "feature": "connection",
+                  "term": "high"
+                },
+                {
+                  "feature": "structure",
+                  "term": "high"
+                }
+              ]
+            },
+            "rationale_en": "One elevated dimension needs cross-dimension corroboration.",
+            "reason_key": "task05.final.F03"
+          },
+          {
+            "id": "F05",
+            "strength": 0.35983084012592853,
+            "consequent": "High",
+            "antecedent": {
+              "all": [
+                {
+                  "feature": "timing",
+                  "term": "high"
+                },
+                {
+                  "feature": "structure",
+                  "term": "high"
+                }
+              ]
+            },
+            "rationale_en": "Joint long-gap timing and varied-response structure provide corroboration.",
+            "reason_key": "task05.final.F05"
+          }
+        ],
+        "membership_degrees": {}
+      }
+    },
+    "activated_rules": [
+      {
+        "id": "F02",
+        "strength": 0.6919782253268053,
+        "consequent": "Medium",
+        "antecedent": {
+          "any": [
+            {
+              "feature": "intensity",
+              "term": "moderate"
+            },
+            {
+              "feature": "timing",
+              "term": "moderate"
+            },
+            {
+              "feature": "connection",
+              "term": "moderate"
+            },
+            {
+              "feature": "structure",
+              "term": "moderate"
+            }
+          ]
+        },
+        "rationale_en": "Any moderate module is ambiguous behavioral evidence.",
+        "reason_key": "task05.final.F02"
+      },
+      {
+        "id": "F03",
+        "strength": 0.5158333320871565,
+        "consequent": "Medium",
+        "antecedent": {
+          "any": [
+            {
+              "feature": "intensity",
+              "term": "high"
+            },
+            {
+              "feature": "timing",
+              "term": "high"
+            },
+            {
+              "feature": "connection",
+              "term": "high"
+            },
+            {
+              "feature": "structure",
+              "term": "high"
+            }
+          ]
+        },
+        "rationale_en": "One elevated dimension needs cross-dimension corroboration.",
+        "reason_key": "task05.final.F03"
+      },
+      {
+        "id": "F05",
+        "strength": 0.35983084012592853,
+        "consequent": "High",
+        "antecedent": {
+          "all": [
+            {
+              "feature": "timing",
+              "term": "high"
+            },
+            {
+              "feature": "structure",
+              "term": "high"
+            }
+          ]
+        },
+        "rationale_en": "Joint long-gap timing and varied-response structure provide corroboration.",
+        "reason_key": "task05.final.F05"
+      }
+    ],
+    "explanation_data": {
+      "message_key": "task05.prediction.ok",
+      "layer_order": [
+        "intensity",
+        "timing",
+        "connection",
+        "structure",
+        "final"
+      ],
+      "outside_training_range": []
+    },
+    "explanation": "Behavioral risk 50.92; inspect module and final rule paths. Not an attack probability or attack attribution.",
+    "alert": true,
+    "alert_policy": {
+      "name": "Balanced",
+      "threshold": 43.332350876917445,
+      "policy_id": "e9e69bbed0701111373cd5621a3bb2ccf9d89eb3d5ed54b81ba28776949e4726",
+      "calibration_fpr_target": 0.05,
+      "target_weighting": "signature_group_weighted",
+      "target_is_not_a_guarantee": true
+    }
+  }
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "candidate": "B_flat8",
+    "status": "PASS",
+    "design_rows": 14042,
+    "seconds": 0.13631640000039624,
+    "rows_per_second": 103010.3494514173,
+    "max_change_plus_0_1_percent": 0.10159968743856851,
+    "p99_change": 0.08309181651449972,
+    "near_anchors_2ppm_max_change": 8.16176323610307e-05,
+    "near_anchor_checks": 21,
+    "centroid_workspace_bytes_per_layer": 1646592,
+    "empirical_scope": "1000 eligible design rows, SYN unchanged, not a universal continuity bound"
+  },
+  {
+    "candidate": "C_hierarchy",
+    "status": "PASS",
+    "design_rows": 14042,
+    "seconds": 0.6368326000001616,
+    "rows_per_second": 22049.750593792523,
+    "max_change_plus_0_1_percent": 0.060437729876195334,
+    "p99_change": 0.03747997476995451,
+    "near_anchors_2ppm_max_change": 1.6306464736715043e-05,
+    "near_anchor_checks": 21,
+    "centroid_workspace_bytes_per_layer": 1646592,
+    "empirical_scope": "1000 eligible design rows, SYN unchanged, not a universal continuity bound"
+  },
+  {
+    "candidate": "D_behavior",
+    "status": "PASS",
+    "design_rows": 14042,
+    "seconds": 0.47269800000049145,
+    "rows_per_second": 29706.07026047371,
+    "max_change_plus_0_1_percent": 0.060437729876195334,
+    "p99_change": 0.04938559522212113,
+    "near_anchors_2ppm_max_change": 1.6306464736715043e-05,
+    "near_anchor_checks": 21,
+    "centroid_workspace_bytes_per_layer": 1646592,
+    "empirical_scope": "1000 eligible design rows, SYN unchanged, not a universal continuity bound"
+  }
+]

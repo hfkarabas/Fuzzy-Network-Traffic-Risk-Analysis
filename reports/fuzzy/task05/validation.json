@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "python_tests_passed": 164,
+  "frontend_tests_passed": 15,
+  "failed_tests": 0,
+  "typescript": "PASS",
+  "production_build": "PASS",
+  "production_api_direct_comparisons": 27,
+  "model_fitting_reproduced": 15,
+  "policy_calibration_sets_reproduced": 15,
+  "policy_metric_rows_reproduced": 45,
+  "day_stress_metric_sets_reproduced": 15,
+  "selection_reproduced": true,
+  "source_dataset_hashes_preserved": true,
+  "historical_artifact_hashes_unchanged": 176,
+  "prior_tracked_files_unchanged": 242,
+  "production_web_source_unchanged": true,
+  "cli_full_explanation_matches_python": true,
+  "source_sha256": {
+    "src/fuzzy_network_risk/advanced.py": "c1275d62d1f9677364fa91317a6bbb19897020bb6e243d02b8bcc8d03048ba9f",
+    "tests/test_advanced.py": "8fa14001967a529dc4155523fad00066f235568c54287e0f0a5f7addd6d264a7",
+    "scripts/task05_research.py": "6fe9cc74db9eca8aab3a2fe854b774f19b97bcd2aa5a9cade12af3772378591e",
+    "scripts/task05_experiment.py": "45cfe41d51876408dd70704b6f2c46cc183a178e9aa3349cee9eb62ad1774abe",
+    "scripts/task05_validate.py": "03eca1e68cb412ea8bb7f54326f1297ae9dc1cd7d355ac2cc9e40836c923b610",
+    "scripts/task05_reports.py": "1af6af244cc061f3a08c4b3a65daf3d8ea25357b9bfbc05e54fa1eeaa54ea0d7",
+    "scripts/task05_predict.py": "cf6da2c74835f909c969ff9ce5e7951c097cb352d7f3c45982c3989448c26a03",
+    "scripts/task05_finalize.py": "f2798edb545bd3270e8ed16ad9816cc290ef46e626f49b2f89f5a84681402fcb"
+  },
+  "protocol_sha256": "0f37b86726b456611b8755465929a8d324cbd3ebdae4766297e0619ea599dafb",
+  "no_independent_holdout": true,
+  "production_promoted": false,
+  "decision": "Promising hierarchical internal gains; capture-day stability gate failed; keep TASK04 production."
+}

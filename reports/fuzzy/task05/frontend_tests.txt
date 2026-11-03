@@ -1,0 +1,12 @@
+
+> fuzzy-network-risk-web@1.0.0 test
+> vitest run --run
+
+
+ RUN  v5.1.0 C:/Fuzzy-Network-Traffic-Risk-Analysis/web
+
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  10:04:37
+   Duration  3.07s (environment 61%, tests 22%, setup 12%, import 4%, transform 1%)

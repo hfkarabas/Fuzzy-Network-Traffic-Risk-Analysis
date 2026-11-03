@@ -1,0 +1,842 @@
+[
+  {
+    "candidate": "A_frozen",
+    "day": "Tuesday",
+    "training_rows": 18076,
+    "calibration_rows": 16271,
+    "assessment_rows": 9090,
+    "threshold": 51.077860464065964,
+    "group_metrics": {
+      "rows": 9090,
+      "weight": 7010.0,
+      "threshold": 51.077860464065964,
+      "confusion_matrix": {
+        "tn": 6310.033333333333,
+        "fp": 664.6571428571428,
+        "fn": 19.999999999999996,
+        "tp": 15.309523809523812
+      },
+      "precision": 0.02251510928406855,
+      "recall": 0.43358057990559684,
+      "f1": 0.04280730720068173,
+      "false_positive_rate": 0.09529557549916877,
+      "false_negative_rate": 0.5664194200944032,
+      "balanced_accuracy": 0.669142502203214,
+      "accuracy": 0.9023313633584674,
+      "roc_auc": 0.6190767580299749,
+      "pr_auc_average_precision": 0.018533238545635863,
+      "pr_auc_trapezoid": 0.014093053918062263
+    },
+    "row_metrics": {
+      "rows": 9090,
+      "weight": 9090.0,
+      "threshold": 51.077860464065964,
+      "confusion_matrix": {
+        "tn": 7817.0,
+        "fp": 1124.0,
+        "fn": 39.0,
+        "tp": 110.0
+      },
+      "precision": 0.08914100486223663,
+      "recall": 0.738255033557047,
+      "f1": 0.15907447577729572,
+      "false_positive_rate": 0.12571300749356895,
+      "false_negative_rate": 0.26174496644295303,
+      "balanced_accuracy": 0.806271013031739,
+      "accuracy": 0.8720572057205721,
+      "roc_auc": 0.7682127954397546,
+      "pr_auc_average_precision": 0.10110589077479984,
+      "pr_auc_trapezoid": 0.061767334782701154
+    },
+    "unseen_labels": [
+      "FTP-Patator",
+      "SSH-Patator"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "A_refit",
+    "day": "Tuesday",
+    "training_rows": 18076,
+    "calibration_rows": 16271,
+    "assessment_rows": 9090,
+    "threshold": 50.24076857825459,
+    "group_metrics": {
+      "rows": 9090,
+      "weight": 7010.0,
+      "threshold": 50.24076857825459,
+      "confusion_matrix": {
+        "tn": 6464.5,
+        "fp": 510.19047619047615,
+        "fn": 19.999999999999996,
+        "tp": 15.309523809523812
+      },
+      "precision": 0.029133251778351688,
+      "recall": 0.43358057990559684,
+      "f1": 0.05459794514732107,
+      "false_positive_rate": 0.07314883404964206,
+      "false_negative_rate": 0.5664194200944032,
+      "balanced_accuracy": 0.6802158729279774,
+      "accuracy": 0.9243665511853815,
+      "roc_auc": 0.7813032863016203,
+      "pr_auc_average_precision": 0.04139059440762084,
+      "pr_auc_trapezoid": 0.031492757046678824
+    },
+    "row_metrics": {
+      "rows": 9090,
+      "weight": 9090.0,
+      "threshold": 50.24076857825459,
+      "confusion_matrix": {
+        "tn": 7892.0,
+        "fp": 1049.0,
+        "fn": 39.0,
+        "tp": 110.0
+      },
+      "precision": 0.09490940465918896,
+      "recall": 0.738255033557047,
+      "f1": 0.16819571865443425,
+      "false_positive_rate": 0.11732468403981658,
+      "false_negative_rate": 0.26174496644295303,
+      "balanced_accuracy": 0.8104651747586152,
+      "accuracy": 0.8803080308030803,
+      "roc_auc": 0.8777826902535564,
+      "pr_auc_average_precision": 0.27956422677276965,
+      "pr_auc_trapezoid": 0.16586348010563418
+    },
+    "unseen_labels": [
+      "FTP-Patator",
+      "SSH-Patator"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "B_flat8",
+    "day": "Tuesday",
+    "training_rows": 18076,
+    "calibration_rows": 16271,
+    "assessment_rows": 9090,
+    "threshold": 54.0266106442577,
+    "group_metrics": {
+      "rows": 9090,
+      "weight": 7010.0,
+      "threshold": 54.0266106442577,
+      "confusion_matrix": {
+        "tn": 6902.690476190476,
+        "fp": 71.99999999999999,
+        "fn": 35.30952380952381,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.010323038742118611,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4948384806289407,
+      "accuracy": 0.9846919366890836,
+      "roc_auc": 0.5369537200884534,
+      "pr_auc_average_precision": 0.006007845434665366,
+      "pr_auc_trapezoid": 0.005041090391263336
+    },
+    "row_metrics": {
+      "rows": 9090,
+      "weight": 9090.0,
+      "threshold": 54.0266106442577,
+      "confusion_matrix": {
+        "tn": 8815.0,
+        "fp": 126.0,
+        "fn": 149.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.014092383402303992,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.492953808298848,
+      "accuracy": 0.9697469746974697,
+      "roc_auc": 0.5463602182540427,
+      "pr_auc_average_precision": 0.025238855411179803,
+      "pr_auc_trapezoid": 0.016464876104297872
+    },
+    "unseen_labels": [
+      "FTP-Patator",
+      "SSH-Patator"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "C_hierarchy",
+    "day": "Tuesday",
+    "training_rows": 18076,
+    "calibration_rows": 16271,
+    "assessment_rows": 9090,
+    "threshold": 43.33162487370727,
+    "group_metrics": {
+      "rows": 9090,
+      "weight": 7010.0,
+      "threshold": 43.33162487370727,
+      "confusion_matrix": {
+        "tn": 6629.019047619047,
+        "fp": 345.6714285714286,
+        "fn": 35.30952380952381,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.049560827072032555,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4752195864639837,
+      "accuracy": 0.9456517899599212,
+      "roc_auc": 0.3794559086953454,
+      "pr_auc_average_precision": 0.004745532379641205,
+      "pr_auc_trapezoid": 0.0038670495723515733
+    },
+    "row_metrics": {
+      "rows": 9090,
+      "weight": 9090.0,
+      "threshold": 43.33162487370727,
+      "confusion_matrix": {
+        "tn": 8544.0,
+        "fp": 397.0,
+        "fn": 149.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.044402192148529245,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4777989039257354,
+      "accuracy": 0.9399339933993399,
+      "roc_auc": 0.4584607220038297,
+      "pr_auc_average_precision": 0.022708593027600303,
+      "pr_auc_trapezoid": 0.014333474296628505
+    },
+    "unseen_labels": [
+      "FTP-Patator",
+      "SSH-Patator"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "D_behavior",
+    "day": "Tuesday",
+    "training_rows": 18076,
+    "calibration_rows": 16271,
+    "assessment_rows": 9090,
+    "threshold": 51.998217241283506,
+    "group_metrics": {
+      "rows": 9090,
+      "weight": 7010.0,
+      "threshold": 51.998217241283506,
+      "confusion_matrix": {
+        "tn": 6710.357142857143,
+        "fp": 264.33333333333337,
+        "fn": 35.30952380952381,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.03789893390046325,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4810505330497684,
+      "accuracy": 0.9572549419197066,
+      "roc_auc": 0.46235247931167545,
+      "pr_auc_average_precision": 0.005481927661608641,
+      "pr_auc_trapezoid": 0.004397275777749128
+    },
+    "row_metrics": {
+      "rows": 9090,
+      "weight": 9090.0,
+      "threshold": 51.998217241283506,
+      "confusion_matrix": {
+        "tn": 8627.0,
+        "fp": 314.0,
+        "fn": 149.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.03511911419304328,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4824404429034784,
+      "accuracy": 0.9490649064906491,
+      "roc_auc": 0.5392419657876504,
+      "pr_auc_average_precision": 0.026674348097745455,
+      "pr_auc_trapezoid": 0.016565466808745207
+    },
+    "unseen_labels": [
+      "FTP-Patator",
+      "SSH-Patator"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "A_frozen",
+    "day": "Wednesday",
+    "training_rows": 15733,
+    "calibration_rows": 13997,
+    "assessment_rows": 14085,
+    "threshold": 52.24051097880421,
+    "group_metrics": {
+      "rows": 14085,
+      "weight": 6887.0,
+      "threshold": 52.24051097880421,
+      "confusion_matrix": {
+        "tn": 5587.458333333334,
+        "fp": 156.80379708011287,
+        "fn": 916.3416666666667,
+        "tp": 226.39620291988712
+      },
+      "precision": 0.5908042873692253,
+      "recall": 0.19811735389656596,
+      "f1": 0.2967305647656915,
+      "false_positive_rate": 0.027297465456860487,
+      "false_negative_rate": 0.801882646103434,
+      "balanced_accuracy": 0.5854099442198528,
+      "accuracy": 0.8441780944174853,
+      "roc_auc": 0.6740737296964997,
+      "pr_auc_average_precision": 0.3607391062199865,
+      "pr_auc_trapezoid": 0.3632294784849508
+    },
+    "row_metrics": {
+      "rows": 14085,
+      "weight": 14085.0,
+      "threshold": 52.24051097880421,
+      "confusion_matrix": {
+        "tn": 7230.0,
+        "fp": 215.0,
+        "fn": 5499.0,
+        "tp": 1141.0
+      },
+      "precision": 0.8414454277286135,
+      "recall": 0.17183734939759035,
+      "f1": 0.2853926963481741,
+      "false_positive_rate": 0.02887844190732035,
+      "false_negative_rate": 0.8281626506024097,
+      "balanced_accuracy": 0.571479453745135,
+      "accuracy": 0.5943201987930422,
+      "roc_auc": 0.6476530804210798,
+      "pr_auc_average_precision": 0.6556966967903546,
+      "pr_auc_trapezoid": 0.657139988733557
+    },
+    "unseen_labels": [
+      "DoS GoldenEye",
+      "DoS Hulk",
+      "DoS Slowhttptest",
+      "DoS slowloris",
+      "Heartbleed"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "A_refit",
+    "day": "Wednesday",
+    "training_rows": 15733,
+    "calibration_rows": 13997,
+    "assessment_rows": 14085,
+    "threshold": 61.30532372360249,
+    "group_metrics": {
+      "rows": 14085,
+      "weight": 6887.0,
+      "threshold": 61.30532372360249,
+      "confusion_matrix": {
+        "tn": 5693.209498834499,
+        "fp": 51.05263157894737,
+        "fn": 1102.7905011655012,
+        "tp": 39.94736842105263
+      },
+      "precision": 0.4389820705610179,
+      "recall": 0.03495759568684436,
+      "f1": 0.06475827549078908,
+      "false_positive_rate": 0.008887587373258126,
+      "false_negative_rate": 0.9650424043131556,
+      "balanced_accuracy": 0.5130350041567932,
+      "accuracy": 0.8324607038268551,
+      "roc_auc": 0.6342078676070947,
+      "pr_auc_average_precision": 0.2235085356280163,
+      "pr_auc_trapezoid": 0.22049229620723268
+    },
+    "row_metrics": {
+      "rows": 14085,
+      "weight": 14085.0,
+      "threshold": 61.30532372360249,
+      "confusion_matrix": {
+        "tn": 7388.0,
+        "fp": 57.0,
+        "fn": 6471.0,
+        "tp": 169.0
+      },
+      "precision": 0.7477876106194691,
+      "recall": 0.025451807228915664,
+      "f1": 0.04922808039615496,
+      "false_positive_rate": 0.007656145063801209,
+      "false_negative_rate": 0.9745481927710843,
+      "balanced_accuracy": 0.5088978310825573,
+      "accuracy": 0.5365282215122471,
+      "roc_auc": 0.6531189769150477,
+      "pr_auc_average_precision": 0.5619215757775329,
+      "pr_auc_trapezoid": 0.5492605742758356
+    },
+    "unseen_labels": [
+      "DoS GoldenEye",
+      "DoS Hulk",
+      "DoS Slowhttptest",
+      "DoS slowloris",
+      "Heartbleed"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "B_flat8",
+    "day": "Wednesday",
+    "training_rows": 15733,
+    "calibration_rows": 13997,
+    "assessment_rows": 14085,
+    "threshold": 54.0266106442577,
+    "group_metrics": {
+      "rows": 14085,
+      "weight": 6887.0,
+      "threshold": 54.0266106442577,
+      "confusion_matrix": {
+        "tn": 5606.262130413446,
+        "fp": 138.0,
+        "fn": 1141.7378695865536,
+        "tp": 1.0
+      },
+      "precision": 0.007194244604316547,
+      "recall": 0.0008750913281291739,
+      "f1": 0.0015603814535378705,
+      "false_positive_rate": 0.024023973291425575,
+      "false_negative_rate": 0.9991249086718709,
+      "balanced_accuracy": 0.4884255590183518,
+      "accuracy": 0.8141806491089656,
+      "roc_auc": 0.56063615468485,
+      "pr_auc_average_precision": 0.17601859155068691,
+      "pr_auc_trapezoid": 0.17351735999369222
+    },
+    "row_metrics": {
+      "rows": 14085,
+      "weight": 14085.0,
+      "threshold": 54.0266106442577,
+      "confusion_matrix": {
+        "tn": 7300.0,
+        "fp": 145.0,
+        "fn": 6639.0,
+        "tp": 1.0
+      },
+      "precision": 0.00684931506849315,
+      "recall": 0.00015060240963855423,
+      "f1": 0.0002947244326554671,
+      "false_positive_rate": 0.019476158495634655,
+      "false_negative_rate": 0.9998493975903614,
+      "balanced_accuracy": 0.49033722195700197,
+      "accuracy": 0.5183528576499823,
+      "roc_auc": 0.6763812739203962,
+      "pr_auc_average_precision": 0.5920013528213378,
+      "pr_auc_trapezoid": 0.5532934434198653
+    },
+    "unseen_labels": [
+      "DoS GoldenEye",
+      "DoS Hulk",
+      "DoS Slowhttptest",
+      "DoS slowloris",
+      "Heartbleed"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "C_hierarchy",
+    "day": "Wednesday",
+    "training_rows": 15733,
+    "calibration_rows": 13997,
+    "assessment_rows": 14085,
+    "threshold": 100.0,
+    "group_metrics": {
+      "rows": 14085,
+      "weight": 6887.0,
+      "threshold": 100.0,
+      "confusion_matrix": {
+        "tn": 5744.262130413446,
+        "fp": 0.0,
+        "fn": 1142.7378695865536,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.5,
+      "accuracy": 0.8340732002923547,
+      "roc_auc": 0.6403617241880762,
+      "pr_auc_average_precision": 0.4632799166947589,
+      "pr_auc_trapezoid": 0.46198852390105755
+    },
+    "row_metrics": {
+      "rows": 14085,
+      "weight": 14085.0,
+      "threshold": 100.0,
+      "confusion_matrix": {
+        "tn": 7445.0,
+        "fp": 0.0,
+        "fn": 6640.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.5,
+      "accuracy": 0.5285764998225062,
+      "roc_auc": 0.7320003620931004,
+      "pr_auc_average_precision": 0.815262179640408,
+      "pr_auc_trapezoid": 0.8179944737606574
+    },
+    "unseen_labels": [
+      "DoS GoldenEye",
+      "DoS Hulk",
+      "DoS Slowhttptest",
+      "DoS slowloris",
+      "Heartbleed"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "D_behavior",
+    "day": "Wednesday",
+    "training_rows": 15733,
+    "calibration_rows": 13997,
+    "assessment_rows": 14085,
+    "threshold": 69.73233905384545,
+    "group_metrics": {
+      "rows": 14085,
+      "weight": 6887.0,
+      "threshold": 69.73233905384545,
+      "confusion_matrix": {
+        "tn": 5733.762130413446,
+        "fp": 10.5,
+        "fn": 1142.7378695865536,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0018279110113041197,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.49908604449434796,
+      "accuracy": 0.8325485887053066,
+      "roc_auc": 0.537374152200436,
+      "pr_auc_average_precision": 0.35316041956693267,
+      "pr_auc_trapezoid": 0.2633192615075346
+    },
+    "row_metrics": {
+      "rows": 14085,
+      "weight": 14085.0,
+      "threshold": 69.73233905384545,
+      "confusion_matrix": {
+        "tn": 7434.0,
+        "fp": 11.0,
+        "fn": 6640.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0014775016789791806,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4992612491605104,
+      "accuracy": 0.5277955271565495,
+      "roc_auc": 0.6917548467880927,
+      "pr_auc_average_precision": 0.7834638554371718,
+      "pr_auc_trapezoid": 0.5062665378601411
+    },
+    "unseen_labels": [
+      "DoS GoldenEye",
+      "DoS Hulk",
+      "DoS Slowhttptest",
+      "DoS slowloris",
+      "Heartbleed"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "A_frozen",
+    "day": "Thursday",
+    "training_rows": 17241,
+    "calibration_rows": 16530,
+    "assessment_rows": 10243,
+    "threshold": 51.499889541923835,
+    "group_metrics": {
+      "rows": 10243,
+      "weight": 4917.0,
+      "threshold": 51.499889541923835,
+      "confusion_matrix": {
+        "tn": 4608.0,
+        "fp": 301.0,
+        "fn": 7.999999999999999,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.06131595029537584,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4693420248523121,
+      "accuracy": 0.937156802928615,
+      "roc_auc": 0.4942622394241803,
+      "pr_auc_average_precision": 0.001834974204172657,
+      "pr_auc_trapezoid": 0.0015236059252730395
+    },
+    "row_metrics": {
+      "rows": 10243,
+      "weight": 10243.0,
+      "threshold": 51.499889541923835,
+      "confusion_matrix": {
+        "tn": 5648.0,
+        "fp": 4585.0,
+        "fn": 10.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.4480601974005668,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.2759699012997166,
+      "accuracy": 0.5514009567509519,
+      "roc_auc": 0.23776995993354835,
+      "pr_auc_average_precision": 0.0006522270568701761,
+      "pr_auc_trapezoid": 0.000584228703777607
+    },
+    "unseen_labels": [
+      "Infiltration",
+      "Web Attack � Brute Force"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "A_refit",
+    "day": "Thursday",
+    "training_rows": 17241,
+    "calibration_rows": 16530,
+    "assessment_rows": 10243,
+    "threshold": 59.09597422088557,
+    "group_metrics": {
+      "rows": 10243,
+      "weight": 4917.0,
+      "threshold": 59.09597422088557,
+      "confusion_matrix": {
+        "tn": 4589.0,
+        "fp": 320.0,
+        "fn": 7.999999999999999,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0651863923405989,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.46740680382970057,
+      "accuracy": 0.9332926581248729,
+      "roc_auc": 0.653697838291307,
+      "pr_auc_average_precision": 0.003104466918604604,
+      "pr_auc_trapezoid": 0.0025696705562865702
+    },
+    "row_metrics": {
+      "rows": 10243,
+      "weight": 10243.0,
+      "threshold": 59.09597422088557,
+      "confusion_matrix": {
+        "tn": 9789.0,
+        "fp": 444.0,
+        "fn": 10.0,
+        "tp": 0.0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.043389035473468195,
+      "false_negative_rate": 1.0,
+      "balanced_accuracy": 0.4783054822632659,
+      "accuracy": 0.9556770477399199,
+      "roc_auc": 0.3504250952799765,
+      "pr_auc_average_precision": 0.0009126686206108682,
+      "pr_auc_trapezoid": 0.0007429810063654372
+    },
+    "unseen_labels": [
+      "Infiltration",
+      "Web Attack � Brute Force"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "B_flat8",
+    "day": "Thursday",
+    "training_rows": 17241,
+    "calibration_rows": 16530,
+    "assessment_rows": 10243,
+    "threshold": 54.028331161306866,
+    "group_metrics": {
+      "rows": 10243,
+      "weight": 4917.0,
+      "threshold": 54.028331161306866,
+      "confusion_matrix": {
+        "tn": 4761.5,
+        "fp": 147.5,
+        "fn": 4.999999999999999,
+        "tp": 3.0
+      },
+      "precision": 0.019933554817275746,
+      "recall": 0.37500000000000006,
+      "f1": 0.03785488958990536,
+      "false_positive_rate": 0.030046852719494806,
+      "false_negative_rate": 0.625,
+      "balanced_accuracy": 0.6724765736402526,
+      "accuracy": 0.9689851535489119,
+      "roc_auc": 0.818863736674218,
+      "pr_auc_average_precision": 0.012694496113694416,
+      "pr_auc_trapezoid": 0.010555047667098742
+    },
+    "row_metrics": {
+      "rows": 10243,
+      "weight": 10243.0,
+      "threshold": 54.028331161306866,
+      "confusion_matrix": {
+        "tn": 10020.0,
+        "fp": 213.0,
+        "fn": 7.0,
+        "tp": 3.0
+      },
+      "precision": 0.013888888888888888,
+      "recall": 0.3,
+      "f1": 0.02654867256637168,
+      "false_positive_rate": 0.02081501026092055,
+      "false_negative_rate": 0.7,
+      "balanced_accuracy": 0.6395924948695397,
+      "accuracy": 0.9785219174070097,
+      "roc_auc": 0.8224469852438191,
+      "pr_auc_average_precision": 0.007749395394059799,
+      "pr_auc_trapezoid": 0.0065294085821401785
+    },
+    "unseen_labels": [
+      "Infiltration",
+      "Web Attack � Brute Force"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "C_hierarchy",
+    "day": "Thursday",
+    "training_rows": 17241,
+    "calibration_rows": 16530,
+    "assessment_rows": 10243,
+    "threshold": 43.33118594904604,
+    "group_metrics": {
+      "rows": 10243,
+      "weight": 4917.0,
+      "threshold": 43.33118594904604,
+      "confusion_matrix": {
+        "tn": 4639.848484848485,
+        "fp": 269.1515151515151,
+        "fn": 6.999999999999999,
+        "tp": 1.0
+      },
+      "precision": 0.0037016264722378018,
+      "recall": 0.12500000000000003,
+      "f1": 0.007190325743545049,
+      "false_positive_rate": 0.05482817583041661,
+      "false_negative_rate": 0.875,
+      "balanced_accuracy": 0.5350859120847917,
+      "accuracy": 0.9438373977727242,
+      "roc_auc": 0.6892653297592763,
+      "pr_auc_average_precision": 0.004019025791292541,
+      "pr_auc_trapezoid": 0.002999289949172459
+    },
+    "row_metrics": {
+      "rows": 10243,
+      "weight": 10243.0,
+      "threshold": 43.33118594904604,
+      "confusion_matrix": {
+        "tn": 9898.0,
+        "fp": 335.0,
+        "fn": 9.0,
+        "tp": 1.0
+      },
+      "precision": 0.002976190476190476,
+      "recall": 0.1,
+      "f1": 0.005780346820809248,
+      "false_positive_rate": 0.03273722271083749,
+      "false_negative_rate": 0.9,
+      "balanced_accuracy": 0.5336313886445813,
+      "accuracy": 0.9664160890364151,
+      "roc_auc": 0.8040848236098896,
+      "pr_auc_average_precision": 0.0033917334612589634,
+      "pr_auc_trapezoid": 0.002653048023108744
+    },
+    "unseen_labels": [
+      "Infiltration",
+      "Web Attack � Brute Force"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  },
+  {
+    "candidate": "D_behavior",
+    "day": "Thursday",
+    "training_rows": 17241,
+    "calibration_rows": 16530,
+    "assessment_rows": 10243,
+    "threshold": 54.804558886039885,
+    "group_metrics": {
+      "rows": 10243,
+      "weight": 4917.0,
+      "threshold": 54.804558886039885,
+      "confusion_matrix": {
+        "tn": 4806.5,
+        "fp": 102.5,
+        "fn": 6.999999999999999,
+        "tp": 1.0
+      },
+      "precision": 0.00966183574879227,
+      "recall": 0.12500000000000003,
+      "f1": 0.017937219730941704,
+      "false_positive_rate": 0.020880016296598084,
+      "false_negative_rate": 0.875,
+      "balanced_accuracy": 0.552059991851701,
+      "accuracy": 0.9777303233679072,
+      "roc_auc": 0.7293533985198214,
+      "pr_auc_average_precision": 0.12933572180842454,
+      "pr_auc_trapezoid": 0.1286485813328945
+    },
+    "row_metrics": {
+      "rows": 10243,
+      "weight": 10243.0,
+      "threshold": 54.804558886039885,
+      "confusion_matrix": {
+        "tn": 10069.0,
+        "fp": 164.0,
+        "fn": 9.0,
+        "tp": 1.0
+      },
+      "precision": 0.006060606060606061,
+      "recall": 0.1,
+      "f1": 0.011428571428571429,
+      "false_positive_rate": 0.016026580670380142,
+      "false_negative_rate": 0.9,
+      "balanced_accuracy": 0.54198670966481,
+      "accuracy": 0.9831104168700576,
+      "roc_auc": 0.8277240300987003,
+      "pr_auc_average_precision": 0.1034678838230717,
+      "pr_auc_trapezoid": 0.10300021965457817
+    },
+    "unseen_labels": [
+      "Infiltration",
+      "Web Attack � Brute Force"
+    ],
+    "caveat": "Internal day stress; A_frozen historical fit remains warm."
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "research_rows": 60000,
+  "research_columns": 85,
+  "research_dataframe_deep_bytes": 44945679,
+  "eight_input_dataframe_deep_bytes": 3840132,
+  "research_parquet_bytes": 13333589,
+  "centroid_workspace_bytes_per_layer": 1646592,
+  "eight_input_vectors_with_conflicting_labels": 6,
+  "scope": "Measured cache/dataframe/workspace sizes; not peak process RSS or whole-pipeline memory"
+}

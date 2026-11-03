@@ -1,0 +1,10 @@
+{
+  " Flow Packets/s": 0.519741801,
+  " Total Fwd Packets": 26.0,
+  " Packet Length Mean": 931.6984127,
+  " Bwd Packet Length Std": 1915.343783,
+  " Down/Up Ratio": 1.0,
+  " Flow Duration": 119290001.0,
+  " Flow IAT Std": 10500000.0,
+  " SYN Flag Count": 0.0
+}

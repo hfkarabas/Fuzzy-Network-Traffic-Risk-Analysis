@@ -1,0 +1,72 @@
+[
+  {
+    "candidate": "B_flat8",
+    "layer": "final",
+    "low_high_conflict_fraction": 0.17554479418886199,
+    "coverage": 1.0,
+    "score_median": 16.41386160067225
+  },
+  {
+    "candidate": "C_hierarchy",
+    "layer": "intensity",
+    "low_high_conflict_fraction": 0.027275316906423586,
+    "coverage": 1.0,
+    "score_median": 14.606639617634977
+  },
+  {
+    "candidate": "C_hierarchy",
+    "layer": "timing",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 25.946505717585406
+  },
+  {
+    "candidate": "C_hierarchy",
+    "layer": "connection",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 13.165
+  },
+  {
+    "candidate": "C_hierarchy",
+    "layer": "structure",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 13.165
+  },
+  {
+    "candidate": "C_hierarchy",
+    "layer": "final",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 35.04533535710348
+  },
+  {
+    "candidate": "D_behavior",
+    "layer": "flood",
+    "low_high_conflict_fraction": 0.027275316906423586,
+    "coverage": 1.0,
+    "score_median": 13.165
+  },
+  {
+    "candidate": "D_behavior",
+    "layer": "intermittent",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 25.946505717585406
+  },
+  {
+    "candidate": "D_behavior",
+    "layer": "connection",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 13.165
+  },
+  {
+    "candidate": "D_behavior",
+    "layer": "final",
+    "low_high_conflict_fraction": 0.0,
+    "coverage": 1.0,
+    "score_median": 27.228571736408558
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "feature": " Fwd URG Flags",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " Bwd URG Flags",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " SYN Flag Count",
+    "identical_to": "Fwd PSH Flags"
+  },
+  {
+    "feature": " CWE Flag Count",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " ECE Flag Count",
+    "identical_to": " RST Flag Count"
+  },
+  {
+    "feature": " Avg Fwd Segment Size",
+    "identical_to": " Fwd Packet Length Mean"
+  },
+  {
+    "feature": " Fwd Header Length.1",
+    "identical_to": " Fwd Header Length"
+  },
+  {
+    "feature": "Fwd Avg Bytes/Bulk",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " Fwd Avg Packets/Bulk",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " Fwd Avg Bulk Rate",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " Bwd Avg Bytes/Bulk",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": " Bwd Avg Packets/Bulk",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": "Bwd Avg Bulk Rate",
+    "identical_to": " Bwd PSH Flags"
+  },
+  {
+    "feature": "Subflow Fwd Packets",
+    "identical_to": " Total Fwd Packets"
+  },
+  {
+    "feature": " Subflow Fwd Bytes",
+    "identical_to": "Total Length of Fwd Packets"
+  },
+  {
+    "feature": " Subflow Bwd Packets",
+    "identical_to": " Total Backward Packets"
+  }
+]

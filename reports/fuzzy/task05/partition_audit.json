@@ -1,0 +1,56 @@
+{
+  "folds": [
+    {
+      "fold": 0,
+      "training_rows": 16175,
+      "calibration_rows": 15626,
+      "assessment_rows": 14157,
+      "benign_rows": 11790,
+      "attack_rows": 2367,
+      "assessment_days": {
+        "Wednesday": 4672,
+        "Monday": 3867,
+        "Tuesday": 2956,
+        "Thursday": 2662
+      },
+      "unseen_labels": []
+    },
+    {
+      "fold": 1,
+      "training_rows": 14157,
+      "calibration_rows": 16175,
+      "assessment_rows": 15626,
+      "benign_rows": 13531,
+      "attack_rows": 2095,
+      "assessment_days": {
+        "Wednesday": 4609,
+        "Monday": 4482,
+        "Thursday": 3471,
+        "Tuesday": 3064
+      },
+      "unseen_labels": [
+        "Heartbleed",
+        "Web Attack � Brute Force"
+      ]
+    },
+    {
+      "fold": 2,
+      "training_rows": 15626,
+      "calibration_rows": 14157,
+      "assessment_rows": 16175,
+      "benign_rows": 13838,
+      "attack_rows": 2337,
+      "assessment_days": {
+        "Wednesday": 4804,
+        "Monday": 4191,
+        "Thursday": 4110,
+        "Tuesday": 3070
+      },
+      "unseen_labels": []
+    }
+  ],
+  "overlap": 0,
+  "exposed_contamination": 0,
+  "eight_input_duplicate_role_overlap": 0,
+  "common_valid_rows": 60000
+}

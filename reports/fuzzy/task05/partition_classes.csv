@@ -1,0 +1,49 @@
+bucket,capture_day, Label,rows
+0,Monday,BENIGN,3867
+0,Thursday,BENIGN,2658
+0,Thursday,Infiltration,4
+0,Tuesday,BENIGN,2909
+0,Tuesday,FTP-Patator,25
+0,Tuesday,SSH-Patator,22
+0,Wednesday,BENIGN,2356
+0,Wednesday,DoS GoldenEye,81
+0,Wednesday,DoS Hulk,2170
+0,Wednesday,DoS Slowhttptest,34
+0,Wednesday,DoS slowloris,31
+1,Monday,BENIGN,4482
+1,Thursday,BENIGN,3466
+1,Thursday,Infiltration,2
+1,Thursday,Web Attack � Brute Force,3
+1,Tuesday,BENIGN,2981
+1,Tuesday,FTP-Patator,79
+1,Tuesday,SSH-Patator,4
+1,Wednesday,BENIGN,2602
+1,Wednesday,DoS GoldenEye,120
+1,Wednesday,DoS Hulk,1795
+1,Wednesday,DoS Slowhttptest,69
+1,Wednesday,DoS slowloris,22
+1,Wednesday,Heartbleed,1
+2,Monday,BENIGN,4191
+2,Thursday,BENIGN,4109
+2,Thursday,Infiltration,1
+2,Tuesday,BENIGN,3051
+2,Tuesday,FTP-Patator,14
+2,Tuesday,SSH-Patator,5
+2,Wednesday,BENIGN,2487
+2,Wednesday,DoS GoldenEye,119
+2,Wednesday,DoS Hulk,2094
+2,Wednesday,DoS Slowhttptest,65
+2,Wednesday,DoS slowloris,39
+design,Monday,BENIGN,2735
+design,Thursday,BENIGN,4878
+design,Thursday,Infiltration,1
+design,Thursday,Web Attack � Sql Injection,1
+design,Thursday,Web Attack � XSS,1
+design,Tuesday,BENIGN,2290
+design,Tuesday,FTP-Patator,2
+design,Tuesday,SSH-Patator,14
+design,Wednesday,BENIGN,1709
+design,Wednesday,DoS GoldenEye,200
+design,Wednesday,DoS Hulk,2152
+design,Wednesday,DoS Slowhttptest,22
+design,Wednesday,DoS slowloris,37

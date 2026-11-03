@@ -1,0 +1,23 @@
+{
+  "selected": "A_frozen",
+  "production_model": "config/fuzzy/task04/selected_v4.json",
+  "experimental_models": [
+    "config/fuzzy/task05/A_frozen_fold0.json",
+    "config/fuzzy/task05/A_frozen_fold1.json",
+    "config/fuzzy/task05/A_frozen_fold2.json",
+    "config/fuzzy/task05/A_refit_fold0.json",
+    "config/fuzzy/task05/A_refit_fold1.json",
+    "config/fuzzy/task05/A_refit_fold2.json",
+    "config/fuzzy/task05/B_flat8_fold0.json",
+    "config/fuzzy/task05/B_flat8_fold1.json",
+    "config/fuzzy/task05/B_flat8_fold2.json",
+    "config/fuzzy/task05/C_hierarchy_fold0.json",
+    "config/fuzzy/task05/C_hierarchy_fold1.json",
+    "config/fuzzy/task05/C_hierarchy_fold2.json",
+    "config/fuzzy/task05/D_behavior_fold0.json",
+    "config/fuzzy/task05/D_behavior_fold1.json",
+    "config/fuzzy/task05/D_behavior_fold2.json"
+  ],
+  "promotion_gate_passed": false,
+  "independent_test": false
+}

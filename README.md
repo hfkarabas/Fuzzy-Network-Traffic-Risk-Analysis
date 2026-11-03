@@ -246,3 +246,31 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-web.ps1 
 ```
 
 This does not change the saved execution policy. Rebuild once after this update.
+
+## TASK05 — experimental fuzzy architectures
+
+The research audit covers all 78 numerical columns on eligible design/training
+roles. New eight-input flat, four-module hierarchical and three behavior-module
+Mamdani engines are implemented separately from production. Hierarchical candidates
+improve mixed-day internal recall, but fail the preregistered capture-day stability
+gate. **The production model, backend and frontend remain unchanged.**
+
+See [TASK05 final report](reports/fuzzy/task05/final_report.md),
+[feature research](reports/fuzzy/task05/feature_research.md),
+[architecture and complete rules](reports/fuzzy/task05/architecture_design.md),
+[candidate evaluation](reports/fuzzy/task05/candidate_evaluation.md), and
+[failure analysis](reports/fuzzy/task05/failure_analysis.md).
+These are adaptive internal-validation results, not independent final testing.
+
+Reproduce the research with the existing `.venv` and local source cache:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/task05_research.py
+# Protocol is already frozen; do not overwrite or rerun freeze.
+.\.venv\Scripts\python.exe scripts/task05_experiment.py evaluate
+.\.venv\Scripts\python.exe scripts/task05_validate.py
+.\.venv\Scripts\python.exe scripts/task05_reports.py
+```
+
+The source/cache hash registration must match; `.tmp/task05` and generated figures
+remain ignored. Research commands do not activate experimental models in the app.

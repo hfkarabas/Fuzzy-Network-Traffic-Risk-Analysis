@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "eligible_population": 297916,
+  "direct_exposed_rows": 703945,
+  "excluded_exposed_or_linked": 2529845,
+  "sample_rows": 60000,
+  "design_rows": 14042,
+  "comparison_rows": 45958,
+  "original_groups": 58069,
+  "coarse_signature_groups": 31142,
+  "source_sha256": "6d075afbb8a88c76d0cec5aa8783bd93997e2cd78adad7d9fbf3bb3ab4d9f187",
+  "research_cache_sha256": "a207592da666d8aac5b966145102278123b901f02447405b23aff5615c7aac2f",
+  "numeric_features_audited": 78,
+  "exposed_id_group_signature_contamination": 0,
+  "Friday_rows": 0,
+  "five_input_vectors_with_multiple_labels": 6,
+  "near_duplicate_note": "TASK04 found 3169 adjacent-bin cross-role representative pairs. Exact signatures protected; boundary/host/session dependence remains.",
+  "capture_days": {
+    "Wednesday": 18205,
+    "Monday": 15275,
+    "Thursday": 15124,
+    "Tuesday": 11396
+  },
+  "independent_holdout": false,
+  "scope": "New feature measurements on previously used eligible development population; comparison outcomes remain adaptive internal validation."
+}

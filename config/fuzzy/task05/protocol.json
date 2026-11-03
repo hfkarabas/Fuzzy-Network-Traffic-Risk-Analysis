@@ -1,0 +1,50 @@
+{
+  "version": "task05-architecture-v1",
+  "seed": 20261105,
+  "candidates": [
+    "A_frozen",
+    "A_refit",
+    "B_flat8",
+    "C_hierarchy",
+    "D_behavior"
+  ],
+  "features_A": [
+    " Flow Packets/s",
+    " Total Fwd Packets",
+    " Packet Length Mean",
+    " Bwd Packet Length Std",
+    " Down/Up Ratio"
+  ],
+  "features_B_C_D": [
+    " Flow Packets/s",
+    " Total Fwd Packets",
+    " Packet Length Mean",
+    " Bwd Packet Length Std",
+    " Down/Up Ratio",
+    " Flow Duration",
+    " Flow IAT Std",
+    " SYN Flag Count"
+  ],
+  "hypotheses": "B expanded flat 15 rules; C four independently defuzzified modules then 7 final rules; D three behavior modules then 6 final rules. Exact rules are in frozen advanced.py. No outcome-driven iteration.",
+  "membership": "Training row p25/p60/p90; positive subset for variation/IAT, log1p rate/volume/variation/duration/IAT; 0/1 SYN domain, integer ratio 0/1/2; domain final-layer 25/50/75 anchors. No labels fit boundaries.",
+  "feature_reasoning": "Retain baseline dimensions and add persistence, spacing spread and exported SYN. Timing redundancy does not preclude a conditional hypothesis; zero-heavy SYN is supplemental, never conclusive alone. Other flags, active/idle, bytes and packet measures audited, not additional search candidates.",
+  "population": "Same eligible 60k development; design excluded, three fixed train/calibration/assessment signature roles on 45958 records. Prior adaptive development reuse, not independent testing.",
+  "policies": "Existing calibration-only max signature-weighted recall at FPR caps Sensitive10%, Balanced5%, Conservative1%. Exact ties unchanged. Raw row metrics also reported.",
+  "promotion": "Balanced mean group recall >= BOTH A_frozen and A_refit +0.05, each fold recall >= A_frozen-0.02, mean group FPR<=0.075 and each fold<=0.10, no abstentions, paired signature-bootstrap recall gain lower95>0 vs both. Additionally every Tuesday/Wednesday/Thursday group-disjoint day stress has FPR<=0.10 and recall>=day-clean A_refit-0.02. Prefer fewer rules/layers within 0.02 mean recall among passing candidates; otherwise retain current production.",
+  "day_stress": "Predeclared auxiliary stability gate: exclude entire assessment day and all its signatures from other days; split remaining signatures by SHA256 task05-day suffix for training/calibration. A_frozen remains historically warm, never called day-clean.",
+  "uncertainty": "500 paired signature-group resamples, fixed seed; conditional fitted-fold recall difference, no day/session or adaptive-search correction.",
+  "independent_holdout": false,
+  "search_budget": "Three new architecture hypotheses only; no post-outcome refitting/rule changes. Failed candidates remain recorded.",
+  "research_cache_sha256": "a207592da666d8aac5b966145102278123b901f02447405b23aff5615c7aac2f",
+  "source_sha256": {
+    "scripts/task05_experiment.py": "45cfe41d51876408dd70704b6f2c46cc183a178e9aa3349cee9eb62ad1774abe",
+    "scripts/task05_research.py": "6fe9cc74db9eca8aab3a2fe854b774f19b97bcd2aa5a9cade12af3772378591e",
+    "src/fuzzy_network_risk/advanced.py": "c1275d62d1f9677364fa91317a6bbb19897020bb6e243d02b8bcc8d03048ba9f",
+    "src/fuzzy_network_risk/membership.py": "5d11478dc187a769243acbb84500e3a033723d0f16d2dcc49e8d8f67c501bec7",
+    "src/fuzzy_network_risk/engine.py": "02a10504621f9c92d86ffc17d13f733aeea38f9b6878881eddd8ecfde5b6b594",
+    "src/fuzzy_network_risk/refinement.py": "10d97b9a74b82ccc8aa8f161e474eb5a8240538635a6f2cc1c1a091911c5e898",
+    "src/fuzzy_network_risk/evaluation.py": "da240af871834858d8ff3039e1a237c95ecc87062f2459777a0f0dd0370a1da7",
+    "src/fuzzy_network_risk/calibration.py": "89c248f8b3b8fe4c18813a783fcb021113ff0a27f50b4603449fa3071e5a0f72",
+    "src/fuzzy_network_risk/rules.py": "fdd1cbdc4736b70f2b313eb2a3c76cbfb4408f6a9068ff69cfc4ad27aac18388"
+  }
+}

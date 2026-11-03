@@ -1,350 +1,327 @@
-# Fuzzy Logic-Based Network Traffic Risk Analysis
+# Fuzzy Network Security
 
-A university Fuzzy Logic project: numerical network-flow characteristics will feed
-interpretable membership functions and IF–THEN rules to produce a 0–100 risk score,
-Low/Medium/High/Critical categories and explanations. The fuzzy inference engine is
-the central algorithm. TASK 02 implements a working, explainable Mamdani engine;
-TASK 03 adds a Turkish local web application around its frozen configuration.
-No conventional classifier or neural network is included.
+Local network traffic monitoring and explainable, flow-based risk analysis with a
+FastAPI backend and a bilingual React dashboard.
 
-## Quick Start — one command
+## Overview
 
-With **Python 3.12+**, **Node.js 24.15+ (or 22.22.2+) with npm 10+**, and
-**GNU Make** installed:
+Fuzzy Network Security reconstructs bidirectional IPv4 TCP/UDP flows and evaluates
+five numerical measurements with a 22-rule Mamdani fuzzy inference engine. Each
+eligible, finalized observed flow receives a continuous-valued **0–100 risk score**,
+a linguistic risk level and a rule-based explanation.
 
-```sh
-make
+Capture runs continuously only after explicit authorization. Scores are published
+when flow segments finalize, rather than for every packet. A separate alert policy
+compares each score with a threshold; changing policy does not change the score.
+The application monitors and analyzes traffic; it does not block connections or
+perform automated mitigation.
+
+## Features
+
+- Explicit interface selection, authorization, start/stop and capture status.
+- Bidirectional IPv4 TCP/UDP flow tracking with timeouts and bounded retention.
+- Five-feature fuzzy inference, 22 interpretable rules and three alert policies.
+- Risk gauge, configured membership curves, observed values and membership degrees.
+- Activated-rule inspection, aggregated output membership plot and centroid marker.
+- Recorded traffic analysis with original labels and reference results.
+- Historical/internal performance metrics with clearly identified evaluation scope.
+- Dataset Information with provenance, preparation, calibration and model history.
+- Turkish/English switching, persisted locally; Turkish is the initial default.
+- Local dashboard, HTTP API and explicitly labeled synthetic packet replay.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    NIC[Selected authorized interface] --> CAP[Scapy / Npcap or libpcap]
+    CAP --> Q[Bounded packet metadata queue]
+    Q --> FLOW[Bidirectional flow statistics]
+    FLOW --> QUALITY[Feature adapter and quality gate]
+    RECORD[Recorded flow / manual measurements] --> QUALITY
+    QUALITY --> FIS[Python Mamdani engine]
+    FIS --> POLICY[Score / category / alert policy]
+    POLICY --> API[FastAPI HTTP API]
+    API --> UI[React / TypeScript dashboard]
+    UI -->|Explicit local controls| API
+    API --> MON[Monitoring lifecycle]
+    MON --> CAP
 ```
 
-First run creates `.venv` when needed, installs the pinned Python dependencies and
-locked npm dependencies, then starts FastAPI and Vite. Later runs verify and reuse
-healthy installations. Open **http://127.0.0.1:5173**; API **http://127.0.0.1:8000**.
-Press **Ctrl+C** to stop both owned services. Ordinary web startup needs no dataset,
-Git LFS download, preprocessing or training.
+The frontend uses Vite and SVG visualizations; fuzzy inference runs in Python,
+not TypeScript. Live results are polled every two seconds. Scapy is optional;
+o capture socket is opened at application startup. Packet payloads are not stored.
 
-Commands: `make setup`, `make run`, `make backend`, `make frontend`, `make test`,
-`make build`, `make check`, `make help`. Existing PowerShell startup remains available.
-On Windows GNU Make is a separate prerequisite; on macOS install Xcode Command Line
-Tools for Make and use native Intel/arm64 Python and Node. No system software is
-installed automatically. [Windows/macOS setup, local Make installation, fallback
-commands and troubleshooting](docs/launcher.md).
+Default flow limits are a 15-second idle timeout, 120-second maximum segment age,
+4,096 active flows, a 4,096-entry metadata queue and 200 retained results. User-stop,
+time-limit and eviction segments are marked partial. Invalid/unavailable required
+measurements cause abstention rather than fabricated scores.
 
-Native Windows execution was validated; native Intel/Apple Silicon macOS and Linux
-execution remains unverified. POSIX branches have code inspection and mocked tests.
+## Fuzzy inference model
 
-Dataset: [c01dsnap/CIC-IDS2017](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017).
+The active configuration is
+[`config/fuzzy/task04/selected_v4.json`](config/fuzzy/task04/selected_v4.json).
+It is a rule-based Mamdani system, not a conventional machine-learning classifier.
+Each input has three overlapping triangular/trapezoidal sets with frozen,
+training-derived boundaries and saturation outside the configured domain.
 
-Interface languages: **Türkçe / English**. Use the full-width globe button at the bottom of
-the sidebar; Turkish is the initial default and your selection
-is remembered locally. [Localization behavior and development guide](docs/localization.md).
+Exact source column names, including leading spaces, are preserved:
 
-## Optional live monitoring (TASK 07)
+| Input column | Measurement | Transform |
+|---|---|---|
+| `" Flow Packets/s"` | Observed packets per second | `log1p` |
+| `" Total Fwd Packets"` | Count in the first-observed direction | `log1p` |
+| `" Packet Length Mean"` | Mean transport-payload length, bytes | Identity |
+| `" Bwd Packet Length Std"` | Backward payload-length sample std, bytes | `log1p` |
+| `" Down/Up Ratio"` | Integer backward/forward packet-count ratio | Identity |
 
-Open **Canlı Trafik** after `make`. Capture never starts automatically. Install the
-optional `requirements-live.txt` into the project `.venv`; Windows also requires
-Npcap and capture-specific permissions. Offline pages work without either.
+AND and implication use **minimum**; OR and aggregation use **maximum**.
+Defuzzification uses the **centroid** on a 201-point output grid. The live extraction
+profile reproduces documented legacy CIC conventions, including a duplicated first
+payload length in the mean and integer direction ratio. Exact equivalence to the
+original dataset exporter is unverified; see the
+[feature compatibility mapping](docs/realtime-monitoring.md).
 
-Select an authorized interface and explicitly start/stop monitoring, or select
-the clearly labeled synthetic packet replay to exercise the complete pipeline
-without a capture driver. IPv4 TCP/UDP flows feed the unchanged five-input model.
-Live feature compatibility is experimental, not validated against the original
-2017 exporter/PCAPs. Partial segments and insufficient data are labeled explicitly;
-the application is not a reliable operational IDS.
+| Risk level | Score interval |
+|---|---|
+| Low | `[0, 25)` |
+| Medium | `[25, 50)` |
+| High | `[50, 75)` |
+| Critical | `[75, 100]` |
 
-[Dependencies, Npcap, feature mapping, API, privacy and validation](docs/realtime-monitoring.md).
+Alerts use `score >= policy threshold`, independently of these category boundaries:
 
-Verified source: **2,830,743 records, 79 columns, one train split, 15 labels**.
-TASK 01 supplies full-data profiling, cleaning, a five-input fuzzy-ready export,
-grouped evaluation manifests, a development sample and synthetic unit tests.
+| Policy | Active threshold | Calibration FPR target |
+|---|---:|---:|
+| Sensitive | 49.632522849397134 | 10% |
+| Balanced | 51.809236850031304 | 5% |
+| Conservative | 59.465890915130174 | 1% |
 
-## Layout
+These targets describe signature-group-weighted calibration, not guarantees for
+live traffic. The exact settings are in
+[`selected_policies.json`](config/fuzzy/task04/selected_policies.json).
+Risk scores are not attack probabilities; alerts are indicators, not confirmed attacks.
 
-- `config/dataset.yaml`: source revision, seed, batches and exact input names.
-- `src/fuzzy_network_risk/data.py`: pure validation, cleaning, grouping and sampling rules.
-- `scripts/`: acquisition, analysis, preparation, reports and full-output validation.
-- `tests/`: synthetic, offline tests.
-- `reports/dataset/`: versioned English reports and compact CSV/JSON measurements.
-- `reports/figures/`: generated charts, ignored by Git.
-- `data/processed/v1/`: generated cleaned/fuzzy-ready/manifest Parquet files.
-- `data/samples/`: generated small development dataset.
-- `data/processed/v1/source_sessions.parquet`: verified source file/day mapping and
-  an alternative day-based evaluation manifest with duplicate-group quarantine.
-- `.cache/huggingface/`: original HF downloads and Arrow cache; no redundant raw copy.
-- `docs/`: methodology notes. A future web directory will be added with the UI.
+## Installation
 
-## Environment
+### Prerequisites
 
-Python >=3.12 is required. This run used the only installed interpreter, Python
-3.14, on Windows. requirements.txt pins the complete executed environment;
-compatible wheels on other platforms/Python versions may differ. No GPU is needed.
-DuckDB provides memory-limited exact duplicate grouping with disk spill; pandas
-and NumPy handle small-column profiles/batches, PyArrow handles Parquet, matplotlib
-produces four focused figures, and pytest validates synthetic fixtures.
+- Git and Git LFS for an LFS-aware clone, or GitHub Desktop.
+- Python **3.12+** with venv/pip support; Python **3.14** matches the validated stack.
+- Native Node.js **24.15+ on 24.x**, or **22.22.2+ on 22.x**, with **npm 10+**.
+- Windows PowerShell for the Windows launcher. GNU Make is optional.
+- For actual capture: optional Scapy dependencies and Npcap on Windows, or
+  appropriate libpcap/socket permissions on Linux/macOS. No GPU is needed.
 
-```powershell
-# From this repository, use Python 3.12 if available, otherwise the installed compatible Python.
-./scripts/setup.ps1
-# Alternative conventional setup:
-# py -m venv .venv
-# ./.venv/Scripts/python -m pip install -r requirements.txt
-```
-
-The setup script uses the installed launcher's pip to populate `.venv` and places
-temporary files inside the repository. This avoids environment-specific Windows
-temp permissions encountered during this task. Normal tests do not access the network.
-
-## Acquisition and preparation
-
-```powershell
-$env:PYTHONUTF8 = '1'
-./.venv/Scripts/python scripts/acquire.py
-# The primary acquisition method is exactly:
-# from datasets import load_dataset
-# ds = load_dataset("c01dsnap/CIC-IDS2017")
-```
-
-HF_HOME and HF_DATASETS_CACHE are set by acquire.py before importing datasets, so
-the original downloads and Arrow cache stay inside this repository. Authentication
-is not required for this public dataset. Large files are ignored by Git.
-
-For the recorded source revision on a fresh machine:
-
-```powershell
-$env:DATASET_REVISION = '4e9edfa727f800b6f595bc2ee7420527156562b2'
-./.venv/Scripts/python scripts/acquire.py
-# Record only on first acquisition; the script refuses to replace a baseline.
-# A checked-in baseline already exists; validate it if cache paths match.
-./.venv/Scripts/python scripts/cache_integrity.py
-./.venv/Scripts/python scripts/prepare.py
-./.venv/Scripts/python scripts/validate_outputs.py
-```
-
-The mandated unpinned call was executed for initial acquisition. DATASET_REVISION
-optionally enables pinned replay; preparation refuses a revision differing from
-config. The integrity manifest uses relative paths and SHA256; it covers source
-blobs and Arrow shards, not mutable locks or metadata files. Hugging Face may change
-cache layout between library versions; review the provenance rather than silently
-replacing the baseline. The original CSV blob hashes are independently checked
-against their SHA256 cache names. Acquisition may require about 4 GB peak disk for
-raw CSV + Arrow + generated outputs and temporary duplicate grouping; allow at
-least 8 GB free disk for headroom. Profiling materializes one numeric column at a
-time; candidate correlation holds only 5–10 columns. DuckDB is capped at 1 GB, but
-Python/Arrow allocations are additional. Memory availability could not be queried
-through Windows CIM in the execution sandbox; avoid concurrent heavy processes.
-
-To reuse the acquired cache without network access:
-
-```powershell
-$env:HF_HUB_OFFLINE = '1'
-$env:HF_DATASETS_OFFLINE = '1'
-./.venv/Scripts/python scripts/prepare.py
-./.venv/Scripts/python scripts/validate_outputs.py
-```
-
-Preparation overwrites generated v1 outputs only. It preserves exact original
-column names, including leading spaces. All original features remain in cleaned
-data; fuzzy-ready data selects five inputs and evaluation metadata. Invalid values
-become null; no imputation, winsorization or model fitting is performed. Duplicate
-rows remain, with conservative group partitions. The development sample is capped
-per class/partition, intentionally overrepresenting rare attacks.
-
-## Tests and reports
-
-```powershell
-./.venv/Scripts/python -m pytest -q
-# If Windows temporary directory permissions are restricted:
-./.venv/Scripts/python -m pytest -q -p no:cacheprovider --basetemp=.tmp/pytest-local
-```
-
-Full-output validation checks every cleaned numerical value and label against the
-cached source, recomputes group IDs/partitions, checks fuzzy/sample/manifests and
-verifies source integrity. See:
-
-- [Dataset profile](reports/dataset/dataset_profile.md)
-- [Data quality and leakage](reports/dataset/data_quality_and_leakage.md)
-- [Fuzzy feature selection](reports/dataset/fuzzy_feature_selection.md)
-- [Preprocessing report](reports/dataset/preprocessing_report.md)
-- [Validation results](reports/dataset/validation.json)
-
-## Fuzzy engine (TASK 02 complete)
-
-The five-input Mamdani system uses 22 hand-written rules, minimum AND/implication,
-maximum OR/aggregation and centroid defuzzification. Three overlapping memberships
-per input are derived from the appropriate training partition. Rate, volume and
-response variation use log1p; size and directional ratio retain physical coordinates.
-Separate frozen configurations represent grouped-development and day-based protocols.
-
-Risk categories are Low [0,25), Medium [25,50), High [50,75), Critical [75,100].
-Binary alerts use a separate validation-selected threshold: 25 grouped, 75 day.
-Invalid or missing input produces explicit abstention; no silent zero substitution.
-Scores express behavioral rule output, not attack probability or calibrated severity.
-
-```powershell
-# Offline single-record CLI; preserves exact column names including leading spaces.
-./.venv/Scripts/python scripts/score_flow.py --input config/fuzzy/example_flow.json
-# Standalone numerical validation and source/output integrity checks:
-./.venv/Scripts/python scripts/validate_fuzzy.py
-./.venv/Scripts/python scripts/task02_integrity.py
-# Complete experiment replay, using existing TASK 01 outputs (no download):
-./.venv/Scripts/python scripts/run_fuzzy.py all
-```
-
-Replay refits from training, calibrates only six alert thresholds on validation,
-freezes JSON configurations, evaluates each test once, validates numerical behavior
-on training records and regenerates reports/figures. Individual `fit`, `evaluate`
-and `report` phases are also supported. Scores/parameters are deterministic; wall
-timings can vary. `report` reuses saved predictions and does not refit or rescore
-the complete test set. No test-driven parameter search is performed.
-
-Python API (run with `PYTHONPATH=src`, or from an installed package):
-
-```python
-from fuzzy_network_risk.engine import MamdaniRiskEngine
-engine = MamdaniRiskEngine.load("config/fuzzy/grouped_v1.json")
-record = {" Flow Packets/s": 100000.0, " Total Fwd Packets": 100.0,
-          " Packet Length Mean": 6.0, " Bwd Packet Length Std": 0.0,
-          " Down/Up Ratio": 0.0}
-prediction = engine.predict_one(record)
-batch = engine.predict_batch([record, record])
-```
-
-Only these five columns are accepted; explicitly select them from labeled frames.
-For large files, stream outer batches (the evaluation script uses 8,192 rows).
-The centroid workspace is capped internally at 2,048 rows by default. Structured
-membership/rule strengths, consequents and translation keys support a future
-Turkish interface; English explanation text is separate. See [API details](docs/fuzzy_api.md).
-
-Actual evaluation exposes major detection weaknesses: grouped test recall 88.75%
-but false-positive rate 76%; day test recall 0.00626% at the frozen threshold 75.
-These are unsuitable operational alert settings. The engine is ready for an
-educational local UI integration, with those limitations visible. Do not present
-high grouped F1 as real-world detection effectiveness: its test is 91.43% attack.
-
-- [System design](reports/fuzzy/fuzzy_system_design.md)
-- [Rule analysis](reports/fuzzy/rule_base_analysis.md)
-- [Model evaluation](reports/fuzzy/model_evaluation.md)
-- [Error analysis](reports/fuzzy/error_analysis.md)
-- [Machine-readable metrics](reports/fuzzy/metrics.json)
-
-Original source and TASK 01 outputs/reports are SHA256-protected and unchanged.
-Generated predictions live in ignored `data/fuzzy_v1/`, with figures in ignored
-`reports/figures/fuzzy/`. Small model configurations, metrics, test results and
-deterministic error examples are versioned. No extra dependencies were required.
-
-## Local web application (TASK 03 complete)
-
-TASK 02B is complete: membership and rule refinements failed the preregistered
-internal-validation selection rule, so the original scoring model remains the
-recommended baseline. New Sensitive/Balanced/Conservative alert policies are saved
-separately; they reduce alerts at a substantial recall cost and do not improve
-score ranking. Use `PolicyRiskModel` for the new policies. All old model artifacts
-and metrics remain unchanged. See [TASK02B workflow](docs/task02b_workflow.md),
-[experimental integrity](reports/fuzzy/evaluation_integrity.md),
-[candidate comparison](reports/fuzzy/candidate_comparison.md) and
-[final decision](reports/fuzzy/task02b_final_report.md).
-
-The FastAPI + React/TypeScript/Vite dashboard provides five Turkish sections,
-validated manual analysis, a risk gauge, frozen policy switching, actual Python
-membership curves/degrees, activated-rule evidence, nine real eligible examples,
-and separate historical/internal evaluation panels. Model/policy parameters and
-previous data/report artifacts remain unchanged. No fuzzy inference runs in JavaScript.
-
-```powershell
-# First installation/build with existing .venv and Node.js:
-.\scripts\start-web.ps1 -Install -Build
-# Later offline starts:
-.\scripts\start-web.ps1
-# Optional development frontend + API:
-.\scripts\start-web.ps1 -Dev
-```
-
-Production-like local UI: **http://127.0.0.1:8000**. Development UI:
-**http://127.0.0.1:5173**. Offline API documentation: **http://127.0.0.1:8000/docs**.
-The model loads once at startup. Runtime uses only a small tracked example catalog,
-frozen JSON and recorded metrics; it never loads the full dataset or needs internet.
-Builds/node_modules are ignored. See [web application guide](docs/web_application.md)
-for manual commands, strict API behavior, tests and troubleshooting.
-
-The UI is an educational demonstration, not a reliable IDS. Zero integer direction
-ratio does not prove no response. Policy targets are group-weighted estimates, not
-per-flow guarantees; both 4.91% grouped FPR and 15.71% raw-flow FPR remain visible
-in the internal-validation view. Future scientific revisions need training/validation
-work and a newly reserved evaluation, not optimization against exposed tests.
-
-## TASK04 — bounded scientific refinement
-
-Five registered candidates (frozen/refit, group-reference memberships, contextual
-rules, combined changes) were compared on the eligible, reused internal folds.
-None passed the promotion gate. The original 22-rule scoring model and all three
-policies remain byte-identical; the backend now loads the versioned TASK04 manifest.
-The existing evaluation page includes the negative candidate comparison without a
-visual redesign. No independent generalization improvement is claimed.
-
-See [scientific report](reports/fuzzy/task04/scientific_report.md),
-[registered protocol](config/fuzzy/task04/protocol.json) and
-[measured comparison](reports/fuzzy/task04/comparison.csv).
-
-If Windows blocks PowerShell scripts, use a process-scoped invocation:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-web.ps1 -Build
-```
-
-This does not change the saved execution policy. Rebuild once after this update.
-
-## TASK05 — experimental fuzzy architectures
-
-The research audit covers all 78 numerical columns on eligible design/training
-roles. New eight-input flat, four-module hierarchical and three behavior-module
-Mamdani engines are implemented separately from production. Hierarchical candidates
-improve mixed-day internal recall, but fail the preregistered capture-day stability
-gate. **The production model, backend and frontend remain unchanged.**
-
-See [TASK05 final report](reports/fuzzy/task05/final_report.md),
-[feature research](reports/fuzzy/task05/feature_research.md),
-[architecture and complete rules](reports/fuzzy/task05/architecture_design.md),
-[candidate evaluation](reports/fuzzy/task05/candidate_evaluation.md), and
-[failure analysis](reports/fuzzy/task05/failure_analysis.md).
-These are adaptive internal-validation results, not independent final testing.
-
-Reproduce the research with the existing `.venv` and local source cache:
-
-```powershell
-.\.venv\Scripts\python.exe scripts/task05_research.py
-# Protocol is already frozen; do not overwrite or rerun freeze.
-.\.venv\Scripts\python.exe scripts/task05_experiment.py evaluate
-.\.venv\Scripts\python.exe scripts/task05_validate.py
-.\.venv\Scripts\python.exe scripts/task05_reports.py
-```
-
-The source/cache hash registration must match; `.tmp/task05` and generated figures
-remain ignored. Research commands do not activate experimental models in the app.
-
-## Dataset distribution with Git LFS
-
-The complete parsed CIC-IDS2017 source is now distributed as the single lossless
-`datasets/cic_ids2017_v1.parquet` object: **2,830,743 rows, 79 original columns,
-15 labels, 276,625,347 bytes**. Original values/types, invalid values, row order and
-duplicates are preserved. No CSV, Arrow cache, processed projection or prediction
-copy is uploaded. This is separate from the ignored local `data/` working outputs.
-
-Install Git LFS before cloning (GitHub Desktop also supports LFS), then use the
-existing Python environment:
+Clone with Git LFS installed:
 
 ```powershell
 git lfs install
 git clone https://github.com/hfkarabas/Fuzzy-Network-Traffic-Risk-Analysis.git
 cd Fuzzy-Network-Traffic-Risk-Analysis
-# Set up .venv/dependencies using the instructions above, then:
-.\.venv\Scripts\python.exe scripts/verify_dataset_archive.py
-# Fresh clone only: refuses to overwrite a populated data directory.
-.\.venv\Scripts\python.exe scripts/restore_dataset_archive.py
 ```
 
-The offline restoration reproduces the existing v1 paths, grouping, temporal
-provenance and 11,720-row development sample without Hugging Face downloads.
-Original HF acquisition remains available and unchanged. The frozen fuzzy models
-and web application are unchanged. See [the complete LFS guide](docs/dataset_lfs.md)
-for quota evidence, exact integrity checks, storage accounting, reconstruction
-limits and research-cache reproduction. A small pointer in place of Parquet data
-means the LFS object has not been downloaded; the verifier stops explicitly.
+### Windows setup and startup
+
+Run from the repository root. First setup only:
+
+```powershell
+py -3 scripts/dev.py setup
+npm.cmd --prefix web run build
+```
+
+The setup helper creates a repository-local `.venv` if absent, synchronizes pinned
+Python packages and the npm lockfile, and reuses healthy installations. It does not
+install Python, Node, Make or capture drivers globally.
+
+**Normal startup:**
+
+```powershell
+.\scripts\start-web.ps1
+```
+
+Open **http://127.0.0.1:8000**. The built frontend and API share this origin;
+API reference is **http://127.0.0.1:8000/docs**. Keep the terminal open and use
+**Ctrl+C** to stop the server and its monitoring session. Later starts need only
+the launcher; rebuild the frontend after pulling UI changes.
+
+If PowerShell blocks scripts, use a process-scoped invocation:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-web.ps1
+```
+
+This does not change the saved execution policy. `-Build` rebuilds the UI; `-Dev`
+starts the Vite development frontend. The launcher recognizes a matching application
+already on port 8000; stop the owning terminal yourself before replacing it.
+
+### Optional development workflow
+
+With GNU Make already available, `make` prepares missing local dependencies and
+starts Vite at **http://127.0.0.1:5173**, with FastAPI at **http://127.0.0.1:8000**.
+Available targets: `setup`, `run`, `backend`, `frontend`, `test`, `build`, `check`,
+`help`. Without Make, use `py -3 scripts/dev.py run` on Windows or
+`python3 scripts/dev.py run` on POSIX. Ctrl+C stops the owned service trees.
+
+See the [launcher guide](docs/launcher.md) for prerequisite installation and manual
+commands. Native Windows startup is verified; Linux/macOS and Apple Silicon paths
+are implemented but have not received equivalent native capture/startup validation.
+
+### Optional capture support
+
+After normal setup, install Scapy into the existing local environment:
+
+```powershell
+py -m pip --python .venv install -r requirements-live.txt
+```
+
+Install [Npcap](https://npcap.com/#download) separately on Windows and review its
+capture permissions. The application does not install drivers or elevate itself.
+Offline analysis works without capture support. Replay also needs Scapy but does
+not require a physical interface or capture driver. Detailed OS guidance and the
+manual authorized-capture procedure are in
+[Real-time monitoring](docs/realtime-monitoring.md).
+
+## Dataset and Git LFS
+
+[CIC-IDS2017 on Hugging Face](https://huggingface.co/datasets/c01dsnap/CIC-IDS2017)
+is the historical development/evaluation source: **2,830,743 records, 79 original
+columns and 15 labels**. The single versioned parsed-source archive is
+`datasets/cic_ids2017_v1.parquet`, **276,625,347 bytes**, tracked through Git LFS.
+It preserves source values/types, row order, labels, duplicates and invalid values;
+it is not a packet capture or the cleaned model-input projection.
+
+A normal LFS-aware clone retrieves the archive automatically. If the checkout
+contains only its LFS pointer, retrieve the object from the repository root:
+
+```powershell
+git lfs pull --include="datasets/cic_ids2017_v1.parquet"
+```
+
+**The application can start without the full dataset.** Runtime uses small tracked
+configurations, summaries and reference examples. To defer the archive download,
+set `GIT_LFS_SKIP_SMUDGE=1` for cloning, then retrieve it later. LFS storage/bandwidth
+limits apply; see the [dataset/LFS guide](docs/dataset_lfs.md).
+
+For optional local data reconstruction, use the documented archive verification
+and restoration scripts. Restoration refuses a populated working-data directory.
+See [preprocessing](reports/dataset/preprocessing_report.md),
+[provenance](reports/dataset/provenance.json) and
+[data quality/leakage](reports/dataset/data_quality_and_leakage.md).
+These workflows are not part of dashboard startup.
+
+## Usage
+
+| Page | Purpose |
+|---|---|
+| Security Overview | Loaded engine configuration and recorded-traffic inventory |
+| Risk Analysis | Manual/recorded inputs, risk assessment and fuzzy visualizations |
+| Recorded Traffic | Saved flow examples and original labels, distinct from live results |
+| Live Traffic | Authorized interface capture, status, flow list and inspection |
+| Model Performance | Recorded evaluation metrics and confusion matrices |
+| System Information | Actual model configuration, policy thresholds and rule inventory |
+| Dataset Information | Provenance, class distribution, preparation, calibration and development evidence |
+
+1. Start the application and open the local dashboard.
+2. In **Live Traffic**, select the intended interface and confirm authorization.
+3. Choose **Start monitoring**; use **Stop monitoring** to close capture explicitly.
+   Changing pages or closing the browser does not stop the backend session.
+4. Wait for flows to finalize through TCP termination or timeout. Inspect status,
+   queue-loss and capture-error indicators; empty traffic legitimately produces no rows.
+5. Choose **Inspect flow** for endpoints, duration, completion reason, observed
+   inputs, risk level and alert decision. Partial segments remain clearly labeled.
+6. Inspect the five membership curves/degrees, activated rules and output/centroid
+   plot. Compare policies; only the alert decision changes.
+7. Use **Recorded Traffic** for saved examples, or enter measurements in **Risk Analysis**.
+8. Review **Model Performance** and **Dataset Information** for evaluation context.
+9. Use the sidebar globe button for English/Turkish. Selection persists locally.
+
+For a driver-free demonstration, explicitly select **Synthetic packet replay**
+instead of an interface. These are test packets, never live observations. No packets
+are transmitted by this replay. The application binds loopback; do not expose its
+capture-control API through an untrusted proxy or run multiple backend workers.
+
+## Evaluation
+
+The following are recorded **signature-group-weighted means across three internal
+folds**, with fold-specific calibrated Balanced thresholds. They are not a new test
+of the single deployed threshold and are not independent live-deployment results.
+
+| Configuration | Precision | Recall | F1 | FPR | ROC-AUC |
+|---|---:|---:|---:|---:|---:|
+| Retained flat baseline | 17.46% | 21.08% | 0.1910 | 4.91% | 0.6383 |
+| Research hierarchy, not deployed | 25.76% | 31.66% | 0.2838 | 4.53% | 0.6553 |
+
+The frozen baseline overlaps historical training and the internal folds were
+adaptively reused. The hierarchy failed the day-stability gate, including zero
+recall in Tuesday/Wednesday stress checks, so it did not replace production.
+Group-weighted rates differ from raw pooled flow rates: the retained baseline's
+pooled flow FPR is **15.71%**, not 4.91%.
+
+Sources: [retained-model comparison](reports/fuzzy/task02b/comparison_summary.csv),
+[architecture comparison](reports/fuzzy/task05/comparison.csv),
+[partition integrity](reports/fuzzy/task02b/evaluation_integrity.md) and
+[selection decision](reports/fuzzy/task05/final_report.md).
+
+## Screenshots
+
+Current-release screenshots are not bundled; no mockups or outdated captures are
+presented as the application. The views below are available in the dashboard:
+
+| View | Content |
+|---|---|
+| Security Overview | Real configuration counts and monitoring/recorded-traffic entry points |
+| Live Traffic | Interface controls, session status and observed-flow table |
+| Flow Analysis | Selected flow metadata, risk gauge and policy comparison |
+| Membership visualizations | Five configured curves, observed markers and rule strengths |
+| Dataset Information | Class distribution, preparation and evaluation/calibration records |
+
+Genuine captures can be added under `docs/screenshots/` and linked here after
+redacting network endpoint information. Synthetic replay captures must remain
+explicitly labeled. There are no placeholder image links.
+
+## Limitations
+
+- Historical distribution/scenario shift and duplicate dependencies limit generalization.
+- Exact equivalence between live extraction and the original CICFlowMeter exporter
+  is unverified. Capture loss, offload and partial/mid-connection flows affect inputs.
+- Capture requires a compatible driver and permissions; IPv6 and IP reassembly are
+  not supported by the current live profile.
+- Independently validated live intrusion-detection accuracy is not established.
+- Scores are not probabilities; alerts are indicators, not confirmed attacks or
+  evidence of automatic blocking.
+
+## Repository structure
+
+```text
+config/                         Frozen model, policies and dataset manifest
+datasets/                       Git LFS parsed-source Parquet archive
+docs/                           Setup, capture, localization and data guides
+reports/                        Recorded evaluation and verification evidence
+scripts/                        Local launchers, preparation and verification tools
+src/fuzzy_network_risk/
+  engine.py                     Mamdani inference
+  policy.py                     Threshold-based alert policies
+  realtime/                     Capture, flow statistics and monitoring lifecycle
+  webapp/                       FastAPI and response presentation
+tests/                          Python fixtures and regression tests
+web/src/                        Seven dashboard pages, shared SVG components, i18n
+```
+
+### Verification
+
+```powershell
+npm.cmd --prefix web test
+npm.cmd --prefix web run build
+# Python regression tests; optional packet tests need requirements-live.txt:
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+The build includes TypeScript checking. Ordinary tests use small fixtures rather
+than downloading or processing the complete dataset. Release verification and its
+platform/capture boundaries are recorded in [the final report](reports/task10/report.md).
+
+## License
+
+Application source is licensed under the [MIT License](LICENSE), copyright 2026
+Hikmet Furkan Karabas. Consult the dataset and third-party components' own terms,
+including Npcap, for their respective use and distribution permissions.

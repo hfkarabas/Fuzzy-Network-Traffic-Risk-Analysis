@@ -27,14 +27,26 @@ def interfaces():
             for i in api.conf.ifaces.values() if i.network_name]
 
 
+def _scope(network):
+    """Host-pair attribution of a rejected packet whose IPv4 header is readable."""
+    try:
+        protocol = {6: 'TCP', 17: 'UDP'}.get(int(network.proto), 'OTHER')
+        return protocol, str(network.src), str(network.dst)
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        return None
+
+
 def decode(raw):
     """Read outer IPv4 only. Reject fragments, truncation, tunnels and bad lengths.
 
     Retain scalar transport-payload LENGTH only, never contents. IPv6 is explicitly
     unsupported by this version (the legacy reference has different IPv6 behavior).
+    Rejections of readable IPv4 packets carry a host-pair ``scope`` so that only
+    flows between those hosts are marked as having missed a packet.
     """
     from scapy.layers.inet import IP, TCP, UDP
     from scapy.layers.inet6 import IPv6
+    network = None
     try:
         network = raw if isinstance(raw, (IP, IPv6)) else raw.payload
         if isinstance(network, IPv6):
@@ -42,7 +54,7 @@ def decode(raw):
         if not isinstance(network, IP):
             raise PacketRejected('unsupported_network')
         if network.frag or int(network.flags) & 1:
-            raise PacketRejected('fragmented_ipv4')
+            raise PacketRejected('fragmented_ipv4', _scope(network))
         transport = network.payload
         if not isinstance(transport, (TCP, UDP)):
             raise PacketRejected('unsupported_protocol')
@@ -50,27 +62,27 @@ def decode(raw):
         ihl = int(network.ihl) * 4
         total = int(network.len)
         if ihl < 20 or total < ihl or len(bytes(network)) < total:
-            raise PacketRejected('truncated_or_malformed_packet')
+            raise PacketRejected('truncated_or_malformed_packet', _scope(network))
         if isinstance(transport, TCP):
             header = int(transport.dataofs) * 4
             length = total - ihl - header
             if header < 20 or length < 0:
-                raise PacketRejected('malformed_tcp')
+                raise PacketRejected('malformed_tcp', _scope(network))
             protocol, flags = 'TCP', int(transport.flags)
         else:
             length = int(transport.len) - 8
             if length < 0 or int(transport.len) != total - ihl:
-                raise PacketRejected('malformed_udp')
+                raise PacketRejected('malformed_udp', _scope(network))
             protocol, flags = 'UDP', 0
         # Check transport bytes, excluding link padding, without saving them.
         if len(bytes(transport)) < (header if protocol == 'TCP' else 8) + length:
-            raise PacketRejected('truncated_transport')
+            raise PacketRejected('truncated_transport', _scope(network))
         return Packet(int(raw.time * 1_000_000), network.src, network.dst,
                       int(transport.sport), int(transport.dport), protocol, length, flags)
     except PacketRejected:
         raise
     except (AttributeError, TypeError, ValueError, OverflowError, IndexError) as exc:
-        raise PacketRejected('malformed_packet') from exc
+        raise PacketRejected('malformed_packet', _scope(network) if isinstance(network, IP) else None) from exc
 
 
 class ScapySource:
@@ -96,7 +108,7 @@ class ScapySource:
             try:
                 def receive(raw):
                     try: on_packet(decode(raw))
-                    except PacketRejected as exc: on_error(str(exc), False)
+                    except PacketRejected as exc: on_error(exc.code, False, exc.scope)
                 while not self.stop_event.is_set():
                     api.sniff(opened_socket=self.socket, store=False, timeout=.25, prn=receive)
                     # Scapy may log and swallow a dead socket exception. Do not

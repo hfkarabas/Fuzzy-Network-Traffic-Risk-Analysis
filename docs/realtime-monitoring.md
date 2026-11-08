@@ -141,10 +141,35 @@ Maximum-duration, eviction, tuple-restart and user-stop segments are marked
 segments, not proven completed connections. FIN/RST/idle completion still cannot
 prove that the capture saw the initial packet or every packet. Single-packet or
 equal-timestamp segments have no finite rate and receive no score. Out-of-order
-timestamps also abstain. Queue overflow or unusable IPv4/capture error makes
-subsequent finalized segments insufficient-data; new monitoring starts a fresh
-quality epoch. Unsupported unrelated protocols alone do not poison valid flows.
-Inference exceptions are recorded and never produce an invented score.
+timestamps also abstain. Inference exceptions are recorded and never produce an
+invented score.
+
+### Packet loss and rejected packets (per-flow attribution)
+
+Capture impairments are attributed to the flows that actually missed a packet,
+following the per-connection loss accounting of flow monitors such as Zeek
+(`missed_bytes`, `capture_loss`) and Suricata decoder events. One bad packet
+never stops scoring for the rest of the session; sensor-wide counters
+(`queue_dropped_packets`, `rejected_packets`, `capture_errors`, `impaired_flows`)
+and the error list report overall capture health separately.
+
+| Event | Attribution | Quality code on the affected flow(s) |
+|---|---|---|
+| Decoded packet dropped because the bounded queue is full | Exact flow key | `capture_queue_loss` |
+| Fragmented, truncated or malformed IPv4 TCP/UDP packet with a readable header | Flows between the same two hosts (same protocol when known) | `endpoint_packet_rejected` |
+| Unattributable error (unreadable header, fatal capture failure) | Every flow active at that moment | `concurrent_capture_error` |
+| IPv6, non-IP or non-TCP/UDP packet | None: not part of any analyzed flow | — (counted only) |
+
+Impairment events travel through the same queue as packets, so they apply in
+arrival order; when the queue is full they fall back to an unordered counter
+that the worker applies before processing more packets. Attributed impairments
+also mark a flow created with the same key or host pair within one idle timeout
+(15 s), because the missed packet may have been that flow's first packet. The
+pending set is deduplicated, bounded by the flow-table capacity and cleared
+when monitoring stops. An impaired flow abstains (`insufficient_data`) instead
+of receiving a score from incomplete statistics; flows created afterwards are
+scored normally. A flow already published before a late-applied loss cannot be
+retracted.
 
 There is no provisional periodic re-scoring of active flows. Results can be delayed
 until timeout, so this is not instantaneous packet attack detection. Final ACKs
@@ -252,8 +277,9 @@ description/name does not identify loopback. No remote probes/scans/attacks occu
   startup itself never requires elevation.
 - **Waiting/no flows:** check selected interface and IPv4 traffic; wait for TCP
   completion or idle timeout. Zero traffic legitimately produces no results.
-- **Insufficient data:** inspect quality errors/queue-loss counters. Restart after
-  addressing capture load or malformed/truncated input; never impute measurements.
+- **Insufficient data:** inspect the flow's quality codes and the session's
+  queue-loss/rejection counters. Only affected flows abstain; persistent loss
+  indicates capture load. Measurements are never imputed.
 - **403 control error:** refresh status in the local default-origin application;
   do not enable unrestricted CORS or remote binding as a workaround.
 - **Cleanup failed:** stop the backend process; do not launch another capture until

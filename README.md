@@ -298,9 +298,18 @@ py -m pip --python .venv install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-The build includes TypeScript checking. Ordinary tests use small fixtures rather
+Run `make lint` for Ruff and the TypeScript typecheck. The build includes
+TypeScript checking. Ordinary tests use small fixtures rather
 than downloading or processing the complete dataset. Release verification and its
 platform/capture boundaries are recorded in [the final report](reports/task10/report.md).
+
+### Continuous integration
+
+`.github/workflows/ci.yml` runs Ruff, the TypeScript typecheck, pytest (Ubuntu and
+Windows, Python 3.12 and 3.14), a web-profile API smoke test and the frontend
+tests/build. By project decision it runs **only when started manually**: GitHub
+**Actions** tab → **CI** → **Run workflow** (untick *full-matrix* for a quick
+Ubuntu/Python 3.14 run). It never downloads the Git LFS dataset.
 
 ## License
 

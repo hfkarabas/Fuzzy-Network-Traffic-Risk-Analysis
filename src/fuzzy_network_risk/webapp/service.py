@@ -3,6 +3,7 @@ from pathlib import Path
 import csv
 import json
 import numpy as np
+from .. import __version__
 from ..engine import MamdaniRiskEngine
 from ..config_integrity import frozen_text_matches
 from ..policy import PolicyRiskModel
@@ -61,7 +62,7 @@ class WebService:
                              'axis_label':'Display axis: log(1+x)' if display['key']=='size' or spec['transform']=='log1p' else 'Linear axis'}})
         rules=[{'id':r['id'],'conditions':condition_text(r['antecedent']),'consequent':r['consequent'],
                 'text':rule_text(r['antecedent'],r['consequent'])} for r in self.engine.config['rules']]
-        return {'title':'Fuzzy Logic-Based Network Traffic Risk Analysis','model_id':self.engine.model_id,
+        return {'title':'Fuzzy Logic-Based Network Traffic Risk Analysis','app_version':__version__,'model_id':self.engine.model_id,
                 'model_version':self.manifest['model_version'],'configuration_version':self.manifest['configuration_version'],
                 'method':'Mamdani','and':'Minimum','or':'Maximum','implication':'Minimum clipping','aggregation':'Maximum',
                 'defuzzification':'Centroid','output_grid_points':len(self.engine.grid),

@@ -2,9 +2,13 @@
 
 The public implementation is `fuzzy_network_risk.engine.MamdaniRiskEngine`.
 Load a versioned model with `MamdaniRiskEngine.load(path)` and treat its configuration
-as immutable. No network service, web framework or GPU is required. The default
-educational demonstration configuration is `config/fuzzy/grouped_v1.json`; the day
-configuration is a separate evaluation model, not an automatically switched model.
+as immutable. No network service, web framework or GPU is required. The deployed
+configuration is `config/fuzzy/task04/selected_v4.json` (same model ID as the
+historical `config/fuzzy/grouped_v1.json`); the day configuration is a separate
+evaluation model, not an automatically switched model. Production alert decisions
+come from `fuzzy_network_risk.policy.PolicyRiskModel` with
+`config/fuzzy/task04/selected_policies.json`, never from the engine's embedded
+`alert_threshold`, which is historical metadata.
 
 ## Input
 
@@ -37,7 +41,9 @@ convert user-entered text to validated numbers before calling the engine.
 - `status`: `ok`, `invalid_input`, or `no_rule_activation`.
 - `risk_score`: float in [0,100], or JSON null on abstention.
 - `risk_level`: Low / Medium / High / Critical, or null.
-- `alert`: score >= the model's frozen alert threshold, or null.
+- `alert`: engine level: score >= the model's embedded historical threshold, or null.
+  `PolicyRiskModel.predict_one` replaces it with score >= the selected policy
+  threshold and adds `alert_policy`; applications must use the policy model.
 - `membership_degrees`: exact source keys -> linguistic terms -> [0,1] degrees.
 - `activated_rules`: every rule with strength >0, sorted by descending strength
   then ID. Includes strength, consequent, antecedent, `reason_key`, and English rationale.
@@ -82,3 +88,26 @@ Grouped and temporal metrics differ greatly. This implementation is suitable for
 explaining fuzzy inference in a local course-project UI. Its measured false alarms
 and misses do not support operational security deployment. The future UI should
 include that empirical limitation rather than implying trusted attack detection.
+
+## Command-line scoring
+
+`scripts/score_flow.py` scores exactly as the web application does: deployed
+model, manifest hash verification and a calibrated policy (Balanced by default).
+
+```sh
+python scripts/score_flow.py --input config/fuzzy/example_flow.json
+echo '{" Flow Packets/s": 238.04, " Total Fwd Packets": 37, " Packet Length Mean": 614.54, " Bwd Packet Length Std": 492.81, " Down/Up Ratio": 1}' \
+  | python scripts/score_flow.py --policy Conservative --compact
+```
+
+| Option | Meaning |
+|---|---|
+| `--input PATH` | JSON object or array of objects; stdin when omitted |
+| `--policy NAME` | `Sensitive`, `Balanced` (default) or `Conservative` |
+| `--model PATH`, `--policies PATH` | Alternative model and the policy file calibrated for it (model IDs must match) |
+| `--embedded-threshold` | Reproduce historical reports with the engine's embedded threshold; output marks it `historical_metadata_only` |
+| `--compact` | Single-line JSON |
+
+Exit status: `0` all records scored, `1` at least one abstention
+(`invalid_input` / `no_rule_activation`), `2` usage, input, schema or
+configuration error (message on stderr, no JSON on stdout).

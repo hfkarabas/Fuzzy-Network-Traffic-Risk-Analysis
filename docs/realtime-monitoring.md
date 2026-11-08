@@ -261,7 +261,7 @@ or packet content is returned to the UI.
 make test
 make build
 # Starts/stops its own loopback services; requires both ports free:
-.venv/bin/python scripts/validate_realtime.py
+.venv/bin/python scripts/validation/validate_realtime.py
 ```
 
 On Windows replace `.venv/bin/python` with `.venv/Scripts/python.exe`. The validator

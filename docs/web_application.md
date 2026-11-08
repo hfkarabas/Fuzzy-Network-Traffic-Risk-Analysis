@@ -145,8 +145,8 @@ The application never opens a Parquet file. Catalog rebuilding is optional and
 requires only the existing bounded development artifact:
 
 ```powershell
-.\.venv\Scripts\python scripts/build_web_catalog.py
-.\.venv\Scripts\python scripts/build_web_test_fixture.py
+.\.venv\Scripts\python scripts/webapp/build_web_catalog.py
+.\.venv\Scripts\python scripts/webapp/build_web_test_fixture.py
 ```
 
 The second command captures genuine adapter responses for isolated React tests;
@@ -171,10 +171,10 @@ npm --prefix web run typecheck
 npm --prefix web test
 npm --prefix web run build
 # With the application running:
-.\.venv\Scripts\python scripts/validate_web_http.py
+.\.venv\Scripts\python scripts/webapp/validate_web_http.py
 # With the optional Vite frontend running:
-.\.venv\Scripts\python scripts/validate_web_http.py --base http://127.0.0.1:5173 --output reports/web/dev_proxy_integration.json
-.\.venv\Scripts\python scripts/task03_integrity.py
+.\.venv\Scripts\python scripts/webapp/validate_web_http.py --base http://127.0.0.1:5173 --output reports/web/dev_proxy_integration.json
+.\.venv\Scripts\python scripts/research/task03_integrity.py
 ```
 
 Windows sandbox temporary-file restrictions may require an explicitly local pytest

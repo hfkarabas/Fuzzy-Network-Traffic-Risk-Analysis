@@ -36,7 +36,7 @@ Use the existing project Python setup, then verify the downloaded artifact:
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-research.txt
-.\.venv\Scripts\python.exe scripts/verify_dataset_archive.py
+.\.venv\Scripts\python.exe scripts/data/verify_dataset_archive.py
 ```
 
 An already installed compatible Python and `.venv` can be used. Versions used for
@@ -47,7 +47,7 @@ export are recorded in the manifest; dependencies remain pinned in the project.
 On a fresh checkout with an absent or empty `data` directory:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/restore_dataset_archive.py
+.\.venv\Scripts\python.exe scripts/data/restore_dataset_archive.py
 ```
 
 The command verifies the entire source object's SHA256, then uses the original
@@ -68,7 +68,7 @@ the same quarantine policy. Labels remain evaluation metadata, never model input
 empty alternate destination to inspect a reconstruction:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/restore_dataset_archive.py --destination .tmp/my-offline-data
+.\.venv\Scripts\python.exe scripts/data/restore_dataset_archive.py --destination .tmp/my-offline-data
 ```
 
 The complete reconstruction was validated against untouched original v1 outputs.
@@ -82,7 +82,7 @@ research cache can then be regenerated using its existing preparation script:
 
 ```powershell
 New-Item -ItemType Directory -Force data/fuzzy_v2 | Out-Null
-.\.venv\Scripts\python.exe scripts/task02b_prepare.py
+.\.venv\Scripts\python.exe scripts/research/task02b_prepare.py
 ```
 
 Run research preparation only when the local cache is absent, as the original
@@ -136,13 +136,13 @@ and pointer checks must pass first. No push, pull or fetch command was executed.
 The following checks are offline:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/verify_dataset_archive.py
+.\.venv\Scripts\python.exe scripts/data/verify_dataset_archive.py
 git check-attr filter diff merge text -- datasets/cic_ids2017_v1.parquet
 git lfs ls-files -l
 git lfs fsck --objects --pointers
 ```
 
-`scripts/build_dataset_archive.py` is an export/verification tool for maintainers
+`scripts/data/build_dataset_archive.py` is an export/verification tool for maintainers
 with the original datasets-loaded Arrow cache; it never downloads and never replaces
 an existing archive. The tracked manifest is exclusive-create. Ordinary clones do
 not need to run it. Synthetic pytest coverage includes NaN/null distinctions,

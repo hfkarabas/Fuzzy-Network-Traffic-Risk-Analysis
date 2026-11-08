@@ -16,26 +16,26 @@ it('draws server-sampled membership points and the server-scaled observed marker
   const feature = data.model.features[0]
   const position = analysis.input_positions[feature.column]
   const { container } = render(<MembershipChart feature={feature} position={position} />)
-  expect(screen.getByRole('img', { name: /sunucudan alınan üyelik fonksiyonları ve mevcut değer/ })).toBeVisible()
+  expect(screen.getByRole('img', { name: /membership functions from the server and observed value/ })).toBeVisible()
   expect(container.querySelector('polyline')).toHaveAttribute('points', feature.chart.curves[0].degrees.map((v, i) => `${28 + feature.chart.positions[i] * 314},${100 - v * 78}`).join(' '))
   expect(container.querySelector('line[stroke="#f4f8fd"]')).toHaveAttribute('x1', String(28 + position * 314))
 })
 
 it('shares the existing five feature graphs, numerical memberships and accessible keyboard tabs', () => {
   render(<Evidence result={analysis} data={data} idPrefix="shared-" />)
-  expect(screen.getAllByRole('img', { name: /sunucudan alınan üyelik/ })).toHaveLength(5)
-  for (const feature of data.model.features) expect(screen.getAllByText(feature.chart.axis_label + ' · beyaz çizgi: mevcut değer').length).toBeGreaterThan(0)
-  const tab = screen.getByRole('tab', { name: 'Üyelik dereceleri' })
+  expect(screen.getAllByRole('img', { name: /membership functions from the server/ })).toHaveLength(5)
+  for (const feature of data.model.features) expect(screen.getAllByText(feature.chart.axis_label + ' · white line: observed value').length).toBeGreaterThan(0)
+  const tab = screen.getByRole('tab', { name: 'Membership degrees' })
   fireEvent.keyDown(tab, { key: 'ArrowRight' })
   expect(screen.getByRole('tabpanel')).toHaveAttribute('id', 'shared-panel-rules')
-  expect(screen.getByText(analysis.activated_rules[0].text_tr)).toBeVisible()
+  expect(screen.getByText(analysis.activated_rules[0].text)).toBeVisible()
 })
 
 it('sorts all backend rule activations without mutating their strengths or order', () => {
   const reversed = { ...analysis, activated_rules: [...analysis.activated_rules].reverse() }
   const original = JSON.stringify(reversed)
   const { container } = render(<Evidence result={reversed} data={data} />)
-  fireEvent.click(screen.getByRole('tab', { name: /Etkin kurallar/ }))
+  fireEvent.click(screen.getByRole('tab', { name: /Active rules/ }))
   expect([...container.querySelectorAll('.rule-row>.rule-id')].map(e => e.textContent)).toEqual(analysis.activated_rules.map(r => r.id))
   expect(container.querySelectorAll('.rule-row')).toHaveLength(analysis.activated_rules.length)
   expect(container.querySelector('.rule-strength i')).toHaveStyle({ width: `${analysis.activated_rules[0].strength * 100}%` })
@@ -44,15 +44,15 @@ it('sorts all backend rule activations without mutating their strengths or order
 
 it('preserves historical score, category and exact selected policy threshold', () => {
   render(<ResultPanel result={analysis} data={data} selectedPolicy="Balanced" busy={false} invalid={false} />)
-  expect(screen.getByRole('img', { name: /Risk puanı/ })).toBeVisible()
-  expect(screen.getByText('Alarm üretildi')).toBeVisible()
-  expect(screen.getByText('Yüksek risk')).toBeVisible()
-  expect(screen.getByText('Baskın kurallar: ' + analysis.activated_rules.slice(0, 3).map(r => r.id).join(' · '))).toBeVisible()
+  expect(screen.getByRole('img', { name: /Risk score/ })).toBeVisible()
+  expect(screen.getByText('Alert raised')).toBeVisible()
+  expect(screen.getByText('High risk')).toBeVisible()
+  expect(screen.getByText('Dominant rules: ' + analysis.activated_rules.slice(0, 3).map(r => r.id).join(' · '))).toBeVisible()
 })
 
 it('draws the actual aggregate, four output curves and exact backend centroid marker', () => {
   const { container } = render(<OutputChart output={output} />)
-  expect(screen.getByRole('img', { name: /Çıktı üyelikleri, birleşik küme ve ağırlık merkezi/ })).toBeVisible()
+  expect(screen.getByRole('img', { name: /Output memberships, aggregate and centroid/ })).toBeVisible()
   expect(container.querySelectorAll('polyline[data-level]')).toHaveLength(4)
   expect(screen.getByTestId('output-aggregate')).toHaveAttribute('points', `28,135 ${output.aggregate.map((d, i) => `${28 + output.grid[i] * 3.14},${135 - d * 105}`).join(' ')} 342,135`)
   expect(screen.getByTestId('output-centroid')).toHaveAttribute('x1', String(28 + output.centroid! * 3.14))
@@ -81,6 +81,6 @@ it('rejects mismatched model, centroid and invalid degree data instead of drawin
   expect(() => validateOutput({ ...output, aggregate: [2] }, analysis.model_id, analysis.risk_score!)).toThrow()
   vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ ...output, centroid: 10 }))))
   render(<OutputVisualization result={analysis} />)
-  expect(await screen.findByText(/Mevcut risk sonucu değiştirilmedi/)).toBeVisible()
+  expect(await screen.findByText(/The existing risk result was not changed/)).toBeVisible()
   expect(screen.queryByTestId('output-centroid')).not.toBeInTheDocument()
 })

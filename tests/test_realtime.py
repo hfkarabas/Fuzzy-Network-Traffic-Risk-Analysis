@@ -142,7 +142,7 @@ def test_monitor_no_autostart_singleton_stop_cleanup_and_adapter(service):
     assert monitor.source is None and not monitor.snapshot()['running']
     monitor.start('capture','safe')
     try:
-        with pytest.raises(CaptureError,match='zaten'): monitor.start('capture','safe')
+        with pytest.raises(CaptureError,match='already running'): monitor.start('capture','safe')
         source.accept(packet()); source.accept(packet(100_000,True,flags=4))
         wait(lambda:monitor.snapshot()['counts'].get('ok')==1)
         snapshots=[monitor.snapshot(policy) for policy in ['Sensitive','Balanced','Conservative']]
@@ -282,7 +282,7 @@ def test_permission_failure_and_invalid_interface(service):
     class Denied(ManualSource):
         def start(self,*_): raise CaptureError('permission_denied','Denied')
     source=Denied(); monitor=Monitor(service,lambda *_:source,lambda:[{'id':'safe'}])
-    with pytest.raises(CaptureError,match='geçerli'): monitor.start('capture','injected')
+    with pytest.raises(CaptureError,match='valid interface'): monitor.start('capture','injected')
     with pytest.raises(CaptureError,match='Denied'): monitor.start('capture','safe')
     assert source.stopped and monitor.snapshot()['state']=='permission_denied'
 

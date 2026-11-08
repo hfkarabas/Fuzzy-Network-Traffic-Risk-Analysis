@@ -15,13 +15,13 @@ def scapy_api():
         from scapy import all as api
         return api
     except ImportError as exc:
-        raise CaptureError('capture_unavailable', 'Scapy eksik. Yerel .venv içine requirements-live.txt kurun; çevrimdışı analiz kullanılabilir.') from exc
+        raise CaptureError('capture_unavailable', 'Scapy is missing. Install requirements-live.txt into the local .venv; offline analysis remains available.') from exc
 
 
 def interfaces():
     api = scapy_api()
     if sys.platform == 'win32' and not api.conf.use_pcap:
-        raise CaptureError('capture_unavailable', 'Npcap kullanılamıyor. Npcap kurulumu ve yakalama izinlerini kontrol edin; çevrimdışı analiz kullanılabilir.')
+        raise CaptureError('capture_unavailable', 'Npcap is unavailable. Check the Npcap installation and capture permissions; offline analysis remains available.')
     api.conf.ifaces.reload()
     return [{'id': str(i.network_name), 'name': str(i.name), 'description': str(i.description)}
             for i in api.conf.ifaces.values() if i.network_name]
@@ -102,7 +102,7 @@ class ScapySource:
         except Exception as exc:
             denied = isinstance(exc, PermissionError) or any(word in str(exc).lower() for word in ('permission', 'denied', 'not permitted', 'access is denied'))
             raise CaptureError('permission_denied' if denied else 'capture_unavailable',
-                               'Yakalama izni reddedildi.' if denied else 'Yakalama soketi açılamadı; Npcap/libpcap ve arayüzü kontrol edin.') from exc
+                               'Capture permission was denied.' if denied else 'The capture socket could not be opened; check Npcap/libpcap and the interface.') from exc
 
         def run():
             try:
@@ -134,9 +134,9 @@ class ScapySource:
             self.thread.join(timeout=3)
             if self.thread.is_alive():
                 try: self.socket.close()
-                except Exception as exc: raise CaptureError('cleanup_failed', 'Yakalama soketi kapatılamadı; uygulamayı durdurun.') from exc
+                except Exception as exc: raise CaptureError('cleanup_failed', 'The capture socket could not be closed; stop the application.') from exc
                 self.thread.join(timeout=3)
-            if self.thread.is_alive(): raise CaptureError('cleanup_failed', 'Yakalama iş parçacığı kapanmadı; uygulamayı durdurun.')
+            if self.thread.is_alive(): raise CaptureError('cleanup_failed', 'The capture thread did not exit; stop the application.')
 
 
 def reference_packets():

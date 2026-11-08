@@ -2,7 +2,7 @@
   "candidate": "A_frozen",
   "model_id": "ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b",
   "configuration_version": "task04-v1",
-  "model_version": "TASK 04 · korunan Mamdani v1",
+  "model_version": "TASK 04 · retained Mamdani v1",
   "rule_count": 22,
   "feature_count": 5,
   "independent_test": false,

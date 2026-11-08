@@ -40,7 +40,7 @@ class Monitor:
     def discovery(self):
         try: return {'available': True, 'interfaces': self.interface_provider(), 'error': None}
         except capture.CaptureError as exc: return {'available': False, 'interfaces': [], 'error': {'code': exc.code, 'message': str(exc)}}
-        except Exception: return {'available': False, 'interfaces': [], 'error': {'code': 'capture_unavailable', 'message': 'Arayüzler okunamadı; yakalama sürücüsünü kontrol edin.'}}
+        except Exception: return {'available': False, 'interfaces': [], 'error': {'code': 'capture_unavailable', 'message': 'Interfaces could not be read; check the capture driver.'}}
 
     def error(self, code, fatal=False, scope=None):
         """Record a capture-side event and attribute any packet loss per flow.
@@ -81,9 +81,9 @@ class Monitor:
         with self.control:
             source_thread = getattr(self.source, 'thread', None)
             if (self.worker and self.worker.is_alive()) or (source_thread and source_thread.is_alive()):
-                raise capture.CaptureError('already_running', 'İzleme zaten açık. Önce durdurun.')
+                raise capture.CaptureError('already_running', 'Monitoring is already running. Stop it first.')
             if mode not in ('capture', 'replay'):
-                raise capture.CaptureError('invalid_mode', 'Geçersiz izleme modu.')
+                raise capture.CaptureError('invalid_mode', 'Invalid monitoring mode.')
             if mode == 'capture':
                 available = self.discovery()
                 if not available['available']:
@@ -93,9 +93,9 @@ class Monitor:
                         self.errors.append({**error, 'time': time.time(), 'fatal': True})
                     raise capture.CaptureError(error['code'], error['message'])
                 if interface not in {item['id'] for item in available['interfaces']}:
-                    raise capture.CaptureError('invalid_interface', 'Listeden geçerli bir arayüz seçin.')
+                    raise capture.CaptureError('invalid_interface', 'Select a valid interface from the list.')
             elif interface is not None:
-                raise capture.CaptureError('invalid_interface', 'Replay modu ağ arayüzü kullanmaz.')
+                raise capture.CaptureError('invalid_interface', 'Replay mode does not use a network interface.')
             self.queue = queue.Queue(maxsize=self.queue_size)
             self.table = FlowTable(capacity=self.capacity)
             self.stop_event = threading.Event()
@@ -117,9 +117,9 @@ class Monitor:
                 self.source.stop()
                 with self.lock:
                     self.state = exc.code if isinstance(exc, capture.CaptureError) else 'capture_failed'
-                    self.errors.append({'code': self.state, 'message': str(exc) if isinstance(exc, capture.CaptureError) else 'İzleme başlatılamadı.', 'time': time.time(), 'fatal': True})
+                    self.errors.append({'code': self.state, 'message': str(exc) if isinstance(exc, capture.CaptureError) else 'Monitoring could not be started.', 'time': time.time(), 'fatal': True})
                 if isinstance(exc, capture.CaptureError): raise
-                raise capture.CaptureError('capture_failed', 'İzleme başlatılamadı.') from exc
+                raise capture.CaptureError('capture_failed', 'Monitoring could not be started.') from exc
             return self.snapshot()
 
     def accept(self, packet):
@@ -210,7 +210,7 @@ class Monitor:
             if self.worker:
                 self.worker.join(timeout=8)
                 if self.worker.is_alive():
-                    raise capture.CaptureError('cleanup_failed', 'Analiz iş parçacığı kapanmadı; uygulamayı durdurun.')
+                    raise capture.CaptureError('cleanup_failed', 'The analysis thread did not exit; stop the application.')
             with self.lock:
                 if self.state not in ('capture_failed', 'cleanup_failed'): self.state = 'stopped'
             return self.snapshot()
@@ -230,4 +230,4 @@ class Monitor:
                 'active_flows': self.active, 'counts': dict(self.counts), 'risk_distribution': dict(self.risks[policy]),
                 'policy': policy, 'flows': rows, 'errors': list(self.errors), 'control_token': self.token,
                 'compatibility_profile': PROFILE, 'retention_limit': self.retention, 'active_limit': self.capacity,
-                'notice': 'Tamamlanan gözlemlenmiş akışlar; deneysel CIC uyumu. Puan saldırı olasılığı değildir. Paket kaybı/offload ve eksik başlangıç sonuçları etkiler.'})
+                'notice': 'Finalized observed flows; experimental CIC compatibility. Scores are not attack probabilities. Packet loss/offload and missing beginnings affect results.'})

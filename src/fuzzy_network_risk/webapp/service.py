@@ -7,7 +7,7 @@ from ..engine import MamdaniRiskEngine
 from ..config_integrity import frozen_text_matches
 from ..policy import PolicyRiskModel
 from ..membership import membership
-from .content import FEATURES,TERMS,LEVELS,POLICIES,condition_text
+from .content import FEATURES,TERMS,LEVELS,POLICIES,condition_text,rule_text
 
 ROOT=Path(__file__).resolve().parents[3]
 
@@ -58,29 +58,28 @@ class WebService:
             curves=[{'term':term,'title':TERMS[term],'degrees':membership(coordinates,mf).tolist()} for term,mf in spec['sets'].items()]
             features.append({**display,'training_min':spec['training_min'],'training_max':spec['training_max'],
                              'transform':spec['transform'],'chart':{'positions':positions.tolist(),'values':raw.tolist(),'curves':curves,
-                             'axis_label':'Görsel eksen: log(1+x)' if display['key']=='size' or spec['transform']=='log1p' else 'Doğrusal eksen'}})
+                             'axis_label':'Display axis: log(1+x)' if display['key']=='size' or spec['transform']=='log1p' else 'Linear axis'}})
         rules=[{'id':r['id'],'conditions':condition_text(r['antecedent']),'consequent':r['consequent'],
-                'text':f"EĞER {condition_text(r['antecedent'])} İSE risk {LEVELS[r['consequent']].lower()}."} for r in self.engine.config['rules']]
-        return {'title':'Bulanık Mantık Tabanlı Ağ Trafiği Risk Analizi','model_id':self.engine.model_id,
+                'text':rule_text(r['antecedent'],r['consequent'])} for r in self.engine.config['rules']]
+        return {'title':'Fuzzy Logic-Based Network Traffic Risk Analysis','model_id':self.engine.model_id,
                 'model_version':self.manifest['model_version'],'configuration_version':self.manifest['configuration_version'],
-                'method':'Mamdani','and':'Minimum','or':'Maksimum','implication':'Minimum kırpma','aggregation':'Maksimum',
-                'defuzzification':'Ağırlık merkezi (centroid)','output_grid_points':len(self.engine.grid),
+                'method':'Mamdani','and':'Minimum','or':'Maximum','implication':'Minimum clipping','aggregation':'Maximum',
+                'defuzzification':'Centroid','output_grid_points':len(self.engine.grid),
                 'rule_count':len(rules),'features':features,'rules':rules,'terms':TERMS,'levels':LEVELS,
                 'risk_category_cuts':self.engine.config['risk_level_thresholds'],
                 'dataset':{'id':provenance['dataset_id'],'records':sum(p['rows'] for p in provenance['splits'].values()),
                            'columns':len(provenance['splits']['train']['columns']),'labels':class_count,'revision':provenance['revision']},
-                'notice':'Eğitim ve deney amaçlıdır. Güvenilir bir operasyonel saldırı tespit sistemi değildir.'}
+                'notice':'For education and experimentation. Not a reliable operational intrusion detection system.'}
 
     def analyze(self,features,policy):
         result=self.models[policy].predict_one(features)
         result['model_version']=self.model['model_version']
         result['input_values']=features
-        result['risk_level_tr']=LEVELS.get(result['risk_level'])
         result['validation_errors']=[]
         result['input_positions']={}
         for r in result['activated_rules']:
-            r['conditions_tr']=condition_text(r['antecedent'])
-            r['text_tr']=f"EĞER {r['conditions_tr']} İSE risk {LEVELS[r['consequent']].lower()}."
+            r['conditions']=condition_text(r['antecedent'])
+            r['text']=rule_text(r['antecedent'],r['consequent'])
         if result['status']=='ok':
             for f in FEATURES:
                 spec=self.engine.config['features'][f['key']]; value=features[f['column']]
@@ -89,25 +88,24 @@ class WebService:
                 position=float(np.log1p(z)/np.log1p(spec['upper'])) if f['key']=='size' else z/spec['upper']
                 result['input_positions'][f['column']]=position
             top=result['activated_rules'][:3]
-            score_text=f"{result['risk_score']:.2f}".replace('.',',')
-            degree_text=lambda value: '<0,001' if 0<value<.001 else f'{value:.3f}'.replace('.',',')
-            result['explanation_tr']=f"{LEVELS[result['risk_level']]} risk: {score_text}/100. "+' '.join(
-                f"{r['id']} ({degree_text(r['strength'])}): {r['conditions_tr']}." for r in top)
-            result['explanation_tr']+=' Bu davranışlar saldırı türünü veya saldırı olasılığını kanıtlamaz.'
+            degree_text=lambda value: '<0.001' if 0<value<.001 else f'{value:.3f}'
+            result['explanation']=f"{LEVELS[result['risk_level']]} risk: {result['risk_score']:.2f}/100. "+' '.join(
+                f"{r['id']} ({degree_text(r['strength'])}): {r['conditions']}." for r in top)
+            result['explanation']+=' These behaviors do not establish attack type or attack probability.'
         else:
-            result['explanation_tr']='Yeterli geçerli ölçüm yok; sistem risk puanı üretmekten kaçındı.'
-            result['validation_errors']=[{'field':c,'message':'Sonlu ve sıfırdan küçük olmayan bir sayı gerekli.'} for c in result['explanation_data']['invalid_features']]
+            result['explanation']='Insufficient valid measurements; the system abstained from producing a risk score.'
+            result['validation_errors']=[{'field':c,'message':'A finite, nonnegative number is required.'} for c in result['explanation_data']['invalid_features']]
         return result
 
     def _evaluation(self):
         old=read_json(self.root/'reports/fuzzy/metrics.json')
         scenarios=[]
-        for key,title,description in [('grouped','Geçmiş gruplu test','Sınıf kotalı geliştirme örneklemi; %91,43 saldırı içerir.'),
-                                      ('day','Geçmiş gün bazlı test','Pazartesi–Çarşamba eğitim, Perşembe doğrulama, Cuma test; senaryo kayması vardır.')]:
+        for key,title,description in [('grouped','Historical grouped test','Class-quota development sample; 91.43% attack traffic.'),
+                                      ('day','Historical day-based test','Monday–Wednesday training, Thursday validation, Friday test; scenario shift is present.')]:
             m=old[key]['row_weighted']
             scenarios.append({'id':key,'title':title,'scope':'historical_test','description':description,
-                              'weighting':'Akış ağırlıklı','metrics':m,'confusion':m['confusion_matrix'],
-                              'confusion_weighting':'Aynı testin akış sayıları','source':'reports/fuzzy/metrics.json'})
+                              'weighting':'Flow-weighted','metrics':m,'confusion':m['confusion_matrix'],
+                              'confusion_weighting':'Flow counts from the same test','source':'reports/fuzzy/metrics.json'})
         with (self.root/'reports/fuzzy/task02b/comparison_summary.csv').open(encoding='utf-8',newline='') as handle:
             summaries=list(csv.DictReader(handle))
         internal=[]
@@ -122,8 +120,8 @@ class WebService:
         with (self.root/'reports/fuzzy/task04/comparison.csv').open(encoding='utf-8',newline='') as handle:
             comparisons=[row for row in csv.DictReader(handle) if row['policy']=='Balanced']
         optimization={'version':'TASK 04','selected_candidate':self.manifest['candidate'],'model_id':self.engine.model_id,
-            'scope':'Yeniden kullanılan iç doğrulama; bağımsız test değildir. Grup ağırlıklı üç kat ortalaması.',
-            'conclusion':'Hiçbir aday terfi ölçütünü geçmedi. Puanlama modeli ve mevcut alarm politikaları aynen korundu.',
+            'scope':'Reused internal validation, not independent testing. Group-weighted mean of three folds.',
+            'conclusion':'No candidate passed the promotion criterion. The scoring model and existing alert policies were retained unchanged.',
             'source':'reports/fuzzy/task04/comparison.csv',
             'candidates':[{'id':r['candidate'],'precision':float(r['precision']),'recall':float(r['recall']),
                 'fpr':float(r['false_positive_rate']),'balanced_accuracy':float(r['balanced_accuracy']),
@@ -132,12 +130,12 @@ class WebService:
         return {'historical':scenarios,'internal':internal,'optimization':optimization,
                 'active_model_id':self.engine.model_id,
                 'internal_model_id':self.engine.model_id,
-                'internal_scope':'TASK 02B · korunan model · üç katın imza-grubu ağırlıklı ortalaması',
-                'internal_confusion_scope':'Ayrı kat eşikleriyle birleştirilmiş ham akış sayıları; grup ağırlıklı oranların matrisi değildir.',
+                'internal_scope':'TASK 02B · retained model · signature-group-weighted mean of three folds',
+                'internal_confusion_scope':'Pooled raw flow counts with separate fold thresholds; not the matrix of group-weighted rates.',
                 'independent_holdout':False,'source':'reports/fuzzy/task02b/comparison_summary.csv',
-                'limitations':['Geçmiş gruplu testte yanlış alarm oranı %76’dır.',
-                               'Geçmiş gün bazlı testte 75 eşiğiyle saldırıların neredeyse tamamı kaçırılmıştır.',
-                               'İç doğrulama bağımsız bir final test değildir; güvenilir, dokunulmamış bir holdout yoktur.',
-                               'Sınıf ve senaryo kayması, kopya/yakın kopya bağımlılığı ve beş girdinin sınırlı temsili sürer.',
-                               'Politika FPR hedefleri imza-grubu ağırlıklıdır; akış bazındaki hata oranını garanti etmez.',
-                               'İyileştirme adayları terfi ölçütünü geçmedi; özgün puanlama modeli korunmuştur.']}
+                'limitations':['The historical grouped test has a 76% false-positive rate.',
+                               'The historical day-based test missed almost all attacks at threshold 75.',
+                               'Internal validation is not independent final testing; no credible untouched holdout exists.',
+                               'Class/scenario shift, duplicate/near-duplicate dependence and the limited five-input representation remain.',
+                               'Policy FPR targets are signature-group-weighted; they do not guarantee flow-weighted error rates.',
+                               'Improvement candidates failed the promotion criterion; the original scoring model was retained.']}

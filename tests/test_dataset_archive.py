@@ -19,7 +19,7 @@ def source(tmp_path):
     columns={c:pa.array([0.,1.,2.,3.,4.,5.]) for c in INPUTS}
     columns[' raw integer']=pa.array([-1,0,1,2,3,2**62],type=pa.int64())
     columns[' raw float']=pa.array([np.nan,np.inf,-np.inf,-0.,None,-1.],type=pa.float64(),from_pandas=False)
-    columns[LABEL]=pa.array(['BENIGN','Rare','BENIGN','Attack','BENIGN','Saldırı �'])
+    columns[LABEL]=pa.array(['BENIGN','Rare','BENIGN','Attack','BENIGN','Ünïcødé ✓ �'])
     table=pa.table(columns).replace_schema_metadata({b'provenance':b'synthetic immutable fixture'})
     path=tmp_path/'source.arrow'
     with pa.OSFile(str(path),'wb') as f:
@@ -41,7 +41,7 @@ def test_exact_source_roundtrip(source,tmp_path,byte_split):
     restored=pq.read_table(target)
     assert np.signbit(restored[' raw float'][3].as_py())
     assert restored[' raw integer'][-1].as_py()==2**62
-    assert restored[LABEL][-1].as_py()=='Saldırı �'
+    assert restored[LABEL][-1].as_py()=='Ünïcødé ✓ �'
 
 
 def test_existing_dataset_is_never_overwritten(source,tmp_path):

@@ -70,7 +70,7 @@ Explicit local Start
   → bounded queue → single serial flow worker
   → bidirectional flow statistics → compatibility/quality gate
   → existing WebService.analyze → PolicyRiskModel → MamdaniRiskEngine
-  → bounded in-memory results → local HTTP polling → Canlı Trafik React section
+  → bounded in-memory results → local HTTP polling → Live Traffic React section
 ```
 
 The capture callback only extracts timestamp, addresses, ports, protocol, payload
@@ -137,7 +137,7 @@ Statistics use constant-memory online moments; individual packets are not saved.
   a second start while running returns 409. New sessions reset retained results.
 
 Maximum-duration, eviction, tuple-restart and user-stop segments are marked
-`provisional=true` and shown as **Kısmi akış tahmini**. They are finalized observed
+`provisional=true` and shown as **Partial-flow estimate**. They are finalized observed
 segments, not proven completed connections. FIN/RST/idle completion still cannot
 prove that the capture saw the initial packet or every packet. Single-packet or
 equal-timestamp segments have no finite rate and receive no score. Out-of-order
@@ -181,10 +181,10 @@ not silently removed. These factors can materially change scores.
 
 ## Web interface and lifecycle
 
-Run `make`, open http://127.0.0.1:5173, choose **Canlı Trafik**. Select a real listed
-interface, acknowledge authorization/experimental limits and click **İzlemeyi
-başlat**. Stop explicitly with **İzlemeyi durdur**. Ordinary startup and opening
-the section do not capture. The separate **Sentetik paket replay** source sends
+Run `make`, open http://127.0.0.1:5173, choose **Live Traffic**. Select a real listed
+interface, acknowledge authorization/experimental limits and click **Start
+monitoring**. Stop explicitly with **Stop monitoring**. Ordinary startup and opening
+the section do not capture. The separate **Sentetik packets replay** source sends
 no packets: it decodes six fixed serialized test packets and labels every result
 as replay. It is not a hidden fallback or presented as real interface traffic.
 
@@ -205,17 +205,17 @@ payload viewer exists.
 
 ### Inspecting a flow (TASK 08)
 
-Choose **Akışı incele** in the recent-flow table. The inline detail view retains
+Choose **Inspect flow** in the recent-flow table. The inline detail view retains
 the chosen flow even when polling removes it from the recent list. Close it with
-**Akış ayrıntısını kapat**; keyboard focus returns to the trigger or table heading.
+**Close flow details**; keyboard focus returns to the trigger or table heading.
 Endpoints, ports, duration, finalization reason and inference eligibility appear
 above the shared historical/live risk panel. A provisional segment prominently
-retains **Kısmi akış tahmini** and its experimental-score warning.
+retains **Partial-flow estimate** and its experimental-score warning.
 
 The five observed values keep their full precision internally; formatted numbers
-expose full values on hover. **Üyelik dereceleri** uses the same server-sampled
+expose full values on hover. **Membership degrees** uses the same server-sampled
 configured curves, scaling and observed-value markers as historical analysis.
-**Etkin kurallar** shows actual backend rule descriptions, strengths, bars and
+**Active rules** shows actual backend rule descriptions, strengths, bars and
 consequents. The output plot shows the engine's real 201-point output memberships,
 max-aggregated clipped set and centroid marker; no inference runs in TypeScript.
 It is supplied by the read-only `POST /api/visualization/output` endpoint using

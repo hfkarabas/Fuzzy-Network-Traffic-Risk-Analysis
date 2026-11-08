@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 from fuzzy_network_risk.webapp.api import create_app
 from fuzzy_network_risk.membership import centroid
+from json_compare import assert_json_close
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -63,18 +64,21 @@ def test_labels_invalid_numbers_and_missing_features_rejected(client):
 
 
 def test_new_plot_fixture_is_actual_output_and_old_references_unchanged(client):
+    # Fixtures were captured on another platform: compare floats with a tight
+    # tolerance, everything else (levels, alerts, rules, keys) exactly.
     output=json.loads((ROOT/'web/src/visualization-test-fixture.json').read_text(encoding='utf-8'))
     historical=json.loads((ROOT/'web/src/test-fixture.json').read_text(encoding='utf-8'))
     live=json.loads((ROOT/'web/src/live-test-fixture.json').read_text(encoding='utf-8'))
     engine=client.app.state.service.engine
-    assert output['historical']==engine.output_visualization(historical['analyses']['policy-contrast']['Balanced']['input_values'])
+    assert_json_close(engine.output_visualization(historical['analyses']['policy-contrast']['Balanced']['input_values']),output['historical'])
     for policies in historical['analyses'].values():
         for policy,reference in policies.items():
             actual=client.post('/api/analyze',json={'features':reference['input_values'],'policy':policy})
-            assert actual.status_code==200 and actual.json()==reference
+            assert actual.status_code==200
+            assert_json_close(actual.json(),reference)
     for row in live['flows']:
-        assert output[row['protocol'].lower()]==engine.output_visualization(row['features'])
-        assert client.app.state.service.analyze(row['features'],'Balanced')==row['analysis']
+        assert_json_close(engine.output_visualization(row['features']),output[row['protocol'].lower()])
+        assert_json_close(client.app.state.service.analyze(row['features'],'Balanced'),row['analysis'])
     for protocol in ('tcp','udp'):
         for policy,reference in output['liveAnalyses'][protocol].items():
-            assert client.app.state.service.analyze(reference['input_values'],policy)==reference
+            assert_json_close(client.app.state.service.analyze(reference['input_values'],policy),reference)

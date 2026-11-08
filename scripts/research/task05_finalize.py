@@ -6,7 +6,6 @@ sys.path.insert(0,str(ROOT/'src'))
 import json
 import re
 import pandas as pd
-import numpy as np
 from task05_research import R,C,T,dump,digest
 from fuzzy_network_risk.advanced import COLUMNS
 from task05_reports import reports

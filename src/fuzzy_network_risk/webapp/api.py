@@ -1,171 +1,275 @@
 """Local FastAPI HTTP adapter. Start with Uvicorn bound to 127.0.0.1."""
-from contextlib import asynccontextmanager
-from typing import Literal,Annotated,Any
-import logging
+
 import html
 import ipaddress
+import logging
 import secrets
-from fastapi import FastAPI,Request,Depends,Header,HTTPException,Query
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse,FileResponse,HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel,ConfigDict,Field,StrictFloat
-from starlette.middleware.trustedhost import TrustedHostMiddleware
-from .. import __version__
-from .service import WebService,ROOT
-from ..realtime.monitor import Monitor
-from ..realtime.capture import CaptureError
+from contextlib import asynccontextmanager
+from typing import Annotated, Any, Literal
 
-Number=Annotated[StrictFloat,Field(ge=0,allow_inf_nan=False)]
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+
+from .. import __version__
+from ..realtime.capture import CaptureError
+from ..realtime.monitor import Monitor
+from .service import ROOT, WebService
+
+Number = Annotated[StrictFloat, Field(ge=0, allow_inf_nan=False)]
+
 
 class FlowFeatures(BaseModel):
-    model_config=ConfigDict(extra='forbid')
-    rate:Number|None=Field(alias=' Flow Packets/s',description='Packet rate, packets/second')
-    volume:Number|None=Field(alias=' Total Fwd Packets',description='Forward packet count, packets')
-    size:Number|None=Field(alias=' Packet Length Mean',description='Mean packet length, bytes')
-    variation:Number|None=Field(alias=' Bwd Packet Length Std',description='Backward packet length standard deviation, bytes')
-    balance:Number|None=Field(alias=' Down/Up Ratio',description='Exported integer backward/forward ratio')
+    model_config = ConfigDict(extra='forbid')
+    rate: Number | None = Field(alias=' Flow Packets/s', description='Packet rate, packets/second')
+    volume: Number | None = Field(alias=' Total Fwd Packets', description='Forward packet count, packets')
+    size: Number | None = Field(alias=' Packet Length Mean', description='Mean packet length, bytes')
+    variation: Number | None = Field(
+        alias=' Bwd Packet Length Std', description='Backward packet length standard deviation, bytes'
+    )
+    balance: Number | None = Field(alias=' Down/Up Ratio', description='Exported integer backward/forward ratio')
+
 
 class AnalyzeRequest(BaseModel):
-    model_config=ConfigDict(extra='forbid')
-    features:FlowFeatures
-    policy:Literal['Sensitive','Balanced','Conservative']='Balanced'
+    model_config = ConfigDict(extra='forbid')
+    features: FlowFeatures
+    policy: Literal['Sensitive', 'Balanced', 'Conservative'] = 'Balanced'
+
 
 class MonitorStart(BaseModel):
-    model_config=ConfigDict(extra='forbid')
-    mode:Literal['capture','replay']='capture'
-    interface:Annotated[str,Field(min_length=1,max_length=512)]|None=None
-    authorized:Literal[True]
+    model_config = ConfigDict(extra='forbid')
+    mode: Literal['capture', 'replay'] = 'capture'
+    interface: Annotated[str, Field(min_length=1, max_length=512)] | None = None
+    authorized: Literal[True]
+
 
 class AnalyzeResponse(BaseModel):
-    status:Literal['ok','invalid_input','no_rule_activation']
-    risk_score:Annotated[float,Field(ge=0,le=100)]|None
-    risk_level:Literal['Low','Medium','High','Critical']|None
-    alert:bool|None
-    alert_policy:dict[str,Any]
-    model_id:str
-    model_version:str
-    membership_degrees:dict[str,dict[str,float]]
-    activated_rules:list[dict[str,Any]]
-    explanation:str
-    explanation_data:dict[str,Any]
-    input_values:dict[str,float|None]
-    input_positions:dict[str,float]
-    validation_errors:list[dict[str,str]]
+    status: Literal['ok', 'invalid_input', 'no_rule_activation']
+    risk_score: Annotated[float, Field(ge=0, le=100)] | None
+    risk_level: Literal['Low', 'Medium', 'High', 'Critical'] | None
+    alert: bool | None
+    alert_policy: dict[str, Any]
+    model_id: str
+    model_version: str
+    membership_degrees: dict[str, dict[str, float]]
+    activated_rules: list[dict[str, Any]]
+    explanation: str
+    explanation_data: dict[str, Any]
+    input_values: dict[str, float | None]
+    input_positions: dict[str, float]
+    validation_errors: list[dict[str, str]]
 
-def create_app(root=ROOT,monitor_factory=Monitor):
+
+def create_app(root=ROOT, monitor_factory=Monitor):
     @asynccontextmanager
     async def lifespan(app):
-        app.state.service=WebService(root)
-        app.state.monitor=monitor_factory(app.state.service)
-        try: yield
+        app.state.service = WebService(root)
+        app.state.monitor = monitor_factory(app.state.service)
+        try:
+            yield
         finally:
             from starlette.concurrency import run_in_threadpool
+
             await run_in_threadpool(app.state.monitor.stop)
 
-    app=FastAPI(title='Fuzzy Network Risk · Local API',version=__version__,lifespan=lifespan,
-                docs_url=None,redoc_url=None,description='Educational frozen Mamdani inference. Scores are not attack probabilities.')
-    app.add_middleware(TrustedHostMiddleware,allowed_hosts=['localhost','127.0.0.1','testserver','[::1]'])
+    app = FastAPI(
+        title='Fuzzy Network Risk · Local API',
+        version=__version__,
+        lifespan=lifespan,
+        docs_url=None,
+        redoc_url=None,
+        description='Educational frozen Mamdani inference. Scores are not attack probabilities.',
+    )
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=['localhost', '127.0.0.1', 'testserver', '[::1]'])
 
     @app.exception_handler(RequestValidationError)
-    async def validation_error(request,exc):
-        errors=[{'field':'.'.join(map(str,e['loc'][1:])),'message':'Missing, unknown or invalid value. Numbers must be finite and nonnegative.'} for e in exc.errors()]
-        return JSONResponse(status_code=422,content={'status':'invalid_input','risk_score':None,'risk_level':None,'alert':None,
-                                                    'activated_rules':[],'membership_degrees':{},'validation_errors':errors,
-                                                    'explanation':'Input validation failed. No risk score was produced.'})
+    async def validation_error(request, exc):
+        errors = [
+            {
+                'field': '.'.join(map(str, e['loc'][1:])),
+                'message': 'Missing, unknown or invalid value. Numbers must be finite and nonnegative.',
+            }
+            for e in exc.errors()
+        ]
+        return JSONResponse(
+            status_code=422,
+            content={
+                'status': 'invalid_input',
+                'risk_score': None,
+                'risk_level': None,
+                'alert': None,
+                'activated_rules': [],
+                'membership_degrees': {},
+                'validation_errors': errors,
+                'explanation': 'Input validation failed. No risk score was produced.',
+            },
+        )
 
     @app.exception_handler(Exception)
-    async def unexpected_error(request,exc):
+    async def unexpected_error(request, exc):
         logging.getLogger('fuzzy.web').exception('Local inference request failed')
-        return JSONResponse(status_code=500,content={'status':'error','message':'The operation failed. Check the local server logs.'})
+        return JSONResponse(
+            status_code=500,
+            content={'status': 'error', 'message': 'The operation failed. Check the local server logs.'},
+        )
 
-    @app.get('/api/health',tags=['System'])
-    def health(request:Request): return {'status':'ok','app_version':__version__,'model_loaded':True,'model_id':request.app.state.service.engine.model_id,'local_only':True,
-                                        'configuration_version':request.app.state.service.model['configuration_version']}
+    @app.get('/api/health', tags=['System'])
+    def health(request: Request):
+        return {
+            'status': 'ok',
+            'app_version': __version__,
+            'model_loaded': True,
+            'model_id': request.app.state.service.engine.model_id,
+            'local_only': True,
+            'configuration_version': request.app.state.service.model['configuration_version'],
+        }
 
-    @app.get('/api/model',tags=['System'])
-    def model(request:Request): return request.app.state.service.model
+    @app.get('/api/model', tags=['System'])
+    def model(request: Request):
+        return request.app.state.service.model
 
-    @app.get('/api/policies',tags=['Inference'])
-    def policies(request:Request): return {'default':'Balanced','policies':request.app.state.service.policy_list()}
+    @app.get('/api/policies', tags=['Inference'])
+    def policies(request: Request):
+        return {'default': 'Balanced', 'policies': request.app.state.service.policy_list()}
 
-    @app.post('/api/analyze',tags=['Inference'],response_model=AnalyzeResponse,responses={422:{'description':'Explicit validation abstention; null score/category/alert'}})
-    def analyze(body:AnalyzeRequest,request:Request):
-        return request.app.state.service.analyze(body.features.model_dump(by_alias=True),body.policy)
+    @app.post(
+        '/api/analyze',
+        tags=['Inference'],
+        response_model=AnalyzeResponse,
+        responses={422: {'description': 'Explicit validation abstention; null score/category/alert'}},
+    )
+    def analyze(body: AnalyzeRequest, request: Request):
+        return request.app.state.service.analyze(body.features.model_dump(by_alias=True), body.policy)
 
-    @app.post('/api/visualization/output',tags=['Inference'])
-    def output_visualization(body:AnalyzeRequest,request:Request):
+    @app.post('/api/visualization/output', tags=['Inference'])
+    def output_visualization(body: AnalyzeRequest, request: Request):
         # Read-only diagnostics from the same engine; alert policy has no effect.
         return request.app.state.service.engine.output_visualization(body.features.model_dump(by_alias=True))
 
-    @app.get('/api/examples',tags=['Data'])
-    def examples(request:Request):
-        service=request.app.state.service
-        return {'examples':service.examples,'scope':service.catalog['scope'],'unavailable_categories':service.catalog['unavailable_categories'],
-                'reference_policy':'Balanced','curated_not_representative':True}
+    @app.get('/api/examples', tags=['Data'])
+    def examples(request: Request):
+        service = request.app.state.service
+        return {
+            'examples': service.examples,
+            'scope': service.catalog['scope'],
+            'unavailable_categories': service.catalog['unavailable_categories'],
+            'reference_policy': 'Balanced',
+            'curated_not_representative': True,
+        }
 
-    @app.get('/api/evaluation',tags=['Data'])
-    def evaluation(request:Request): return request.app.state.service.evaluation
+    @app.get('/api/evaluation', tags=['Data'])
+    def evaluation(request: Request):
+        return request.app.state.service.evaluation
 
-    def local_monitor(request:Request):
-        try: local=bool(request.client and ipaddress.ip_address(request.client.host).is_loopback)
-        except ValueError: local=False
-        origin=request.headers.get('origin')
-        allowed={'http://127.0.0.1:5173','http://localhost:5173','http://[::1]:5173',
-                 'http://127.0.0.1:8000','http://localhost:8000','http://[::1]:8000'}
-        if not local or (origin and origin not in allowed) or request.headers.get('sec-fetch-site')=='cross-site':
-            raise HTTPException(403,detail='Monitoring is restricted to the local application.')
+    def local_monitor(request: Request):
+        try:
+            local = bool(request.client and ipaddress.ip_address(request.client.host).is_loopback)
+        except ValueError:
+            local = False
+        origin = request.headers.get('origin')
+        allowed = {
+            'http://127.0.0.1:5173',
+            'http://localhost:5173',
+            'http://[::1]:5173',
+            'http://127.0.0.1:8000',
+            'http://localhost:8000',
+            'http://[::1]:8000',
+        }
+        if not local or (origin and origin not in allowed) or request.headers.get('sec-fetch-site') == 'cross-site':
+            raise HTTPException(403, detail='Monitoring is restricted to the local application.')
 
-    def control_monitor(request:Request,x_monitor_token:Annotated[str|None,Header()]=None):
+    def control_monitor(request: Request, x_monitor_token: Annotated[str | None, Header()] = None):
         local_monitor(request)
-        if not x_monitor_token or not secrets.compare_digest(x_monitor_token.encode(),request.app.state.monitor.token.encode()):
-            raise HTTPException(403,detail='The local monitoring control token is missing; refresh the page.')
+        if not x_monitor_token or not secrets.compare_digest(
+            x_monitor_token.encode(), request.app.state.monitor.token.encode()
+        ):
+            raise HTTPException(403, detail='The local monitoring control token is missing; refresh the page.')
 
     @app.exception_handler(CaptureError)
-    async def capture_error(request,exc):
-        code=409 if exc.code=='already_running' else 422 if exc.code.startswith('invalid_') else 403 if exc.code=='permission_denied' else 503
-        return JSONResponse(status_code=code,content={'error':{'code':exc.code,'message':str(exc)}})
+    async def capture_error(request, exc):
+        code = (
+            409
+            if exc.code == 'already_running'
+            else 422
+            if exc.code.startswith('invalid_')
+            else 403
+            if exc.code == 'permission_denied'
+            else 503
+        )
+        return JSONResponse(status_code=code, content={'error': {'code': exc.code, 'message': str(exc)}})
 
-    @app.get('/api/live/interfaces',dependencies=[Depends(local_monitor)],tags=['Live'])
-    def live_interfaces(request:Request): return request.app.state.monitor.discovery()
+    @app.get('/api/live/interfaces', dependencies=[Depends(local_monitor)], tags=['Live'])
+    def live_interfaces(request: Request):
+        return request.app.state.monitor.discovery()
 
-    @app.get('/api/live/status',dependencies=[Depends(local_monitor)],tags=['Live'])
-    def live_status(request:Request,policy:Literal['Sensitive','Balanced','Conservative']='Balanced',limit:Annotated[int,Query(ge=1,le=200)]=50):
-        return request.app.state.monitor.snapshot(policy,limit)
+    @app.get('/api/live/status', dependencies=[Depends(local_monitor)], tags=['Live'])
+    def live_status(
+        request: Request,
+        policy: Literal['Sensitive', 'Balanced', 'Conservative'] = 'Balanced',
+        limit: Annotated[int, Query(ge=1, le=200)] = 50,
+    ):
+        return request.app.state.monitor.snapshot(policy, limit)
 
-    @app.get('/api/live/flows',dependencies=[Depends(local_monitor)],tags=['Live'])
-    def live_flows(request:Request,policy:Literal['Sensitive','Balanced','Conservative']='Balanced',limit:Annotated[int,Query(ge=1,le=200)]=50):
-        result=request.app.state.monitor.snapshot(policy,limit)
-        return {'session_id':result['session_id'],'flows':result['flows']}
+    @app.get('/api/live/flows', dependencies=[Depends(local_monitor)], tags=['Live'])
+    def live_flows(
+        request: Request,
+        policy: Literal['Sensitive', 'Balanced', 'Conservative'] = 'Balanced',
+        limit: Annotated[int, Query(ge=1, le=200)] = 50,
+    ):
+        result = request.app.state.monitor.snapshot(policy, limit)
+        return {'session_id': result['session_id'], 'flows': result['flows']}
 
-    @app.get('/api/live/stats',dependencies=[Depends(local_monitor)],tags=['Live'])
-    def live_stats(request:Request,policy:Literal['Sensitive','Balanced','Conservative']='Balanced'):
-        result=request.app.state.monitor.snapshot(policy,1)
-        return {key:result[key] for key in ['state','running','active_flows','counts','risk_distribution','policy','session_id']}
+    @app.get('/api/live/stats', dependencies=[Depends(local_monitor)], tags=['Live'])
+    def live_stats(request: Request, policy: Literal['Sensitive', 'Balanced', 'Conservative'] = 'Balanced'):
+        result = request.app.state.monitor.snapshot(policy, 1)
+        return {
+            key: result[key]
+            for key in ['state', 'running', 'active_flows', 'counts', 'risk_distribution', 'policy', 'session_id']
+        }
 
-    @app.get('/api/live/errors',dependencies=[Depends(local_monitor)],tags=['Live'])
-    def live_errors(request:Request): return {'errors':request.app.state.monitor.snapshot(limit=1)['errors']}
+    @app.get('/api/live/errors', dependencies=[Depends(local_monitor)], tags=['Live'])
+    def live_errors(request: Request):
+        return {'errors': request.app.state.monitor.snapshot(limit=1)['errors']}
 
-    @app.post('/api/live/start',dependencies=[Depends(control_monitor)],tags=['Live'])
-    def live_start(body:MonitorStart,request:Request): return request.app.state.monitor.start(body.mode,body.interface)
+    @app.post('/api/live/start', dependencies=[Depends(control_monitor)], tags=['Live'])
+    def live_start(body: MonitorStart, request: Request):
+        return request.app.state.monitor.start(body.mode, body.interface)
 
-    @app.post('/api/live/stop',dependencies=[Depends(control_monitor)],tags=['Live'])
-    def live_stop(request:Request): return request.app.state.monitor.stop()
+    @app.post('/api/live/stop', dependencies=[Depends(control_monitor)], tags=['Live'])
+    def live_stop(request: Request):
+        return request.app.state.monitor.stop()
 
-    @app.get('/docs',response_class=HTMLResponse,include_in_schema=False)
+    @app.get('/docs', response_class=HTMLResponse, include_in_schema=False)
     def offline_docs():
-        schema=app.openapi()
-        rows=''.join(f'<tr><td>{html.escape(method.upper())}</td><td>{html.escape(path)}</td><td>{html.escape(operation.get("summary",""))}</td></tr>' for path,methods in schema['paths'].items() for method,operation in methods.items())
-        return f'''<!doctype html><html lang="en"><meta charset="utf-8"><title>Local API reference</title><style>body{{font:16px system-ui;background:#101725;color:#e9f1fa;max-width:960px;margin:60px auto;padding:20px}}td{{padding:14px;border-bottom:1px solid #334155}}a{{color:#67ddeb}}code{{white-space:pre-wrap}}</style><h1>Fuzzy Network Risk API</h1><p>Fully local FastAPI / OpenAPI reference. No CDN required.</p><a href="/openapi.json">Open / download the OpenAPI schema</a><table><tr><th>Method</th><th>Path</th><th>Operation</th></tr>{rows}</table><h2>Analysis request</h2><code>{{"features": {{" Flow Packets/s": 100000, " Total Fwd Packets": 100, " Packet Length Mean": 6, " Bwd Packet Length Std": 0, " Down/Up Ratio": 0}}, "policy": "Balanced"}}</code><p>Invalid input returns 422 and a null score. Dataset labels are not accepted. Scores are not attack probabilities.</p><a href="/">Back to the application</a></html>'''
+        schema = app.openapi()
+        rows = ''.join(
+            f'<tr><td>{html.escape(method.upper())}</td><td>{html.escape(path)}</td><td>{html.escape(operation.get("summary", ""))}</td></tr>'
+            for path, methods in schema['paths'].items()
+            for method, operation in methods.items()
+        )
+        return f"""<!doctype html><html lang="en"><meta charset="utf-8"><title>Local API reference</title><style>body{{font:16px system-ui;background:#101725;color:#e9f1fa;max-width:960px;margin:60px auto;padding:20px}}td{{padding:14px;border-bottom:1px solid #334155}}a{{color:#67ddeb}}code{{white-space:pre-wrap}}</style><h1>Fuzzy Network Risk API</h1><p>Fully local FastAPI / OpenAPI reference. No CDN required.</p><a href="/openapi.json">Open / download the OpenAPI schema</a><table><tr><th>Method</th><th>Path</th><th>Operation</th></tr>{rows}</table><h2>Analysis request</h2><code>{{"features": {{" Flow Packets/s": 100000, " Total Fwd Packets": 100, " Packet Length Mean": 6, " Bwd Packet Length Std": 0, " Down/Up Ratio": 0}}, "policy": "Balanced"}}</code><p>Invalid input returns 422 and a null score. Dataset labels are not accepted. Scores are not attack probabilities.</p><a href="/">Back to the application</a></html>"""
 
-    dist=root/'web/dist'
-    @app.get('/favicon.svg',include_in_schema=False)
-    def favicon(): return FileResponse(dist/'favicon.svg',media_type='image/svg+xml')
-    if (dist/'assets').exists(): app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
-    @app.get('/',include_in_schema=False)
+    dist = root / 'web/dist'
+
+    @app.get('/favicon.svg', include_in_schema=False)
+    def favicon():
+        return FileResponse(dist / 'favicon.svg', media_type='image/svg+xml')
+
+    if (dist / 'assets').exists():
+        app.mount('/assets', StaticFiles(directory=dist / 'assets'), name='assets')
+
+    @app.get('/', include_in_schema=False)
     def frontend():
-        if (dist/'index.html').exists(): return FileResponse(dist/'index.html')
-        return HTMLResponse('<h1>Frontend not built yet</h1><p>Run npm ci and npm run build in the web folder.</p>',status_code=503)
+        if (dist / 'index.html').exists():
+            return FileResponse(dist / 'index.html')
+        return HTMLResponse(
+            '<h1>Frontend not built yet</h1><p>Run npm ci and npm run build in the web folder.</p>', status_code=503
+        )
+
     return app
 
-app=create_app()
+
+app = create_app()

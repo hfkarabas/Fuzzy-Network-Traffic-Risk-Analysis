@@ -5,7 +5,6 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'src'))
 import hashlib
 import json
-import numpy as np
 import pandas as pd
 from fuzzy_network_risk.data import INPUTS,LABEL
 from fuzzy_network_risk.policy import PolicyRiskModel

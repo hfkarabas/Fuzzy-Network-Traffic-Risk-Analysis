@@ -51,6 +51,9 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   profile and the reproducibility note for the registered experiments.
 
 ### Added
+- Manually triggered GitHub Actions workflow (`.github/workflows/ci.yml`,
+  `workflow_dispatch` only): lint, pytest on Ubuntu/Windows × Python 3.12/3.14,
+  web-profile smoke test, frontend tests and build.
 - Ruff lint/format configuration (`pyproject.toml`), `make lint`
   (`scripts/dev.py lint`: Ruff check, Ruff format check, TypeScript typecheck),
   `.editorconfig` and `.git-blame-ignore-revs` for the formatting commit.

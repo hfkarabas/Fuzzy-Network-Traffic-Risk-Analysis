@@ -1,0 +1,122 @@
+# Manually triggered checks: Actions tab -> "CI" -> "Run workflow".
+# Intentionally not run on push or pull_request (project decision); the same
+# checks run locally with `make lint` and `make test`.
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      full-matrix:
+        description: 'Also test Windows and the minimum supported Python (3.12)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Git LFS dataset archive is not needed for any check.
+  GIT_LFS_SKIP_SMUDGE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONUTF8: '1'
+
+jobs:
+  lint:
+    name: Lint (Ruff, TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install Ruff (pinned in requirements-dev.txt)
+        run: python -m pip install "$(grep -E '^ruff==' requirements-dev.txt)"
+      - name: Ruff lint
+        run: python -m ruff check --output-format=github .
+      - name: Ruff format check
+        run: python -m ruff format --check .
+      - name: Install frontend dependencies
+        run: npm ci --prefix web
+      - name: TypeScript typecheck
+        run: npm --prefix web run typecheck
+
+  python-tests:
+    name: Python tests (${{ matrix.os }}, ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(inputs.full-matrix && '["ubuntu-latest","windows-latest"]' || '["ubuntu-latest"]') }}
+        python: ${{ fromJSON(inputs.full-matrix && '["3.12","3.14"]' || '["3.14"]') }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Install contributor profile
+        run: python -m pip install -r requirements-dev.txt
+      - name: Run pytest
+        run: python -m pytest -q -p no:cacheprovider
+
+  web-only-profile:
+    name: Web profile starts the API
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Install only the web application profile
+        run: python -m pip install -r requirements-web.txt
+      - name: Health and inference smoke test
+        run: |
+          python -m uvicorn fuzzy_network_risk.webapp.api:app --app-dir src --host 127.0.0.1 --port 8000 &
+          for attempt in $(seq 1 30); do curl -sf http://127.0.0.1:8000/api/health && break; sleep 1; done
+          curl -sf http://127.0.0.1:8000/api/health | python -c "import json,sys; assert json.load(sys.stdin)['status'] == 'ok'"
+          printf '{"features": %s}' "$(cat config/fuzzy/example_flow.json)" \
+            | curl -sf -H 'Content-Type: application/json' -d @- http://127.0.0.1:8000/api/analyze \
+            | python -c "import json,sys; r = json.load(sys.stdin); assert r['status'] == 'ok', r; print(r['risk_level'], r['alert'])"
+
+  frontend:
+    name: Frontend tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install dependencies
+        run: npm ci --prefix web
+      - name: Vitest
+        run: npm --prefix web test
+      - name: Typecheck and production build
+        run: npm --prefix web run build

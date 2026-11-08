@@ -13,5 +13,7 @@ const rawInformationIds = informationFiles.filter(path => path.endsWith('.csv'))
 export default defineConfig({
   plugins: [react()],
   server: { host: '127.0.0.1', port: 5173, strictPort: true, fs: { allow: [fileURLToPath(new URL('.', import.meta.url)), ...informationFiles, ...rawInformationIds] }, proxy: { '/api': 'http://127.0.0.1:8000', '/openapi.json': 'http://127.0.0.1:8000', '/docs': 'http://127.0.0.1:8000' } },
-  test: { environment: 'jsdom', globals: true, setupFiles: './src/test-setup.ts', css: true },
+  // Full-page localization tests render every route; 5 s defaults are too tight
+  // on slower or shared machines and produced timeout-only failures.
+  test: { environment: 'jsdom', globals: true, setupFiles: './src/test-setup.ts', css: true, testTimeout: 30_000 },
 })

@@ -162,7 +162,7 @@ Available targets: `setup`, `run`, `backend`, `frontend`, `test`, `build`, `chec
 `python3 scripts/dev.py run` on POSIX. Ctrl+C stops the owned service trees.
 
 See the [launcher guide](docs/launcher.md) for prerequisite installation and manual
-commands. Native Windows startup is verified; Linux/macOS and Apple Silicon paths
+commands, and the [scripts index](scripts/README.md) for every command-line tool. Native Windows startup is verified; Linux/macOS and Apple Silicon paths
 are implemented but have not received equivalent native capture/startup validation.
 
 ### Dependency profiles

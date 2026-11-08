@@ -45,11 +45,15 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `-web`, `-live`, `-research`, `-dev`) with matching `pyproject.toml` extras;
   the web application no longer installs research and test tooling.
 - One application version for Python, API and frontend (this policy).
+- `scripts/` organized into `data/`, `fuzzy/`, `research/`, `webapp/` and
+  `validation/`; only `dev.py`, `score_flow.py` and the PowerShell launchers stay
+  at the top level. `scripts/README.md` indexes every script, its dependency
+  profile and the reproducibility note for the registered experiments.
 
 ### Added
 
 - `app_version` in `/api/health` and `/api/model`; shown on System Information.
-- `scripts/build_web_test_fixture.py` regenerates all frontend fixtures.
+- `scripts/webapp/build_web_test_fixture.py` regenerates all frontend fixtures.
 
 ### Removed
 

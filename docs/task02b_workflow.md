@@ -23,17 +23,17 @@ A_refit is the training-role-pure comparator for rule/membership improvements.
 
 ```powershell
 $env:PYTHONUTF8 = '1'
-./.venv/Scripts/python scripts/task02b_integrity.py
-./.venv/Scripts/python scripts/task02b_prepare.py
-./.venv/Scripts/python scripts/task02b_diagnostics.py
+./.venv/Scripts/python scripts/research/task02b_integrity.py
+./.venv/Scripts/python scripts/research/task02b_prepare.py
+./.venv/Scripts/python scripts/research/task02b_diagnostics.py
 # The candidate plan already exists and is immutable. Do not replace it.
 # First-time registration on a new experiment version only:
-# ./.venv/Scripts/python scripts/task02b_experiment.py freeze
-./.venv/Scripts/python scripts/task02b_experiment.py compare
-./.venv/Scripts/python scripts/task02b_experiment.py finalize
-./.venv/Scripts/python scripts/task02b_validate.py
-./.venv/Scripts/python scripts/task02b_reports.py
-./.venv/Scripts/python scripts/task02b_integrity.py
+# ./.venv/Scripts/python scripts/research/task02b_experiment.py freeze
+./.venv/Scripts/python scripts/research/task02b_experiment.py compare
+./.venv/Scripts/python scripts/research/task02b_experiment.py finalize
+./.venv/Scripts/python scripts/research/task02b_validate.py
+./.venv/Scripts/python scripts/research/task02b_reports.py
+./.venv/Scripts/python scripts/research/task02b_integrity.py
 ```
 
 Ordinary synthetic tests need no data download:

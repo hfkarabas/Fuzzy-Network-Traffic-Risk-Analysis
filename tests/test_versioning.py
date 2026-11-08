@@ -47,3 +47,8 @@ def test_changelog_documents_the_current_version():
 def test_frontend_fixture_matches_current_version():
     fixture = json.loads((ROOT / 'web/src/test-fixture.json').read_text(encoding='utf-8'))
     assert fixture['model']['app_version'] == VERSION
+
+
+def test_readme_version_badge_matches():
+    readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+    assert f'badge/version-{VERSION}-' in readme

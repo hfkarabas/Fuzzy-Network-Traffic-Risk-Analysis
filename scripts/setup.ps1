@@ -6,5 +6,6 @@ $env:TMP = $env:TEMP
 $env:PIP_CACHE_DIR = Join-Path $PWD '.cache/pip'
 py -m venv --without-pip .venv
 if ($LASTEXITCODE -ne 0) { throw 'Virtual environment creation failed' }
-py -m pip --python .venv install -r requirements.txt
+# Offline research pipeline (dataset preparation, fitting, reports).
+py -m pip --python .venv install -r requirements-research.txt
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }

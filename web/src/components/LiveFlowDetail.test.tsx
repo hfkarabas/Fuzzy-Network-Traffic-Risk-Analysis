@@ -88,3 +88,14 @@ it('keeps extreme finite input values formatted while retaining their full preci
   expect(screen.getByTitle('1.234567890123456e+100')).toBeVisible()
   expect(screen.queryByRole('img')).not.toBeInTheDocument()
 })
+
+it('explains per-flow capture impairments without drawing charts', () => {
+  const fetch = vi.fn(); vi.stubGlobal('fetch', fetch)
+  const impaired = { ...flow, status: 'insufficient_data', analysis: null, quality_errors: ['capture_queue_loss', 'concurrent_capture_error', 'endpoint_packet_rejected'], policy_comparison: {} }
+  render(<LiveFlowDetail flow={impaired} data={data} policy="Balanced" onClose={() => {}} />)
+  expect(screen.getByText('Bu akışın bir paketi yakalama kuyruğunda kayboldu.')).toBeVisible()
+  expect(screen.getByText('Aynı uç noktalar arasındaki bir paket kullanılamadı.')).toBeVisible()
+  expect(screen.getByText('Akış sürerken kaynağı belirlenemeyen bir yakalama hatası oluştu.')).toBeVisible()
+  expect(screen.queryByRole('img')).not.toBeInTheDocument()
+  expect(fetch).not.toHaveBeenCalled()
+})

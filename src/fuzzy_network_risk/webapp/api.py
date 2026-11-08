@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse,FileResponse,HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel,ConfigDict,Field,StrictFloat
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+from .. import __version__
 from .service import WebService,ROOT
 from ..realtime.monitor import Monitor
 from ..realtime.capture import CaptureError
@@ -62,7 +63,7 @@ def create_app(root=ROOT,monitor_factory=Monitor):
             from starlette.concurrency import run_in_threadpool
             await run_in_threadpool(app.state.monitor.stop)
 
-    app=FastAPI(title='Fuzzy Network Risk · Local API',version='1.0.0',lifespan=lifespan,
+    app=FastAPI(title='Fuzzy Network Risk · Local API',version=__version__,lifespan=lifespan,
                 docs_url=None,redoc_url=None,description='Educational frozen Mamdani inference. Scores are not attack probabilities.')
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=['localhost','127.0.0.1','testserver','[::1]'])
 
@@ -79,7 +80,7 @@ def create_app(root=ROOT,monitor_factory=Monitor):
         return JSONResponse(status_code=500,content={'status':'error','message':'The operation failed. Check the local server logs.'})
 
     @app.get('/api/health',tags=['System'])
-    def health(request:Request): return {'status':'ok','model_loaded':True,'model_id':request.app.state.service.engine.model_id,'local_only':True,
+    def health(request:Request): return {'status':'ok','app_version':__version__,'model_loaded':True,'model_id':request.app.state.service.engine.model_id,'local_only':True,
                                         'configuration_version':request.app.state.service.model['configuration_version']}
 
     @app.get('/api/model',tags=['System'])

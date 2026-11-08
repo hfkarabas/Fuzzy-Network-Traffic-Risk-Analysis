@@ -20,7 +20,7 @@ def fit_config(training_inputs, scenario):
     if set(training_inputs.columns) != set(INPUTS):
         raise ValueError('Fit accepts behavior inputs only; training labels/metadata must be removed')
     features = {}
-    for key, column, terms, unit in zip(KEYS, INPUTS, TERMS, UNITS):
+    for key, column, terms, unit in zip(KEYS, INPUTS, TERMS, UNITS, strict=True):
         x = training_inputs[column].to_numpy(dtype='float64')
         if len(x) == 0 or not (np.isfinite(x) & (x >= 0)).all():
             raise ValueError('Training inputs must be nonempty finite nonnegative measurements')
@@ -39,7 +39,10 @@ def fit_config(training_inputs, scenario):
         b = max(b, a + delta)
         c = max(c, b + delta)
         anchors_raw = [a, b, c]
-        z = lambda v: float(np.log1p(v)) if transform == 'log1p' else float(v)
+
+        def z(v, transform=transform):
+            return float(np.log1p(v)) if transform == 'log1p' else float(v)
+
         a, b, c = map(z, anchors_raw)
         upper = max(z(float(x.max())), c)
         features[key] = {
@@ -55,6 +58,7 @@ def fit_config(training_inputs, scenario):
                 zip(
                     ['p01', 'p25', 'p50', 'p60', 'p75', 'p90', 'p95', 'p99'],
                     map(float, np.quantile(x, [0.01, 0.25, 0.50, 0.60, 0.75, 0.90, 0.95, 0.99])),
+                    strict=True,
                 )
             ),
             'zero_fraction': float((x == 0).mean()),

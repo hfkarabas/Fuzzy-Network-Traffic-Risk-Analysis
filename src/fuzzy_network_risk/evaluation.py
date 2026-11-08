@@ -20,7 +20,10 @@ def binary_metrics(y_true, scores, threshold, weights=None):
     fp = float(w[~y & predicted].sum())
     tn = float(w[~y & ~predicted].sum())
     fn = float(w[y & ~predicted].sum())
-    ratio = lambda a, b: float(a / b) if b else None
+
+    def ratio(a, b):
+        return float(a / b) if b else None
+
     precision = ratio(tp, tp + fp)
     recall = ratio(tp, tp + fn)
     specificity = ratio(tn, tn + fp)

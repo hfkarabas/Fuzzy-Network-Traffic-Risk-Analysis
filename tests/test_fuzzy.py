@@ -28,7 +28,7 @@ def engine(config):
 
 @pytest.fixture
 def record():
-    return dict(zip(INPUTS, [100.0, 20.0, 50.0, 10.0, 1.0]))
+    return dict(zip(INPUTS, [100.0, 20.0, 50.0, 10.0, 1.0], strict=True))
 
 
 def test_triangle_analytic():

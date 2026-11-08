@@ -155,7 +155,10 @@ class WebService:
                 position = float(np.log1p(z) / np.log1p(spec['upper'])) if f['key'] == 'size' else z / spec['upper']
                 result['input_positions'][f['column']] = position
             top = result['activated_rules'][:3]
-            degree_text = lambda value: '<0.001' if 0 < value < 0.001 else f'{value:.3f}'
+
+            def degree_text(value):
+                return '<0.001' if 0 < value < 0.001 else f'{value:.3f}'
+
             result['explanation'] = f'{LEVELS[result["risk_level"]]} risk: {result["risk_score"]:.2f}/100. ' + ' '.join(
                 f'{r["id"]} ({degree_text(r["strength"])}): {r["conditions"]}.' for r in top
             )

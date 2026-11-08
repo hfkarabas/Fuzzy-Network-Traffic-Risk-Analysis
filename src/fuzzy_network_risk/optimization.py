@@ -50,7 +50,7 @@ def candidate_config(training, name, frozen):
     config['reference_basis'] = (
         'equal_signature_medians' if name in ['B_group_membership', 'D_combined'] else 'training_rows'
     )
-    for key, column in zip(KEYS, INPUTS):
+    for key, column in zip(KEYS, INPUTS, strict=True):
         config['features'][key]['training_min'] = float(training[column].min())
         config['features'][key]['training_max'] = float(training[column].max())
         f = config['features'][key]

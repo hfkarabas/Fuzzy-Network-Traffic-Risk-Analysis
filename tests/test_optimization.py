@@ -73,7 +73,7 @@ def test_only_declared_rule_changes(training):
     rules = context_rules(base['rules'])
     assert base['rules'] == original and len(rules) == 22
     assert [a['id'] for a in rules] == [a['id'] for a in original]
-    changed = [a['id'] for a, b in zip(rules, original) if a != b]
+    changed = [a['id'] for a, b in zip(rules, original, strict=True) if a != b]
     assert changed == ['R07', 'R10', 'R11', 'R19']
     assert next(r for r in rules if r['id'] == 'R10')['antecedent']['all'][-1] == {'feature': 'volume', 'term': 'many'}
 

@@ -13,6 +13,6 @@ ifeq ($(strip $(PYTHON)),)
 $(error Python is missing. Install Python 3.12+ from python.org; see docs/launcher.md)
 endif
 
-.PHONY: run setup backend frontend test build check help
-run setup backend frontend test build check help:
+.PHONY: run setup backend frontend test lint build check help
+run setup backend frontend test lint build check help:
 	@"$(PYTHON)" scripts/dev.py $@ --via-make

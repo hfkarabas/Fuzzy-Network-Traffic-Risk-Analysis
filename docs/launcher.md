@@ -113,7 +113,8 @@ visible rather than silently changing pins or building an unrelated environment.
 | `make setup` | Prepare/adopt validated local environments |
 | `make backend` | Prepare Python only; backend on 8000 |
 | `make frontend` | Prepare npm only; frontend on 5173; API requires a backend |
-| `make test` | Full pytest suite and frontend Vitest suite |
+| `make test` | Full pytest suite and frontend Vitest suite (contributor profile) |
+| `make lint` | Ruff lint, Ruff format check and TypeScript typecheck; changes nothing |
 | `make build` | TypeScript validation and production frontend build |
 | `make check` | Readiness checks without installation or state-marker writes |
 | `make help` | Command summary |

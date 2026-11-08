@@ -38,6 +38,7 @@ HELP = """Fuzzy Network Risk: project-local development commands
   make backend     prepare Python; run only FastAPI on 127.0.0.1:8000
   make frontend    prepare npm; run only Vite on 127.0.0.1:5173
   make test        prepare contributor dependencies (requirements-dev.txt); run all tests
+  make lint        Ruff lint + format check and TypeScript typecheck (no changes made)
   make build       prepare dependencies; typecheck and build frontend
   make check       report readiness without installing or writing markers
   make help        show this help
@@ -802,7 +803,7 @@ def main(argv=None, root=ROOT):
         'action',
         nargs='?',
         default='run',
-        choices=['run', 'setup', 'backend', 'frontend', 'test', 'build', 'check', 'help'],
+        choices=['run', 'setup', 'backend', 'frontend', 'test', 'lint', 'build', 'check', 'help'],
     )
     parser.add_argument('--via-make', action='store_true')
     parser.add_argument(
@@ -843,7 +844,9 @@ def main(argv=None, root=ROOT):
             stack.enter_context(Lease(root / '.tmp/launcher' / (name + '.lock')))
         with Lease(root / '.tmp/launcher/setup.lock'):
             python = (
-                ensure_python(root, 'dev' if args.action == 'test' else 'web') if args.action != 'frontend' else None
+                ensure_python(root, 'dev' if args.action in ('test', 'lint') else 'web')
+                if args.action != 'frontend'
+                else None
             )
             node = npm = None
             if args.action != 'backend':
@@ -858,6 +861,12 @@ def main(argv=None, root=ROOT):
                 root,
             )
             run_command(npm + ['test'], root / 'web')
+            return 0
+        if args.action == 'lint':
+            # Same checks as the manual CI workflow: Python style/lint, TypeScript types.
+            run_command([python, '-m', 'ruff', 'check', '.'], root)
+            run_command([python, '-m', 'ruff', 'format', '--check', '.'], root)
+            run_command(npm + ['run', 'typecheck'], root / 'web')
             return 0
         if args.action == 'build':
             run_command(npm + ['run', 'build'], root / 'web')

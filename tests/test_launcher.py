@@ -406,3 +406,21 @@ def test_hash_guard_only_allows_line_ending_conversion():
     assert frozen_text_matches(raw.replace(b'\n', b'\r\n'), expected)
     assert not frozen_text_matches(raw + b' ', expected)
     assert not frozen_text_matches(raw.replace(b'1', b'2'), expected)
+
+
+def test_lint_action_runs_ruff_and_typecheck_without_serving(monkeypatch, tmp_path):
+    monkeypatch.setattr(dev, 'choose_python', lambda _root: (Path(sys.executable), {}))
+    monkeypatch.setattr(dev, 'model_assets', lambda _root: None)
+    profiles = []
+    monkeypatch.setattr(dev, 'ensure_python', lambda _root, profile='web': profiles.append(profile) or 'py')
+    monkeypatch.setattr(dev, 'ensure_frontend', lambda _root: ('node', ['npm']))
+    monkeypatch.setattr(dev, 'serve', lambda *_args: pytest.fail('lint must not start services'))
+    calls = []
+    monkeypatch.setattr(dev, 'run_command', lambda cmd, root: calls.append((cmd, root)))
+    assert dev.main(['lint'], tmp_path) == 0
+    assert profiles == ['dev']
+    assert calls == [
+        (['py', '-m', 'ruff', 'check', '.'], tmp_path),
+        (['py', '-m', 'ruff', 'format', '--check', '.'], tmp_path),
+        (['npm', 'run', 'typecheck'], tmp_path / 'web'),
+    ]

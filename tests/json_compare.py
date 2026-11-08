@@ -7,6 +7,7 @@ not a portable regression criterion. Everything that is not a float is compared
 exactly: keys, list lengths, strings, booleans (alerts), ``None`` (abstentions)
 and integers (counts).
 """
+
 import math
 
 # Far below any modelled quantity (scores are reported to 2 decimals, membership

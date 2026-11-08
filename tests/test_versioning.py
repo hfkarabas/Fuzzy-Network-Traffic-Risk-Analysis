@@ -1,9 +1,12 @@
 """One application version (SemVer) across Python, API, frontend and changelog."""
+
 import json
-from pathlib import Path
 import re
 import tomllib
+from pathlib import Path
+
 from fastapi.testclient import TestClient
+
 import fuzzy_network_risk
 from fuzzy_network_risk.webapp.api import create_app
 

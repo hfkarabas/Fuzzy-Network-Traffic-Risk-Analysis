@@ -187,7 +187,7 @@ def requirements(root=ROOT, declaration='requirements-web.txt'):
         try:
             relative = path.relative_to(root.resolve())
         except ValueError:
-            raise LaunchError('Requirement include escapes the repository')
+            raise LaunchError('Requirement include escapes the repository') from None
         if path in visited:
             return
         visited.add(path)

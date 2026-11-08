@@ -177,13 +177,23 @@ class FlowTable:
             raise ValueError('Unknown impairment code')
         if key is not None:
             taint = ('key', key, code)
-            match = lambda candidate: candidate == key
+
+            def match(candidate):
+                return candidate == key
+
         elif scope is not None:
             protocol, hosts = scope[0], frozenset(scope[1:])
             taint = ('hosts', (protocol, hosts), code)
-            match = lambda candidate: (protocol is None or candidate[0] == protocol) and _hosts(candidate) == hosts
+
+            def match(candidate):
+                return (protocol is None or candidate[0] == protocol) and _hosts(candidate) == hosts
+
         else:
-            taint, match = None, lambda candidate: True
+            taint = None
+
+            def match(candidate):
+                return True
+
         marked = 0
         for candidate, flow in self.flows.items():
             if match(candidate):

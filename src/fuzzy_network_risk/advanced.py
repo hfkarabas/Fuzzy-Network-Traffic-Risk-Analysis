@@ -36,9 +36,9 @@ def fitted_features(training):
         raise ValueError('Training features/provenance required')
     original = fit_config(training[INPUTS], 'task05-training')
     features = deepcopy(original['features'])
-    for key, feature in features.items():
+    for feature in features.values():
         old = list(feature['sets'])
-        feature['sets'] = {n: feature['sets'][o] for n, o in zip(['low', 'moderate', 'high'], old)}
+        feature['sets'] = {n: feature['sets'][o] for n, o in zip(['low', 'moderate', 'high'], old, strict=True)}
     # Same row-quantile reference as fair A_refit; expanded features alone,
     # not simultaneous label-based membership optimization, are investigated.
     for key, column, unit in [('duration', EXTRA[0], 'microseconds'), ('iat', EXTRA[1], 'microseconds')]:
@@ -450,7 +450,7 @@ class AdvancedRiskEngine:
                 else {k: set(c['intermediate_memberships']) for k in layers if k != 'final'}
             )
 
-            def check(e):
+            def check(e, allowed=allowed):
                 if set(e) == {'feature', 'term'}:
                     if e['feature'] not in allowed or e['term'] not in allowed[e['feature']]:
                         raise ValueError('Unknown layer feature/term')
@@ -612,7 +612,9 @@ class AdvancedRiskEngine:
             'explanation_data': {
                 'message_key': 'task05.prediction.' + str(p['status'][0]),
                 'layer_order': list(layers),
-                'outside_training_range': [c for c, b in zip(self.columns, p['out_of_training_range'][0]) if b],
+                'outside_training_range': [
+                    c for c, b in zip(self.columns, p['out_of_training_range'][0], strict=True) if b
+                ],
             },
             'explanation': (
                 'Behavioral risk '

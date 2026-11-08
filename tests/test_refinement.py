@@ -217,6 +217,6 @@ def test_selection_predeclared_and_deterministic():
 def test_backward_compatibility_of_frozen_baseline():
     root = Path(__file__).resolve().parents[1]
     e = MamdaniRiskEngine.load(root / 'config/fuzzy/grouped_v1.json')
-    record = dict(zip(INPUTS, [100000.0, 100.0, 6.0, 0.0, 0.0]))
+    record = dict(zip(INPUTS, [100000.0, 100.0, 6.0, 0.0, 0.0], strict=True))
     assert e.predict_one(record)['risk_score'] == pytest.approx(76.02135443342287, abs=1e-12)
     assert e.model_id == 'ba9a293bc6b8068e86558eab707c93399c54499cfb6010b24677427f781cde1b'

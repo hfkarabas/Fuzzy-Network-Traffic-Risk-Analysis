@@ -49,7 +49,7 @@ def test_valid_inference_matches_direct_python(client, request_body):
         assert result[key] == direct[key]
     assert result['explanation'].startswith(f'{result["risk_level"]} risk: ') and result['activated_rules']
     assert not any(key.endswith('_tr') for key in result)
-    for api_rule, direct_rule in zip(result['activated_rules'], direct['activated_rules']):
+    for api_rule, direct_rule in zip(result['activated_rules'], direct['activated_rules'], strict=True):
         for key in ['id', 'strength', 'consequent', 'reason_key']:
             assert api_rule[key] == direct_rule[key]
         assert api_rule['text'].startswith('IF ') and ' THEN risk is ' in api_rule['text']

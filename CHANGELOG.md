@@ -66,6 +66,9 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Turkish interface, runtime translation layer and language switcher.
 
 ### Fixed
+- README rewritten: consistent project name, quick start, usage, CLI and API
+  reference, development/CI/versioning sections and a documentation index; the
+  "o capture socket" typo is gone.
 
 - Platform-dependent last-digit float differences no longer fail fixture tests;
   slow machines no longer fail full-page frontend tests by timeout.

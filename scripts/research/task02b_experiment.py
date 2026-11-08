@@ -11,7 +11,7 @@ import time
 import numpy as np
 import pandas as pd
 from fuzzy_network_risk.data import INPUTS,LABEL
-from fuzzy_network_risk.engine import MamdaniRiskEngine,config_digest
+from fuzzy_network_risk.engine import MamdaniRiskEngine
 from fuzzy_network_risk.evaluation import binary_metrics
 from fuzzy_network_risk.refinement import (roles,membership_candidate,select_policies,group_weights,choose_candidate,SEED)
 

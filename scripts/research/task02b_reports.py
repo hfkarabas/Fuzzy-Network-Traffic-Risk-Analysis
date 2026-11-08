@@ -9,7 +9,6 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from fuzzy_network_risk.engine import MamdaniRiskEngine
 from fuzzy_network_risk.refinement import SEED
 from task02b_experiment import R,C,D,dump
 

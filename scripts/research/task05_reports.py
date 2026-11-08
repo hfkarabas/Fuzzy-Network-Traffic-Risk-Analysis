@@ -15,7 +15,7 @@ from fuzzy_network_risk.data import LABEL
 from fuzzy_network_risk.membership import membership
 from fuzzy_network_risk.refinement import group_weights,threshold_curve
 from fuzzy_network_risk.policy import PolicyRiskModel
-from task05_research import R,C,T,dump,digest
+from task05_research import R,C,T,dump
 
 F=ROOT/'reports/figures/task05'
 

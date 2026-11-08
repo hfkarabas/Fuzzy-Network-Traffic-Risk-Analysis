@@ -6,7 +6,6 @@ sys.path.insert(0,str(ROOT/'src'))
 import json
 import hashlib
 import duckdb
-import pandas as pd
 from fuzzy_network_risk.data import INPUTS
 from fuzzy_network_risk.refinement import assignment,check_lineage,SEED
 

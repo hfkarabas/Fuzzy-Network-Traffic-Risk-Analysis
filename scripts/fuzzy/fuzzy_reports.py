@@ -1,12 +1,11 @@
 """Reports/figures from frozen configurations and saved predictions; no refitting."""
-from pathlib import Path
 import json
 import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from run_fuzzy import ROOT,REPORT,CONFIG,GENERATED,connect,query,write_json
+from run_fuzzy import ROOT,REPORT,CONFIG,GENERATED,connect,write_json
 from fuzzy_network_risk.engine import MamdaniRiskEngine,LEVELS
 from fuzzy_network_risk.membership import membership
 from fuzzy_network_risk.data import INPUTS,LABEL,SEED

@@ -15,7 +15,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from fuzzy_network_risk.data import INPUTS,LABEL,SEED
 from fuzzy_network_risk.calibration import fit_config
-from fuzzy_network_risk.engine import MamdaniRiskEngine,LEVELS,config_digest
+from fuzzy_network_risk.engine import MamdaniRiskEngine,config_digest
 from fuzzy_network_risk.evaluation import binary_metrics,calibrate_alert
 
 REPORT=ROOT/'reports/fuzzy'

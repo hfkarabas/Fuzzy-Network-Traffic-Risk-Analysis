@@ -4,7 +4,6 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'src'))
 import argparse
-from copy import deepcopy
 import hashlib
 import json
 import time

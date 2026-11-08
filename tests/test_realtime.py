@@ -4,15 +4,17 @@ import threading
 import time
 import pytest
 from fastapi.testclient import TestClient
-from fuzzy_network_risk.realtime.flows import Packet, PacketRejected, FlowTable, Moments
+from fuzzy_network_risk.realtime.flows import (Packet, PacketRejected, FlowTable, Moments, QUEUE_LOSS,
+                                               ENDPOINT_REJECTION, UNATTRIBUTED_ERROR)
 from fuzzy_network_risk.realtime.capture import CaptureError, decode, reference_packets
 from fuzzy_network_risk.realtime.monitor import Monitor
 from fuzzy_network_risk.webapp.api import create_app
 from fuzzy_network_risk.webapp.service import WebService
 
 
-def packet(t=0, reverse=False, size=10, protocol='TCP', flags=16, sport=1234):
-    return Packet(t, '192.0.2.2' if reverse else '192.0.2.1', '192.0.2.1' if reverse else '192.0.2.2',
+def packet(t=0, reverse=False, size=10, protocol='TCP', flags=16, sport=1234, hosts=('192.0.2.1', '192.0.2.2')):
+    client, server = hosts
+    return Packet(t, server if reverse else client, client if reverse else server,
                   443 if reverse else sport, sport if reverse else 443, protocol, size, flags)
 
 
@@ -116,6 +118,18 @@ def test_actual_scapy_bytes_decode_and_rejection():
     with pytest.raises(PacketRejected): decode(udp)
 
 
+def test_rejections_carry_host_scope_only_when_header_is_readable():
+    api=pytest.importorskip('scapy.all')
+    fragment=api.IP(bytes(api.IP(src='192.0.2.1',dst='192.0.2.2',flags='MF')/api.TCP()))
+    with pytest.raises(PacketRejected) as info: decode(fragment)
+    assert info.value.code=='fragmented_ipv4' and info.value.scope==('TCP','192.0.2.1','192.0.2.2')
+    truncated=api.IP(bytes(api.IP(src='192.0.2.3',dst='192.0.2.4')/api.UDP()/b'abc')[:-1])
+    with pytest.raises(PacketRejected) as info: decode(truncated)
+    assert info.value.scope==('UDP','192.0.2.3','192.0.2.4')
+    with pytest.raises(PacketRejected) as info: decode(api.IPv6()/api.UDP())
+    assert info.value.code=='unsupported_ipv6' and info.value.scope is None
+
+
 class ManualSource:
     def __init__(self): self.done=threading.Event(); self.stopped=0
     def start(self,on_packet,on_error): self.accept,self.error=on_packet,on_error
@@ -152,15 +166,106 @@ def test_abstention_and_retention(service):
     assert all(row['analysis'] is None for row in snapshot['flows'])
 
 
-def test_overflow_never_silently_scores_incomplete_flow(service):
+def test_queue_overflow_impairs_only_the_flow_that_lost_a_packet(service):
+    # Deterministic: drive the worker's own steps without a racing thread.
     monitor=Monitor(service,queue_size=1)
-    # Exercise deterministic queue overflow without a racing consumer.
-    monitor.queue=__import__('queue').Queue(maxsize=1)
-    monitor.accept(packet()); monitor.accept(packet(100,True))
-    table=FlowTable(); table.add(packet(),0); table.add(packet(100,True),.1)
-    monitor._publish(table.flush()[0])
-    row=monitor.snapshot()['flows'][0]
-    assert row['analysis'] is None and 'session_capture_queue_loss' in row['quality_errors']
+    monitor.queue=__import__('queue').Queue(maxsize=1); monitor.table=FlowTable(); monitor.session='test'
+    lossy=packet(); clean=packet(hosts=('198.51.100.1','198.51.100.2'))
+    monitor.accept(lossy)                     # queued
+    monitor.accept(packet(50,True))           # dropped: belongs to the lossy flow
+    assert monitor.snapshot()['counts']['queue_dropped_packets']==1
+    item,clock=monitor.queue.get_nowait()
+    monitor._apply_losses(clock)
+    monitor.table.add(item,clock)
+    for row in monitor.table.add(packet(100,True,flags=4),clock+.1): monitor._publish(row)
+    # A flow that lost nothing is still scored after the overflow.
+    monitor.table.add(clean,clock+.2)
+    for row in monitor.table.add(packet(100,True,flags=4,hosts=('198.51.100.1','198.51.100.2')),clock+.3): monitor._publish(row)
+    flows=monitor.snapshot()['flows']
+    assert flows[1]['analysis'] is None and flows[1]['quality_errors']==[QUEUE_LOSS]
+    assert flows[0]['status']=='ok' and flows[0]['analysis']['status']=='ok' and flows[0]['quality_errors']==[]
+    counts=monitor.snapshot()['counts']
+    assert counts['impaired_flows']==1 and counts['ok']==1 and counts['insufficient_data']==1
+
+
+def _session(service):
+    source=ManualSource(); monitor=Monitor(service,lambda *_:source,lambda:[{'id':'safe'}])
+    monitor.start('capture','safe')
+    return source,monitor
+
+
+def _finish(source,monitor):
+    source.done.set(); wait(lambda:not monitor.snapshot()['running'])
+    return {(f['source'],f['source_port']):f for f in monitor.snapshot(limit=200)['flows']}
+
+
+def test_rejected_packet_impairs_only_flows_between_the_same_hosts(service):
+    source,monitor=_session(service)
+    other=('198.51.100.1','198.51.100.2')
+    source.accept(packet()); source.accept(packet(t=10,hosts=other))
+    source.error('fragmented_ipv4',False,('TCP','192.0.2.2','192.0.2.1'))
+    source.accept(packet(100_000,True,flags=4)); source.accept(packet(100_010,True,flags=4,hosts=other))
+    flows=_finish(source,monitor)
+    impaired=flows[('192.0.2.1',1234)]; healthy=flows[('198.51.100.1',1234)]
+    assert impaired['status']=='insufficient_data' and impaired['quality_errors']==[ENDPOINT_REJECTION]
+    assert healthy['status']=='ok' and healthy['analysis']['risk_score'] is not None
+    counts=monitor.snapshot()['counts']
+    assert counts['rejected_packets']==1 and counts['impaired_flows']==1 and counts['ok']==1
+
+
+def test_rejected_first_packet_taints_flow_created_within_idle_period(service):
+    source,monitor=_session(service)
+    source.error('truncated_transport',False,('TCP','192.0.2.1','192.0.2.2'))
+    source.accept(packet()); source.accept(packet(100_000,True,flags=4))
+    flows=_finish(source,monitor)
+    assert flows[('192.0.2.1',1234)]['quality_errors']==[ENDPOINT_REJECTION]
+
+
+def test_unattributable_error_impairs_active_flows_but_not_later_flows(service):
+    source,monitor=_session(service)
+    source.accept(packet(sport=1000))
+    source.error('malformed_packet',False)
+    source.accept(packet(100_000,True,flags=4,sport=1000))
+    wait(lambda:monitor.snapshot()['counts'].get('finalized_flows')==1)
+    # Later flows, including between the same hosts, are scored normally.
+    source.accept(packet(200_000,sport=2000)); source.accept(packet(300_000,True,flags=4,sport=2000))
+    flows=_finish(source,monitor)
+    assert flows[('192.0.2.1',1000)]['quality_errors']==[UNATTRIBUTED_ERROR]
+    assert flows[('192.0.2.1',2000)]['status']=='ok'
+
+
+def test_filtered_traffic_rejections_never_impair_flows(service):
+    source,monitor=_session(service)
+    source.accept(packet())
+    for code in ('unsupported_ipv6','unsupported_network','unsupported_protocol'): source.error(code,False)
+    source.accept(packet(100_000,True,flags=4))
+    flows=_finish(source,monitor)
+    assert flows[('192.0.2.1',1234)]['status']=='ok'
+    assert monitor.snapshot()['counts']['rejected_packets']==3
+    assert 'impaired_flows' not in monitor.snapshot()['counts']
+
+
+def test_flow_table_impairment_matching_expiry_and_bounds():
+    table=FlowTable(idle_seconds=1,max_seconds=2,capacity=2)
+    table.add(packet(),0); table.add(packet(hosts=('198.51.100.1','198.51.100.2')),0)
+    assert table.impair(ENDPOINT_REJECTION,0,scope=('UDP','192.0.2.1','192.0.2.2'))==0   # protocol differs
+    assert table.impair(ENDPOINT_REJECTION,0,scope=(None,'192.0.2.2','192.0.2.1'))==1    # any protocol, either order
+    assert table.impair(QUEUE_LOSS,0,key=packet().key)==1
+    assert table.impair(UNATTRIBUTED_ERROR,0)==2
+    with pytest.raises(ValueError): table.impair('session_poisoned',0)
+    rows={row['source']:row for row in table.flush()}
+    # Single-packet flows also carry 'zero_duration_rate_unavailable'.
+    assert {ENDPOINT_REJECTION,QUEUE_LOSS,UNATTRIBUTED_ERROR}<=set(rows['192.0.2.1']['quality_errors'])
+    assert set(rows['198.51.100.1']['quality_errors'])&{ENDPOINT_REJECTION,QUEUE_LOSS}==set()
+    assert UNATTRIBUTED_ERROR in rows['198.51.100.1']['quality_errors']
+    # Pending (attributed) impairment expires after one idle period ...
+    table.impair(QUEUE_LOSS,10,key=packet().key)
+    table.add(packet(),11.5); assert QUEUE_LOSS not in table.flush()[0]['quality_errors']
+    # ... applies within it, and the pending set stays bounded by capacity.
+    for i in range(5): table.impair(QUEUE_LOSS,20,key=packet(sport=3000+i).key)
+    assert len(table.taints)==2 and ('key',packet(sport=3000).key,QUEUE_LOSS) not in table.taints  # oldest evicted
+    table.add(packet(sport=3004),20.5); assert QUEUE_LOSS in table.flush()[0]['quality_errors']
+    assert not table.taints  # a new monitoring session starts without pending impairments
 
 
 def test_worker_inference_exception_visible_and_cleanup(service,monkeypatch):

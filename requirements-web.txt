@@ -1,13 +1,19 @@
+# Local web application: core engine + FastAPI/Uvicorn. Installed by
+# `make setup` / `scripts/dev.py setup` and `scripts/start-web.ps1 -Install`.
 -r requirements.txt
 fastapi==0.162.0
-uvicorn==0.54.0
-httpx==0.28.1
-httpcore==1.0.9
-certifi==2026.10.23
 starlette==1.10.0
 pydantic==2.14.2
 pydantic-core==2.50.2
 annotated-types==0.8.0
 annotated-doc==0.0.5
 typing-inspection==0.4.4
+typing_extensions==4.16.0
 opentelemetry-api==1.45.2
+uvicorn==0.54.0
+click==8.5.0
+# click's console dependency on Windows; harmless elsewhere.
+colorama==0.4.6
+h11==0.16.0
+anyio==4.16.0
+idna==3.20

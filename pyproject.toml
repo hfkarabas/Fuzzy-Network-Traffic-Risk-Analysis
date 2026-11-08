@@ -7,6 +7,40 @@ name = "fuzzy-network-risk"
 version = "0.1.0"
 requires-python = ">=3.12"
 description = "Reproducible CIC-IDS2017 preparation for interpretable fuzzy risk analysis"
+# Abstract, compatible ranges. Exact reproducible pins (including transitive
+# packages) are in the requirements*.txt lock files, one per installation profile:
+#   requirements.txt          core engine        ->  pip install .
+#   requirements-web.txt      + local web app     ->  pip install .[web]
+#   requirements-live.txt     + packet capture    ->  pip install .[live]
+#   requirements-research.txt + data/research     ->  pip install .[research]
+#   requirements-dev.txt      everything + tests  ->  pip install .[dev]
+dependencies = [
+    "numpy>=2.5,<3",
+    "pandas>=3.1,<4",
+]
+
+[project.optional-dependencies]
+web = [
+    "fastapi>=0.162,<1",
+    "uvicorn>=0.54,<1",
+]
+live = [
+    "fuzzy-network-risk[web]",
+    "scapy>=2.8,<3",
+]
+research = [
+    "pyarrow>=26",
+    "duckdb>=2",
+    "PyYAML>=6",
+    "datasets>=5.1",
+    "huggingface_hub>=2.4",
+    "matplotlib>=3.11",
+]
+dev = [
+    "fuzzy-network-risk[live,research]",
+    "pytest>=9.2",
+    "httpx>=0.28",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

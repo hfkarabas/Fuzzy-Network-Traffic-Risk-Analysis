@@ -32,10 +32,10 @@ PYTHON_ADVICE='Install Python 3.12+ (3.14 recommended for the pinned stack) from
 NODE_ADVICE='Install native Node.js 24.15+ LTS (or 22.22.2+) with its bundled npm from https://nodejs.org/. No system software is installed automatically.'
 HELP='''Fuzzy Network Risk: project-local development commands
   make / make run  prepare missing dependencies; run FastAPI + Vite
-  make setup       prepare Python and npm dependencies only
+  make setup       prepare web-app Python (requirements-web.txt) and npm dependencies
   make backend     prepare Python; run only FastAPI on 127.0.0.1:8000
   make frontend    prepare npm; run only Vite on 127.0.0.1:5173
-  make test        prepare dependencies; run Python + frontend tests
+  make test        prepare contributor dependencies (requirements-dev.txt); run all tests
   make build       prepare dependencies; typecheck and build frontend
   make check       report readiness without installing or writing markers
   make help        show this help
@@ -120,7 +120,11 @@ def valid_venv(root=ROOT):
     return executable,info
 
 
-def requirements(root=ROOT):
+# Installation profiles: the web application, or the full contributor set used by `test`.
+PROFILES={'web':'requirements-web.txt','dev':'requirements-dev.txt'}
+
+
+def requirements(root=ROOT,declaration='requirements-web.txt'):
     visited=set(); pins={}; digest=hashlib.sha256()
     def read(path):
         path=path.resolve()
@@ -136,8 +140,10 @@ def requirements(root=ROOT):
             if line.startswith('-r '): read(path.parent/line[3:].strip()); continue
             match=re.fullmatch(r'([\w.-]+)==([^\s;]+)',line)
             if not match: raise LaunchError('Unsupported dependency declaration: '+line)
-            pins[re.sub(r'[-_.]+','-',match[1]).lower()]=match[2]
-    read(root/'requirements-web.txt')
+            name=re.sub(r'[-_.]+','-',match[1]).lower()
+            if pins.get(name,match[2])!=match[2]: raise LaunchError(f'Conflicting pins for {name}: {pins[name]} and {match[2]}')
+            pins[name]=match[2]
+    read(root/declaration)
     if not (root/'pyproject.toml').is_file(): raise LaunchError('Missing pyproject.toml; restore the tracked project metadata.')
     digest.update((root/'pyproject.toml').read_bytes())
     return pins,digest.hexdigest()
@@ -208,15 +214,17 @@ print(json.dumps({"ok":not mismatch,"mismatch":mismatch}))'''
     except (LaunchError,ValueError): return {'ok':False}
 
 
-def ensure_python(root=ROOT):
-    pins,digest=requirements(root)
+def ensure_python(root=ROOT,profile='web'):
+    declaration=PROFILES[profile]
+    pins,digest=requirements(root,declaration)
     valid=valid_venv(root)
     if valid is None:
         base,_=choose_python(root); print('Creating repository-local .venv',flush=True)
         run_command([base,'-m','venv',root/'.venv'],root); valid=valid_venv(root)
     executable,info=valid
     signature={'requirements':digest,'python':info,'platform':sys.platform}
-    marker=root/'.tmp/launcher/python.json'; previous=read_state(marker)
+    # Separate markers: switching between `run` and `test` must not force reinstalls.
+    marker=root/'.tmp/launcher'/('python.json' if profile=='web' else f'python-{profile}.json'); previous=read_state(marker)
     health=python_health(executable,pins,root)
     if not health['ok'] or (previous and previous!=signature):
         # Existing historical environments may have been created --without-pip.
@@ -225,7 +233,7 @@ def ensure_python(root=ROOT):
         print('Synchronizing pinned Python dependencies inside .venv',flush=True)
         command=[executable,'-m','pip','install']
         if health.get('detail') and not health.get('mismatch'): command.append('--force-reinstall')
-        run_command(command+['-r',root/'requirements-web.txt'],root)
+        run_command(command+['-r',root/declaration],root)
         if not python_health(executable,pins,root)['ok']: raise LaunchError('Python dependency verification failed after installation')
     else: print('Python dependencies verified; no installation needed.',flush=True)
     write_state(marker,signature)
@@ -479,7 +487,7 @@ def main(argv=None,root=ROOT):
     with ExitStack() as stack:
         for name in selected: stack.enter_context(Lease(root/'.tmp/launcher'/(name+'.lock')))
         with Lease(root/'.tmp/launcher/setup.lock'):
-            python=ensure_python(root) if args.action!='frontend' else None
+            python=ensure_python(root,'dev' if args.action=='test' else 'web') if args.action!='frontend' else None
             node=npm=None
             if args.action!='backend': node,npm=ensure_frontend(root)
         if args.action=='setup': print('Project dependencies ready.',flush=True); return 0

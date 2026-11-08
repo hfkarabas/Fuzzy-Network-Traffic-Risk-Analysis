@@ -51,6 +51,9 @@ uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   profile and the reproducibility note for the registered experiments.
 
 ### Added
+- Ruff lint/format configuration (`pyproject.toml`), `make lint`
+  (`scripts/dev.py lint`: Ruff check, Ruff format check, TypeScript typecheck),
+  `.editorconfig` and `.git-blame-ignore-revs` for the formatting commit.
 
 - `app_version` in `/api/health` and `/api/model`; shown on System Information.
 - `scripts/webapp/build_web_test_fixture.py` regenerates all frontend fixtures.

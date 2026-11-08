@@ -40,6 +40,7 @@ dev = [
     "fuzzy-network-risk[live,research]",
     "pytest>=9.2",
     "httpx>=0.28",
+    "ruff>=0.17,<0.18",
 ]
 
 [tool.setuptools.dynamic]

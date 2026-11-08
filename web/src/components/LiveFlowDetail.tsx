@@ -14,7 +14,8 @@ const reasons: Record<string, string> = {
 }
 const quality: Record<string, string> = {
   zero_duration_rate_unavailable: 'Süre sıfır; paket/saniye hesaplanamıyor.', out_of_order_timestamp: 'Paket zamanları sıralı değil.',
-  session_capture_queue_loss: 'Yakalama kuyruğunda paket kaybı var.', session_unusable_packet_or_capture_error: 'Oturumda bozuk paket veya yakalama hatası var.',
+  capture_queue_loss: 'Bu akışın bir paketi yakalama kuyruğunda kayboldu.', endpoint_packet_rejected: 'Aynı uç noktalar arasındaki bir paket kullanılamadı.',
+  concurrent_capture_error: 'Akış sürerken kaynağı belirlenemeyen bir yakalama hatası oluştu.',
 }
 
 export default function LiveFlowDetail({ flow, data, policy, onClose }: { flow: LiveFlow; data: AppData; policy: PolicyID; onClose: () => void }) {

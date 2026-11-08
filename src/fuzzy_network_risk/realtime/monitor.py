@@ -6,9 +6,13 @@ import secrets
 import threading
 import time
 from . import capture
-from .flows import FlowTable, PROFILE
+from .flows import FlowTable, PROFILE, QUEUE_LOSS, ENDPOINT_REJECTION, UNATTRIBUTED_ERROR, IMPAIRMENT_CODES
 
 POLICIES = ('Sensitive', 'Balanced', 'Conservative')
+# Rejections that cannot belong to an analyzed IPv4 TCP/UDP flow (filtered
+# traffic classes). They are counted but never impair any flow.
+NEUTRAL_REJECTIONS = ('unsupported_ipv6', 'unsupported_network', 'unsupported_protocol')
+_IMPAIRMENT = object()  # queue sentinel tag for in-order impairment events
 
 
 class Monitor:
@@ -28,21 +32,50 @@ class Monitor:
         self.risks = {policy: Counter() for policy in POLICIES}
         self.active = 0
         self.session = None
+        self.queue = None
+        # Capture-thread -> worker hand-off when the queue itself is full.
+        self.lost_keys = Counter()
+        self.lost_unattributed = 0
 
     def discovery(self):
         try: return {'available': True, 'interfaces': self.interface_provider(), 'error': None}
         except capture.CaptureError as exc: return {'available': False, 'interfaces': [], 'error': {'code': exc.code, 'message': str(exc)}}
         except Exception: return {'available': False, 'interfaces': [], 'error': {'code': 'capture_unavailable', 'message': 'Arayüzler okunamadı; yakalama sürücüsünü kontrol edin.'}}
 
-    def error(self, code, fatal=False):
+    def error(self, code, fatal=False, scope=None):
+        """Record a capture-side event and attribute any packet loss per flow.
+
+        ``scope`` is an optional ``(protocol, host, host)`` attribution. Neutral
+        rejections (filtered traffic classes) never impair flows. Every other
+        non-fatal rejection impairs only flows between the same hosts, or, when
+        unattributable, the flows active at that moment. A fatal error impairs
+        all active flows. Later flows are unaffected: there is no session-wide
+        poisoning, so one bad packet cannot stop scoring for the whole session.
+        """
         with self.lock:
             self.counts['inference_errors' if code == 'inference_failed' else 'rejected_packets' if not fatal else 'capture_errors'] += 1
-            if code not in ('unsupported_ipv6', 'unsupported_network', 'unsupported_protocol', 'inference_failed'):
-                self.counts['quality_events'] += 1
             self.errors.append({'code': code, 'time': time.time(), 'fatal': fatal})
             if fatal:
                 self.state = 'cleanup_failed' if code == 'cleanup_failed' else 'capture_failed'
-                self.stop_event.set()
+        if code in NEUTRAL_REJECTIONS or code == 'inference_failed':
+            pass
+        elif not fatal and scope is not None:
+            self._impair(ENDPOINT_REJECTION, scope=scope)
+        else:
+            self._impair(UNATTRIBUTED_ERROR)
+        if fatal:
+            self.stop_event.set()
+
+    def _impair(self, code, scope=None):
+        """Queue an impairment in packet order; fall back to an unordered counter."""
+        work = self.queue
+        if work is None:
+            return
+        try:
+            work.put_nowait((_IMPAIRMENT, (code, scope), time.monotonic()))
+        except queue.Full:
+            with self.lock:
+                self.lost_unattributed += 1
 
     def start(self, mode, interface=None):
         with self.control:
@@ -68,6 +101,7 @@ class Monitor:
             self.stop_event = threading.Event()
             with self.lock:
                 self.rows.clear(); self.errors.clear(); self.counts.clear()
+                self.lost_keys.clear(); self.lost_unattributed = 0
                 self.risks = {policy: Counter() for policy in POLICIES}
                 self.state, self.mode, self.interface = 'starting', mode, interface
                 self.session, self.active = secrets.token_hex(8), 0
@@ -94,16 +128,24 @@ class Monitor:
         except queue.Full:
             with self.lock:
                 self.counts['queue_dropped_packets'] += 1
+                # The decoded packet identifies its flow exactly.
+                self.lost_keys[packet.key] += 1
                 if not any(e['code'] == 'queue_overflow' for e in self.errors):
                     self.errors.append({'code': 'queue_overflow', 'time': time.time(), 'fatal': False})
+
+    def _apply_losses(self, clock):
+        """Worker thread: attribute packets that never reached the queue."""
+        with self.lock:
+            keys, self.lost_keys = self.lost_keys, Counter()
+            unattributed, self.lost_unattributed = self.lost_unattributed, 0
+        for key in keys:
+            self.table.impair(QUEUE_LOSS, clock, key=key)
+        if unattributed:
+            self.table.impair(UNATTRIBUTED_ERROR, clock)
 
     def _publish(self, row):
         with self.lock:
             self.state = 'analyzing' if not self.stop_event.is_set() else self.state
-            if self.counts['queue_dropped_packets']:
-                row['quality_errors'].append('session_capture_queue_loss')
-            if self.counts['quality_events']:
-                row['quality_errors'].append('session_unusable_packet_or_capture_error')
         predictions = {}
         try:
             if not row['quality_errors']:
@@ -115,6 +157,8 @@ class Monitor:
         with self.lock:
             self.counts['finalized_flows'] += 1
             self.counts[status] += 1
+            if any(code in IMPAIRMENT_CODES for code in row['quality_errors']):
+                self.counts['impaired_flows'] += 1
             row.update(id=f'{self.session}-{self.counts["finalized_flows"]}', observed_at=time.time(), status=status,
                        predictions=predictions, observation_mode=self.mode)
             self.rows.appendleft(row)
@@ -128,14 +172,21 @@ class Monitor:
     def _run(self):
         try:
             while True:
+                self._apply_losses(time.monotonic())
                 try:
-                    packet, clock = self.queue.get(timeout=.2)
-                    with self.lock: self.counts['packets'] += 1
-                    for row in self.table.add(packet, clock): self._publish(row)
+                    item, payload, *rest = self.queue.get(timeout=.2)
+                    if item is _IMPAIRMENT:
+                        (code, scope), clock = payload, rest[0]
+                        self.table.impair(code, clock, scope=scope)
+                    else:
+                        packet, clock = item, payload
+                        with self.lock: self.counts['packets'] += 1
+                        for row in self.table.add(packet, clock): self._publish(row)
                 except queue.Empty:
                     for row in self.table.expire(time.monotonic()): self._publish(row)
                 with self.lock: self.active = len(self.table.flows)
                 if (self.stop_event.is_set() or self.source.done.is_set()) and self.queue.empty(): break
+            self._apply_losses(time.monotonic())
             reason = 'replay_completed' if self.mode == 'replay' and not self.stop_event.is_set() else 'monitoring_stopped'
             for row in self.table.flush(reason): self._publish(row)
         except Exception:

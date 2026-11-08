@@ -5,7 +5,6 @@ import json
 import platform
 import re
 import subprocess
-import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = 'ca49a972c1b29f1edd75a4b85ece09d5d5ee64ae'

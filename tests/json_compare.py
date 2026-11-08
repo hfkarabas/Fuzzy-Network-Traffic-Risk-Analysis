@@ -7,6 +7,7 @@ not a portable regression criterion. Everything that is not a float is compared
 exactly: keys, list lengths, strings, booleans (alerts), ``None`` (abstentions)
 and integers (counts).
 """
+
 import math
 
 # Far below any modelled quantity (scores are reported to 2 decimals, membership
@@ -39,7 +40,7 @@ def json_differences(actual, expected, path='$', rel_tol=REL_TOL, abs_tol=ABS_TO
         if len(actual) != len(expected):
             return [f'{path}: expected {len(expected)} items, got {len(actual)}']
         problems = []
-        for index, (a, e) in enumerate(zip(actual, expected)):
+        for index, (a, e) in enumerate(zip(actual, expected, strict=True)):
             problems += json_differences(a, e, f'{path}[{index}]', rel_tol, abs_tol)
         return problems
     if _is_number(expected) and _is_number(actual) and (isinstance(expected, float) or isinstance(actual, float)):

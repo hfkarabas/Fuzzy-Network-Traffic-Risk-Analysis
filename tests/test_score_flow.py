@@ -1,11 +1,14 @@
 """The scoring CLI must reproduce the deployed web decision, not legacy thresholds."""
+
 import io
 import json
 from pathlib import Path
+
 import pytest
 import score_flow
-from fuzzy_network_risk.webapp.service import WebService
 from json_compare import assert_json_close
+
+from fuzzy_network_risk.webapp.service import WebService
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = {e['id']: e for e in json.loads((ROOT / 'web/catalog/examples.json').read_text(encoding='utf-8'))['examples']}
@@ -23,19 +26,19 @@ def service():
 
 
 def test_default_matches_deployed_balanced_policy(service):
-    features = CATALOG['medium']['features']        # score ~37.8: between 25 and 51.8
+    features = CATALOG['medium']['features']  # score ~37.8: between 25 and 51.8
     code, result, _ = run([], features)
     assert code == score_flow.EXIT_OK
     assert result['alert_policy']['name'] == 'Balanced'
     assert result['alert_policy']['threshold'] == service.models['Balanced'].threshold
-    assert result['alert'] is False                 # legacy embedded threshold 25 would alert
+    assert result['alert'] is False  # legacy embedded threshold 25 would alert
     expected = service.models['Balanced'].predict_one(features)
     assert_json_close(result, expected)
 
 
 @pytest.mark.parametrize('policy,alert', [('Sensitive', True), ('Balanced', True), ('Conservative', False)])
 def test_policy_changes_only_the_alert_decision(policy, alert):
-    features = CATALOG['policy-contrast']['features']   # score ~53.3
+    features = CATALOG['policy-contrast']['features']  # score ~53.3
     code, result, _ = run(['--policy', policy], features)
     assert code == score_flow.EXIT_OK
     assert result['alert'] is alert and result['alert_policy']['name'] == policy
@@ -59,11 +62,14 @@ def test_batch_input_and_abstention_exit_code():
     assert results[1]['risk_score'] is None and results[1]['alert'] is None
 
 
-@pytest.mark.parametrize('payload,message', [
-    ({**CATALOG['low']['features'], ' Label': 'BENIGN'}, 'approved input columns'),
-    ([], 'non-empty array'),
-    ('text', 'JSON object'),
-])
+@pytest.mark.parametrize(
+    'payload,message',
+    [
+        ({**CATALOG['low']['features'], ' Label': 'BENIGN'}, 'approved input columns'),
+        ([], 'non-empty array'),
+        ('text', 'JSON object'),
+    ],
+)
 def test_schema_errors_exit_2_without_output(payload, message):
     code, result, error = run([], payload)
     assert code == score_flow.EXIT_ERROR and result is None and message in error
@@ -96,8 +102,14 @@ def test_input_file_relative_to_working_directory(tmp_path, monkeypatch):
 def test_script_runs_from_any_directory(tmp_path):
     import subprocess
     import sys
-    completed = subprocess.run([sys.executable, str(ROOT / 'scripts/score_flow.py'), '--compact'],
-                               input=json.dumps(CATALOG['low']['features']), capture_output=True,
-                               text=True, cwd=tmp_path, timeout=60)
+
+    completed = subprocess.run(
+        [sys.executable, str(ROOT / 'scripts/score_flow.py'), '--compact'],
+        input=json.dumps(CATALOG['low']['features']),
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        timeout=60,
+    )
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)['alert_policy']['name'] == 'Balanced'

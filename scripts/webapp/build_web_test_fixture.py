@@ -11,10 +11,11 @@ Writes all three frontend fixtures from the deployed model, in process:
 
 No network access, capture device or running server is needed.
 """
-from pathlib import Path
+
 import json
 import sys
 import time
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
@@ -26,8 +27,11 @@ WEB = ROOT / 'web/src'
 
 
 def write(name, value, compact=False):
-    text = json.dumps(value, ensure_ascii=False, separators=(',', ':')) if compact else \
-        json.dumps(value, ensure_ascii=False, indent=2) + '\n'
+    text = (
+        json.dumps(value, ensure_ascii=False, separators=(',', ':'))
+        if compact
+        else json.dumps(value, ensure_ascii=False, indent=2) + '\n'
+    )
     (WEB / name).write_text(text, encoding='utf-8')
 
 
@@ -39,7 +43,7 @@ def replay_session(service):
         if time.monotonic() > deadline:
             monitor.stop()
             raise RuntimeError('Synthetic replay did not finish')
-        time.sleep(.05)
+        time.sleep(0.05)
     status = monitor.snapshot()
     if status['counts'].get('ok') != 2:
         raise RuntimeError(f'Unexpected replay result: {status["counts"]}')
@@ -56,11 +60,21 @@ def replay_session(service):
 def main():
     service = WebService()
     examples = {example['id']: example for example in service.examples}
-    write('test-fixture.json', {
-        'health': {'status': 'ok'}, 'model': service.model, 'policies': {'policies': service.policy_list()},
-        'examples': {'examples': service.examples}, 'evaluation': service.evaluation,
-        'analyses': {example['id']: {policy: service.analyze(example['features'], policy) for policy in service.models}
-                     for example in service.examples}}, compact=True)
+    write(
+        'test-fixture.json',
+        {
+            'health': {'status': 'ok'},
+            'model': service.model,
+            'policies': {'policies': service.policy_list()},
+            'examples': {'examples': service.examples},
+            'evaluation': service.evaluation,
+            'analyses': {
+                example['id']: {policy: service.analyze(example['features'], policy) for policy in service.models}
+                for example in service.examples
+            },
+        },
+        compact=True,
+    )
 
     live = replay_session(service)
     write('live-test-fixture.json', live)

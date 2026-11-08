@@ -59,16 +59,16 @@ beyond the existing requirements were added.
 from fuzzy_network_risk.policy import PolicyRiskModel
 
 model = PolicyRiskModel.load(
-    "config/fuzzy/task02b/selected_v2.json",
-    "config/fuzzy/task02b/selected_policies.json",
-    policy="Balanced",
+    'config/fuzzy/task02b/selected_v2.json',
+    'config/fuzzy/task02b/selected_policies.json',
+    policy='Balanced',
 )
 record = {
-    " Flow Packets/s": 100000.0,
-    " Total Fwd Packets": 100.0,
-    " Packet Length Mean": 6.0,
-    " Bwd Packet Length Std": 0.0,
-    " Down/Up Ratio": 0.0,
+    ' Flow Packets/s': 100000.0,
+    ' Total Fwd Packets': 100.0,
+    ' Packet Length Mean': 6.0,
+    ' Bwd Packet Length Std': 0.0,
+    ' Down/Up Ratio': 0.0,
 }
 result = model.predict_one(record)
 batch = model.predict_batch([record, record])

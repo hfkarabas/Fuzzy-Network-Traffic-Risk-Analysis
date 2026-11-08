@@ -5,10 +5,9 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'src'))
 from run_fuzzy import connect,query,CONFIG,REPORT,write_json
 from fuzzy_network_risk.data import INPUTS
-from fuzzy_network_risk.engine import MamdaniRiskEngine,config_digest
+from fuzzy_network_risk.engine import MamdaniRiskEngine
 import json
 import numpy as np
-import pandas as pd
 import time
 
 def main():

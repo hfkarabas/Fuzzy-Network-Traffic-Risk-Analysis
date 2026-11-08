@@ -157,7 +157,7 @@ already on port 8000; stop the owning terminal yourself before replacing it.
 
 With GNU Make already available, `make` prepares missing local dependencies and
 starts Vite at **http://127.0.0.1:5173**, with FastAPI at **http://127.0.0.1:8000**.
-Available targets: `setup`, `run`, `backend`, `frontend`, `test`, `build`, `check`,
+Available targets: `setup`, `run`, `backend`, `frontend`, `test`, `lint`, `build`, `check`,
 `help`. Without Make, use `py -3 scripts/dev.py run` on Windows or
 `python3 scripts/dev.py run` on POSIX. Ctrl+C stops the owned service trees.
 

@@ -12,10 +12,11 @@ such objects, read from --input or stdin. Labels and metadata are rejected.
 Exit status: 0 every record was scored; 1 at least one record abstained
 (invalid_input / no_rule_activation); 2 usage, input or configuration error.
 """
+
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
@@ -43,16 +44,26 @@ def _path(value):
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(
-        description='Score flow measurements with the deployed fuzzy model and alert policy.')
+        description='Score flow measurements with the deployed fuzzy model and alert policy.'
+    )
     parser.add_argument('--input', type=Path, help='JSON file with one object or an array; stdin if omitted')
-    parser.add_argument('--policy', choices=POLICY_NAMES,
-                        help='alert policy (default: the policy file default, Balanced)')
-    parser.add_argument('--model', type=_path, default=DEFAULT_MODEL,
-                        help='model configuration (default: deployed selected_v4.json)')
-    parser.add_argument('--policies', type=_path, default=DEFAULT_POLICIES,
-                        help='policy configuration calibrated for --model (default: deployed)')
-    parser.add_argument('--embedded-threshold', action='store_true',
-                        help="use the model's historical embedded alert threshold instead of a policy")
+    parser.add_argument(
+        '--policy', choices=POLICY_NAMES, help='alert policy (default: the policy file default, Balanced)'
+    )
+    parser.add_argument(
+        '--model', type=_path, default=DEFAULT_MODEL, help='model configuration (default: deployed selected_v4.json)'
+    )
+    parser.add_argument(
+        '--policies',
+        type=_path,
+        default=DEFAULT_POLICIES,
+        help='policy configuration calibrated for --model (default: deployed)',
+    )
+    parser.add_argument(
+        '--embedded-threshold',
+        action='store_true',
+        help="use the model's historical embedded alert threshold instead of a policy",
+    )
     parser.add_argument('--compact', action='store_true', help='single-line JSON output')
     args = parser.parse_args(argv)
     if args.embedded_threshold and args.policy:
@@ -65,8 +76,10 @@ def _verify_deployed(model_path, policies_path):
     if model_path.resolve() != DEFAULT_MODEL.resolve() and policies_path.resolve() != DEFAULT_POLICIES.resolve():
         return
     manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
-    for path, default, key in ((model_path, DEFAULT_MODEL, 'model_sha256'),
-                               (policies_path, DEFAULT_POLICIES, 'policy_sha256')):
+    for path, default, key in (
+        (model_path, DEFAULT_MODEL, 'model_sha256'),
+        (policies_path, DEFAULT_POLICIES, 'policy_sha256'),
+    ):
         if path.resolve() == default.resolve() and not frozen_text_matches(path.read_bytes(), manifest[key]):
             raise CliError(f'Deployed configuration hash mismatch: {path.name}')
 
@@ -114,8 +127,11 @@ def main(argv=None, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr):
         return EXIT_ERROR
     if args.embedded_threshold:
         for result in results:
-            result['alert_policy'] = {'name': 'embedded', 'threshold': scorer.config['alert_threshold'],
-                                      'historical_metadata_only': True}
+            result['alert_policy'] = {
+                'name': 'embedded',
+                'threshold': scorer.config['alert_threshold'],
+                'historical_metadata_only': True,
+            }
     output = results if isinstance(original, list) else results[0]
     json.dump(output, stdout, ensure_ascii=False, allow_nan=False, indent=None if args.compact else 2)
     stdout.write('\n')

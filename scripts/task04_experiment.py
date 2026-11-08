@@ -141,7 +141,7 @@ def compare():
               'default_policy':'Balanced','independent_test':False})
     active=MamdaniRiskEngine.load(C/'selected_v4.json')
     dump(C/'selected_manifest.json',{'candidate':selected,'model_id':active.model_id,'configuration_version':'task04-v1',
-        'model_version':'TASK 04 · korunan Mamdani v1' if selected=='A_frozen' else 'TASK 04 · '+selected,
+        'model_version':'TASK 04 · retained Mamdani v1' if selected=='A_frozen' else 'TASK 04 · '+selected,
         'rule_count':len(active.config['rules']),'feature_count':5,'independent_test':False,
         'evidence':'reused internal validation; not independent final evaluation',
         'model_sha256':digest(C/'selected_v4.json'),'policy_sha256':digest(C/'selected_policies.json')})

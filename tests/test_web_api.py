@@ -34,10 +34,12 @@ def test_valid_inference_matches_direct_python(client,request_body):
     response=client.post('/api/analyze',json=request_body); assert response.status_code==200
     result=response.json(); direct=client.app.state.service.models['Balanced'].predict_one(request_body['features'])
     for key in ['status','risk_score','risk_level','alert','membership_degrees','model_id']: assert result[key]==direct[key]
-    assert result['explanation_tr'] and result['activated_rules']
+    assert result['explanation'].startswith(f"{result['risk_level']} risk: ") and result['activated_rules']
+    assert not any(key.endswith('_tr') for key in result)
     for api_rule,direct_rule in zip(result['activated_rules'],direct['activated_rules']):
         for key in ['id','strength','consequent','reason_key']: assert api_rule[key]==direct_rule[key]
-        assert api_rule['text_tr'].startswith('EĞER')
+        assert api_rule['text'].startswith('IF ') and ' THEN risk is ' in api_rule['text']
+        assert api_rule['conditions'] in api_rule['text']
 
 def test_policy_switch_only_alert_not_score(client,request_body):
     values={}
@@ -135,3 +137,14 @@ def test_unexpected_errors_do_not_expose_stack_traces(monkeypatch):
         example=c.get('/api/examples').json()['examples'][0]
         response=c.post('/api/analyze',json={'features':example['features'],'policy':'Balanced'})
         assert response.status_code==500 and 'private internal path' not in response.text and 'Traceback' not in response.text
+
+
+def test_api_content_is_english_only(client,request_body):
+    # Guards the English-only interface: no Turkish-specific letters in any served text.
+    turkish=set('çğıöşüÇĞİÖŞÜ')
+    payloads=[client.get(path).json() for path in ['/api/model','/api/policies','/api/examples','/api/evaluation']]
+    payloads+=[client.post('/api/analyze',json={**request_body,'policy':p}).json() for p in ['Sensitive','Balanced','Conservative']]
+    payloads.append(client.post('/api/analyze',json={'features':{}}).json())
+    payloads.append(client.get('/docs').text)
+    text=json.dumps(payloads,ensure_ascii=False)
+    assert not turkish&set(text), sorted(turkish&set(text))

@@ -9,7 +9,7 @@
   "examples": [
     {
       "id": "low",
-      "title": "Düşük risk örneği",
+      "title": "Low-risk record",
       "source_row_id": 899965,
       "source_day": "Monday",
       "observation_group_id": "6097262337365377307",
@@ -29,7 +29,7 @@
     },
     {
       "id": "medium",
-      "title": "Orta risk örneği",
+      "title": "Medium-risk record",
       "source_row_id": 1502229,
       "source_day": "Thursday",
       "observation_group_id": "569318864444864545",
@@ -49,7 +49,7 @@
     },
     {
       "id": "high",
-      "title": "Yüksek risk örneği",
+      "title": "High-risk record",
       "source_row_id": 1384548,
       "source_day": "Thursday",
       "observation_group_id": "12888539212031329997",
@@ -69,7 +69,7 @@
     },
     {
       "id": "critical",
-      "title": "Kritik risk örneği",
+      "title": "Critical-risk record",
       "source_row_id": 1356622,
       "source_day": "Thursday",
       "observation_group_id": "16365391526735905742",
@@ -89,7 +89,7 @@
     },
     {
       "id": "benign",
-      "title": "BENIGN etiketli akış",
+      "title": "BENIGN-labeled flow",
       "source_row_id": 962493,
       "source_day": "Monday",
       "observation_group_id": "5565456723933993868",
@@ -109,7 +109,7 @@
     },
     {
       "id": "attack",
-      "title": "Saldırı etiketli akış",
+      "title": "Attack-labeled flow",
       "source_row_id": 2424072,
       "source_day": "Wednesday",
       "observation_group_id": "12622785942668730742",
@@ -129,7 +129,7 @@
     },
     {
       "id": "false-positive",
-      "title": "Yanlış alarm örneği",
+      "title": "False-alarm record",
       "source_row_id": 1387726,
       "source_day": "Thursday",
       "observation_group_id": "17122130557244045289",
@@ -149,7 +149,7 @@
     },
     {
       "id": "false-negative",
-      "title": "Kaçırılan saldırı örneği",
+      "title": "Missed-attack record",
       "source_row_id": 2422395,
       "source_day": "Wednesday",
       "observation_group_id": "10249499293032104885",
@@ -169,7 +169,7 @@
     },
     {
       "id": "policy-contrast",
-      "title": "Politika karşılaştırma örneği",
+      "title": "Policy comparison record",
       "source_row_id": 1674387,
       "source_day": "Thursday",
       "observation_group_id": "9746993233805205329",

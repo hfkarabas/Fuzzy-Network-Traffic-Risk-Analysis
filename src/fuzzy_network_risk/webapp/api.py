@@ -19,11 +19,11 @@ Number=Annotated[StrictFloat,Field(ge=0,allow_inf_nan=False)]
 
 class FlowFeatures(BaseModel):
     model_config=ConfigDict(extra='forbid')
-    rate:Number|None=Field(alias=' Flow Packets/s',description='Paket yoğunluğu, paket/saniye')
-    volume:Number|None=Field(alias=' Total Fwd Packets',description='İleri yön paket sayısı, paket')
-    size:Number|None=Field(alias=' Packet Length Mean',description='Ortalama paket boyutu, bayt')
-    variation:Number|None=Field(alias=' Bwd Packet Length Std',description='Geri yön boyut standart sapması, bayt')
-    balance:Number|None=Field(alias=' Down/Up Ratio',description='Tam sayı olarak dışa aktarılmış geri/ileri oranı')
+    rate:Number|None=Field(alias=' Flow Packets/s',description='Packet rate, packets/second')
+    volume:Number|None=Field(alias=' Total Fwd Packets',description='Forward packet count, packets')
+    size:Number|None=Field(alias=' Packet Length Mean',description='Mean packet length, bytes')
+    variation:Number|None=Field(alias=' Bwd Packet Length Std',description='Backward packet length standard deviation, bytes')
+    balance:Number|None=Field(alias=' Down/Up Ratio',description='Exported integer backward/forward ratio')
 
 class AnalyzeRequest(BaseModel):
     model_config=ConfigDict(extra='forbid')
@@ -40,7 +40,6 @@ class AnalyzeResponse(BaseModel):
     status:Literal['ok','invalid_input','no_rule_activation']
     risk_score:Annotated[float,Field(ge=0,le=100)]|None
     risk_level:Literal['Low','Medium','High','Critical']|None
-    risk_level_tr:str|None
     alert:bool|None
     alert_policy:dict[str,Any]
     model_id:str
@@ -48,7 +47,6 @@ class AnalyzeResponse(BaseModel):
     membership_degrees:dict[str,dict[str,float]]
     activated_rules:list[dict[str,Any]]
     explanation:str
-    explanation_tr:str
     explanation_data:dict[str,Any]
     input_values:dict[str,float|None]
     input_positions:dict[str,float]
@@ -64,21 +62,21 @@ def create_app(root=ROOT,monitor_factory=Monitor):
             from starlette.concurrency import run_in_threadpool
             await run_in_threadpool(app.state.monitor.stop)
 
-    app=FastAPI(title='Fuzzy Network Risk · Yerel API',version='1.0.0',lifespan=lifespan,
-                docs_url=None,redoc_url=None,description='Eğitim amaçlı, dondurulmuş Mamdani çıkarımı. Puan saldırı olasılığı değildir.')
+    app=FastAPI(title='Fuzzy Network Risk · Local API',version='1.0.0',lifespan=lifespan,
+                docs_url=None,redoc_url=None,description='Educational frozen Mamdani inference. Scores are not attack probabilities.')
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=['localhost','127.0.0.1','testserver','[::1]'])
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request,exc):
-        errors=[{'field':'.'.join(map(str,e['loc'][1:])),'message':'Eksik, tanınmayan veya geçersiz değer. Sayılar sonlu ve sıfırdan küçük olmamalı.'} for e in exc.errors()]
+        errors=[{'field':'.'.join(map(str,e['loc'][1:])),'message':'Missing, unknown or invalid value. Numbers must be finite and nonnegative.'} for e in exc.errors()]
         return JSONResponse(status_code=422,content={'status':'invalid_input','risk_score':None,'risk_level':None,'alert':None,
                                                     'activated_rules':[],'membership_degrees':{},'validation_errors':errors,
-                                                    'explanation_tr':'Girdi doğrulanamadı. Risk puanı üretilmedi.'})
+                                                    'explanation':'Input validation failed. No risk score was produced.'})
 
     @app.exception_handler(Exception)
     async def unexpected_error(request,exc):
         logging.getLogger('fuzzy.web').exception('Local inference request failed')
-        return JSONResponse(status_code=500,content={'status':'error','message':'İşlem tamamlanamadı. Yerel sunucu günlüklerini kontrol edin.'})
+        return JSONResponse(status_code=500,content={'status':'error','message':'The operation failed. Check the local server logs.'})
 
     @app.get('/api/health',tags=['System'])
     def health(request:Request): return {'status':'ok','model_loaded':True,'model_id':request.app.state.service.engine.model_id,'local_only':True,
@@ -115,12 +113,12 @@ def create_app(root=ROOT,monitor_factory=Monitor):
         allowed={'http://127.0.0.1:5173','http://localhost:5173','http://[::1]:5173',
                  'http://127.0.0.1:8000','http://localhost:8000','http://[::1]:8000'}
         if not local or (origin and origin not in allowed) or request.headers.get('sec-fetch-site')=='cross-site':
-            raise HTTPException(403,detail='İzleme yalnızca yerel uygulamadan kullanılabilir.')
+            raise HTTPException(403,detail='Monitoring is restricted to the local application.')
 
     def control_monitor(request:Request,x_monitor_token:Annotated[str|None,Header()]=None):
         local_monitor(request)
         if not x_monitor_token or not secrets.compare_digest(x_monitor_token.encode(),request.app.state.monitor.token.encode()):
-            raise HTTPException(403,detail='Yerel izleme kontrol anahtarı eksik; sayfayı yenileyin.')
+            raise HTTPException(403,detail='The local monitoring control token is missing; refresh the page.')
 
     @app.exception_handler(CaptureError)
     async def capture_error(request,exc):
@@ -157,7 +155,7 @@ def create_app(root=ROOT,monitor_factory=Monitor):
     def offline_docs():
         schema=app.openapi()
         rows=''.join(f'<tr><td>{html.escape(method.upper())}</td><td>{html.escape(path)}</td><td>{html.escape(operation.get("summary",""))}</td></tr>' for path,methods in schema['paths'].items() for method,operation in methods.items())
-        return f'''<!doctype html><html lang="tr"><meta charset="utf-8"><title>Yerel API referansı</title><style>body{{font:16px system-ui;background:#101725;color:#e9f1fa;max-width:960px;margin:60px auto;padding:20px}}td{{padding:14px;border-bottom:1px solid #334155}}a{{color:#67ddeb}}code{{white-space:pre-wrap}}</style><h1>Fuzzy Network Risk API</h1><p>Tamamen yerel FastAPI / OpenAPI referansı. CDN gerektirmez.</p><a href="/openapi.json">OpenAPI şemasını aç / indir</a><table><tr><th>Yöntem</th><th>Adres</th><th>İşlem</th></tr>{rows}</table><h2>Analiz isteği</h2><code>{{"features": {{" Flow Packets/s": 100000, " Total Fwd Packets": 100, " Packet Length Mean": 6, " Bwd Packet Length Std": 0, " Down/Up Ratio": 0}}, "policy": "Balanced"}}</code><p>Geçersiz girdide 422 ve null puan döner. Veri kümesi etiketi kabul edilmez. Puan saldırı olasılığı değildir.</p><a href="/">Uygulamaya dön</a></html>'''
+        return f'''<!doctype html><html lang="en"><meta charset="utf-8"><title>Local API reference</title><style>body{{font:16px system-ui;background:#101725;color:#e9f1fa;max-width:960px;margin:60px auto;padding:20px}}td{{padding:14px;border-bottom:1px solid #334155}}a{{color:#67ddeb}}code{{white-space:pre-wrap}}</style><h1>Fuzzy Network Risk API</h1><p>Fully local FastAPI / OpenAPI reference. No CDN required.</p><a href="/openapi.json">Open / download the OpenAPI schema</a><table><tr><th>Method</th><th>Path</th><th>Operation</th></tr>{rows}</table><h2>Analysis request</h2><code>{{"features": {{" Flow Packets/s": 100000, " Total Fwd Packets": 100, " Packet Length Mean": 6, " Bwd Packet Length Std": 0, " Down/Up Ratio": 0}}, "policy": "Balanced"}}</code><p>Invalid input returns 422 and a null score. Dataset labels are not accepted. Scores are not attack probabilities.</p><a href="/">Back to the application</a></html>'''
 
     dist=root/'web/dist'
     @app.get('/favicon.svg',include_in_schema=False)
@@ -166,7 +164,7 @@ def create_app(root=ROOT,monitor_factory=Monitor):
     @app.get('/',include_in_schema=False)
     def frontend():
         if (dist/'index.html').exists(): return FileResponse(dist/'index.html')
-        return HTMLResponse('<h1>Önyüz henüz derlenmedi</h1><p>web klasöründe npm ci ve npm run build çalıştırın.</p>',status_code=503)
+        return HTMLResponse('<h1>Frontend not built yet</h1><p>Run npm ci and npm run build in the web folder.</p>',status_code=503)
     return app
 
 app=create_app()

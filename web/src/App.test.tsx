@@ -143,4 +143,10 @@ describe('actual-response UI integration', () => {
         for (const attribute of ['aria-label', 'title', 'placeholder', 'alt']) expect(element.getAttribute(attribute) ?? '').not.toMatch(turkish)
     }
   })
+  it('shows the application version next to the independent model identity', async () => {
+    installAPI(); render(<App />); await screen.findByText('Alert raised')
+    await userEvent.click(screen.getByRole('link', { name: 'System Information' }))
+    expect(screen.getByText('Application version').nextElementSibling).toHaveTextContent(fixture.model.app_version)
+    expect(screen.getByText('Model version').nextElementSibling).toHaveTextContent(fixture.model.model_version)
+  })
 })

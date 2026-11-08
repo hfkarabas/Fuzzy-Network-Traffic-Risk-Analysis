@@ -34,7 +34,8 @@ matters for relative `--input` files. The **Profile** column names the
 | `validate_lfs_index.py` | Verify the LFS pointer, attributes and cached object. |
 | `report_dataset_lfs.py` | Summarize local LFS checks; never stages or uploads. |
 
-Profile: research. See [docs/dataset_lfs.md](../docs/dataset_lfs.md).
+Profile: research. See [docs/methodology.md](../docs/methodology.md) and
+[docs/dataset_lfs.md](../docs/dataset_lfs.md).
 
 ## `fuzzy/` — fitting, evaluation and reports of the fuzzy model
 
@@ -44,7 +45,7 @@ Profile: research. See [docs/dataset_lfs.md](../docs/dataset_lfs.md).
 | `fuzzy_reports.py` | Reports and figures from frozen configurations and saved predictions. |
 | `validate_fuzzy.py` | Numerical stability and persisted-model reproducibility checks. |
 
-Profile: research. See [docs/methodology.md](../docs/methodology.md).
+Profile: research. See [fuzzy system design](../reports/fuzzy/fuzzy_system_design.md).
 
 ## `research/` — registered experiments (TASK 02–05)
 

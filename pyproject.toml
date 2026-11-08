@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fuzzy-network-risk"
-version = "0.1.0"
+dynamic = ["version"]
 requires-python = ">=3.12"
 description = "Reproducible CIC-IDS2017 preparation for interpretable fuzzy risk analysis"
 # Abstract, compatible ranges. Exact reproducible pins (including transitive
@@ -41,6 +41,9 @@ dev = [
     "pytest>=9.2",
     "httpx>=0.28",
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "fuzzy_network_risk.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]

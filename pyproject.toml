@@ -49,5 +49,5 @@ version = {attr = "fuzzy_network_risk.__version__"}
 where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src", "scripts"]
+pythonpath = ["src", "scripts", "scripts/data", "scripts/research"]
 testpaths = ["tests"]

@@ -73,7 +73,7 @@ Inference is vectorized over rows. It loops over five features, 22 rules and fou
 output sets. Centroid workspace is bounded by the internal batch size; returning
 all memberships/strengths still costs O(number of rows). For millions of records,
 stream outer frames such as 8,192 rows and write compact predictions as in
-`scripts/run_fuzzy.py`. A 2,048 x 201 float64 grid is about 3.3 MB per workspace;
+`scripts/fuzzy/run_fuzzy.py`. A 2,048 x 201 float64 grid is about 3.3 MB per workspace;
 aggregation/integration temporaries add several such arrays. Large evaluation
 metric sorting and saved prediction summaries consume memory separately.
 

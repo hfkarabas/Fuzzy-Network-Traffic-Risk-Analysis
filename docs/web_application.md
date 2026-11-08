@@ -1,6 +1,6 @@
 # TASK03 local web application
 
-The Turkish dashboard wraps the unchanged scoring model, retained again in TASK04.
+The English dashboard wraps the unchanged scoring model, retained again in TASK04.
 The backend now loads `config/fuzzy/task04/selected_v4.json` and its manifest/policies.
 These scoring and policy files are byte-identical to TASK02B selections. TASK04
 candidate results appear separately as reused internal validation; historical tests
@@ -74,7 +74,7 @@ Backend files live under src/fuzzy_network_risk/webapp:
   loopback-host validation, local frontend/static serving and offline API reference.
 - service.py: cached small JSON/CSV data, authoritative model/policy metadata,
   actual Python inference adaptation and sampled membership curves.
-- content.py: Turkish feature descriptions, linguistic terms and rule presentation.
+- content.py: English feature descriptions, linguistic terms and rule presentation.
 
 The FastAPI lifespan loads MamdaniRiskEngine once. Three PolicyRiskModel wrappers
 share that engine; all thresholds come from selected_policies.json. The original
@@ -117,7 +117,7 @@ activate. The original historical label is BENIGN; it is not sent to inference.
 
 Responses contain status, score/category/alert (nullable on abstention), exact
 applied policy/model identities, memberships, all positive-strength rules with
-conditions/consequents/strengths, structured explanation keys, Turkish explanation,
+conditions/consequents/strengths, structured explanation keys, an English explanation,
 input values, chart positions and out-of-training-range feature names.
 
 Strict schema validation rejects strings masquerading as numbers, booleans,

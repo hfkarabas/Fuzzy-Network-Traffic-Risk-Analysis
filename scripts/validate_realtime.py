@@ -73,7 +73,7 @@ def main():
         call('/api/live/stop',{},token)
         assert call('/api/health')['model_id']==service.engine.model_id
         with opener.open('http://127.0.0.1:5173/src/LiveTraffic.tsx',timeout=3) as response:
-            assert 'Canlı Trafik' in response.read().decode()
+            assert 'Live Traffic' in response.read().decode()
     finally:
         child.close()
     deadline=time.monotonic()+8

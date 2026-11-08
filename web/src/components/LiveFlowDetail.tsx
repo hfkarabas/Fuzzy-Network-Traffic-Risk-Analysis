@@ -1,4 +1,3 @@
-import { useI18n } from '../i18n'
 import { useEffect, useRef, useState } from 'react'
 import { analyze } from '../api'
 import { formatNumber } from '../format'
@@ -8,19 +7,17 @@ import { Card, Evidence, ResultPanel } from './FuzzyAnalysis'
 import OutputVisualization from './OutputVisualization'
 
 const reasons: Record<string, string> = {
-  tcp_reset: 'TCP RST', tcp_fin_both_directions: 'Her iki yönde TCP FIN', idle_timeout: 'Boşta kalma zaman aşımı',
-  maximum_duration: 'Azami akış süresi', capacity_eviction: 'Akış kapasitesi sınırı', monitoring_stopped: 'İzleme durduruldu',
-  new_syn: 'Yeni TCP bağlantı başlangıcı', replay_completed: 'Sentetik replay tamamlandı',
+  tcp_reset: 'TCP RST', tcp_fin_both_directions: 'TCP FIN in both directions', idle_timeout: 'Idle timeout',
+  maximum_duration: 'Maximum flow duration', capacity_eviction: 'Flow capacity limit', monitoring_stopped: 'Monitoring stopped',
+  new_syn: 'New TCP connection start', replay_completed: 'Synthetic replay completed',
 }
 const quality: Record<string, string> = {
-  zero_duration_rate_unavailable: 'Süre sıfır; paket/saniye hesaplanamıyor.', out_of_order_timestamp: 'Paket zamanları sıralı değil.',
-  capture_queue_loss: 'Bu akışın bir paketi yakalama kuyruğunda kayboldu.', endpoint_packet_rejected: 'Aynı uç noktalar arasındaki bir paket kullanılamadı.',
-  concurrent_capture_error: 'Akış sürerken kaynağı belirlenemeyen bir yakalama hatası oluştu.',
+  zero_duration_rate_unavailable: 'Zero duration; packets per second cannot be calculated.', out_of_order_timestamp: 'Packet timestamps are out of order.',
+  capture_queue_loss: 'A packet of this flow was lost in the capture queue.', endpoint_packet_rejected: 'A packet between the same endpoints was unusable.',
+  concurrent_capture_error: 'An unattributable capture error occurred while this flow was active.',
 }
 
 export default function LiveFlowDetail({ flow, data, policy, onClose }: { flow: LiveFlow; data: AppData; policy: PolicyID; onClose: () => void }) {
-  const { localize } = useI18n()
-
   const title = useRef<HTMLHeadingElement>(null)
   const eligible = flow.status === 'ok' && flow.analysis?.status === 'ok' && flow.quality_errors.length === 0
   const compatible = flow.analysis?.model_id === data.model.model_id
@@ -33,31 +30,31 @@ export default function LiveFlowDetail({ flow, data, policy, onClose }: { flow: 
     if (!eligible || !compatible || base) return
     const controller = new AbortController()
     void analyze(flow.features, policy, AbortSignal.any([controller.signal, AbortSignal.timeout(5000)])).then(response => {
-      if (response.model_id !== data.model.model_id || response.risk_score !== flow.analysis!.risk_score) throw new Error('Model veya puan seçilen akışla eşleşmiyor.')
+      if (response.model_id !== data.model.model_id || response.risk_score !== flow.analysis!.risk_score) throw new Error('The model or score does not match the selected flow.')
       if (!controller.signal.aborted) setFetched({ key, result: response })
     }).catch(error => { if (!controller.signal.aborted) setFetched({ key, error: (error as Error).message }) })
     return () => controller.abort()
   }, [key, eligible, compatible, base, flow.features, flow.analysis, policy, data.model.model_id])
-  return localize(<section className="live-flow-detail" aria-labelledby="live-detail-title">
-    <div className="live-detail-heading"><div><span className="eyebrow">AKIŞ DETAYI</span><h2 id="live-detail-title" ref={title} tabIndex={-1}>Akış ayrıntısı · {flow.protocol}</h2></div><button className="secondary-button" onClick={onClose}>Akış ayrıntısını kapat</button></div>
-    {flow.observation_mode === 'replay' && <p className="scope-tag">SENTETİK REPLAY · GERÇEK TRAFİK DEĞİL</p>}
-    {flow.provisional && <div className="important-note"><div><b>Kısmi akış tahmini</b><p>Yalnızca gözlemlenen bölüm puanlandı; tam bağlantı verisi olmayabilir.</p></div></div>}
-    <Card className="live-flow-metadata"><h3>Akış bilgileri</h3><dl>
-      <div><dt>Kaynak / port</dt><dd>{flow.source} : {flow.source_port}</dd></div><div><dt>Hedef / port</dt><dd>{flow.destination} : {flow.destination_port}</dd></div>
-      <div><dt>Protokol</dt><dd>{flow.protocol}</dd></div><div><dt>Süre</dt><dd title={`${flow.duration_us} µs`}>{formatNumber(flow.duration_us / 1e6)} saniye · {formatNumber(flow.duration_us)} µs</dd></div>
-      <div><dt>Sonlandırma nedeni</dt><dd>{reasons[flow.finalization] ?? flow.finalization}</dd></div><div><dt>Gözlem durumu</dt><dd>{flow.provisional ? 'Kısmi akış tahmini' : 'Sonlandırılmış gözlemlenmiş akış'}</dd></div>
-      <div><dt>Çıkarıma uygunluk</dt><dd>{eligible && compatible ? 'Değerlendirilebilir' : compatible ? 'Yeterli geçerli ölçüm yok' : flow.analysis ? 'Model kimliği eşleşmiyor' : 'Değerlendirilemedi'}</dd></div>
+  return (<section className="live-flow-detail" aria-labelledby="live-detail-title">
+    <div className="live-detail-heading"><div><span className="eyebrow">FLOW DETAILS</span><h2 id="live-detail-title" ref={title} tabIndex={-1}>Flow details · {flow.protocol}</h2></div><button className="secondary-button" onClick={onClose}>Close flow details</button></div>
+    {flow.observation_mode === 'replay' && <p className="scope-tag">SYNTHETIC REPLAY · NOT REAL TRAFFIC</p>}
+    {flow.provisional && <div className="important-note"><div><b>Partial-flow estimate</b><p>Only the observed segment was scored; full connection data may be unavailable.</p></div></div>}
+    <Card className="live-flow-metadata"><h3>Flow information</h3><dl>
+      <div><dt>Source / port</dt><dd>{flow.source} : {flow.source_port}</dd></div><div><dt>Destination / port</dt><dd>{flow.destination} : {flow.destination_port}</dd></div>
+      <div><dt>Protocol</dt><dd>{flow.protocol}</dd></div><div><dt>Duration</dt><dd title={`${flow.duration_us} µs`}>{formatNumber(flow.duration_us / 1e6)} seconds · {formatNumber(flow.duration_us)} µs</dd></div>
+      <div><dt>Finalization reason</dt><dd>{reasons[flow.finalization] ?? flow.finalization}</dd></div><div><dt>Observation status</dt><dd>{flow.provisional ? 'Partial-flow estimate' : 'Finalized observed flow'}</dd></div>
+      <div><dt>Inference eligibility</dt><dd>{eligible && compatible ? 'Eligible for inference' : compatible ? 'Insufficient valid measurements' : flow.analysis ? 'Model identity mismatch' : 'Could not be evaluated'}</dd></div>
     </dl></Card>
-    <div className="analysis-grid live-detail-grid"><Card className="live-input-values"><div className="card-heading"><h2>Gözlemlenen beş girdi</h2><span className="tiny-label">ÖLÇÜMLER</span></div><dl>{data.model.features.map(feature => {
+    <div className="analysis-grid live-detail-grid"><Card className="live-input-values"><div className="card-heading"><h2>Five observed inputs</h2><span className="tiny-label">MEASUREMENTS</span></div><dl>{data.model.features.map(feature => {
       const value = flow.features[feature.column]
-      return <div key={feature.key}><dt>{feature.title}<small>{feature.column}</small></dt><dd title={value === null || value === undefined ? 'Ölçüm kullanılamıyor' : String(value)}>{value === null || value === undefined ? 'Hesaplanamıyor' : formatNumber(value)} <small>{feature.unit}</small></dd></div>
-    })}</dl><p className="footnote">Tam değer için ölçümün üzerine gelin.</p></Card>
-    {eligible && compatible ? <ResultPanel result={result} busy={!result && !(fetched.key === key && fetched.error)} selectedPolicy={policy} data={data} invalid={false} /> : <Card className="live-abstention"><h3>Risk puanı üretilmedi</h3><p>{flow.status === 'inference_failed' ? 'Bulanık çıkarım tamamlanamadı.' : flow.analysis && !compatible ? 'Bu akış farklı bir modele ait. Yanlış üyelik eğrileri gösterilmedi.' : 'Bu akış çıkarım için yeterli geçerli ölçüm sağlamıyor.'}</p>{flow.quality_errors.length > 0 && <ul>{flow.quality_errors.map(error => <li key={error}>{quality[error] ?? `Ölçüm sorunu: ${error}`}</li>)}</ul>}<p>Eksik ölçümler sıfırla doldurulmadı; üyelik ve durulaştırma grafikleri çizilmedi.</p></Card>}</div>
-    {fetched.key === key && fetched.error && <p role="alert">Politika sonucu alınamadı: {fetched.error}</p>}
+      return <div key={feature.key}><dt>{feature.title}<small>{feature.column}</small></dt><dd title={value === null || value === undefined ? 'Measurement unavailable' : String(value)}>{value === null || value === undefined ? 'Unavailable' : formatNumber(value)} <small>{feature.unit}</small></dd></div>
+    })}</dl><p className="footnote">Hover over a measurement for its full value.</p></Card>
+    {eligible && compatible ? <ResultPanel result={result} busy={!result && !(fetched.key === key && fetched.error)} selectedPolicy={policy} data={data} invalid={false} /> : <Card className="live-abstention"><h3>No risk score produced</h3><p>{flow.status === 'inference_failed' ? 'Fuzzy inference could not be completed.' : flow.analysis && !compatible ? 'This flow belongs to a different model. Incorrect membership curves were not displayed.' : 'This flow does not provide enough valid measurements for inference.'}</p>{flow.quality_errors.length > 0 && <ul>{flow.quality_errors.map(error => <li key={error}>{quality[error] ?? `Measurement issue: ${error}`}</li>)}</ul>}<p>Missing measurements were not replaced with zero; membership and defuzzification plots were not drawn.</p></Card>}</div>
+    {fetched.key === key && fetched.error && <p role="alert">Policy result unavailable: {fetched.error}</p>}
     {eligible && compatible && flow.analysis?.status === 'ok' && <><Evidence result={result ?? flow.analysis} data={data} idPrefix="live-" /><OutputVisualization result={flow.analysis} /></>}
-    {eligible && compatible && <Card className="live-policy-comparison"><div className="card-heading"><h2>Politika karşılaştırması</h2><span className="tiny-label">AYNI PUAN · FARKLI ALARM EŞİĞİ</span></div><div className="policy-comparison-grid">{data.policies.map(p => {
+    {eligible && compatible && <Card className="live-policy-comparison"><div className="card-heading"><h2>Policy comparison</h2><span className="tiny-label">SAME SCORE · DIFFERENT ALERT THRESHOLD</span></div><div className="policy-comparison-grid">{data.policies.map(p => {
       const decision = flow.policy_comparison[p.id]
-      return <div key={p.id} className={p.id === policy ? 'selected' : ''}><h3>{p.title} <small data-i18n-skip>{p.id}</small></h3>{decision ? <><p>Puan: <b title={String(decision.risk_score)}>{formatNumber(decision.risk_score)}</b></p><p>Eşik: {formatNumber(decision.threshold)}</p><strong>{decision.alert ? 'Alarm var' : 'Alarm yok'}</strong></> : <p>Bu politika sonucu kullanılamıyor.</p>}</div>
+      return <div key={p.id} className={p.id === policy ? 'selected' : ''}><h3>{p.title}</h3>{decision ? <><p>Score: <b title={String(decision.risk_score)}>{formatNumber(decision.risk_score)}</b></p><p>Threshold: {formatNumber(decision.threshold)}</p><strong>{decision.alert ? 'Alert' : 'No alert'}</strong></> : <p>This policy result is unavailable.</p>}</div>
     })}</div></Card>}
   </section>)
 }

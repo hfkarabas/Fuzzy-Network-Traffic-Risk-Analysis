@@ -1,7 +1,7 @@
 # Fuzzy Network Security
 
 Local network traffic monitoring and explainable, flow-based risk analysis with a
-FastAPI backend and a bilingual React dashboard.
+FastAPI backend and an English React dashboard.
 
 ## Overview
 
@@ -26,7 +26,6 @@ perform automated mitigation.
 - Recorded traffic analysis with original labels and reference results.
 - Historical/internal performance metrics with clearly identified evaluation scope.
 - Dataset Information with provenance, preparation, calibration and model history.
-- Turkish/English switching, persisted locally; Turkish is the initial default.
 - Local dashboard, HTTP API and explicitly labeled synthetic packet replay.
 
 ## Architecture
@@ -233,7 +232,6 @@ These workflows are not part of dashboard startup.
    plot. Compare policies; only the alert decision changes.
 7. Use **Recorded Traffic** for saved examples, or enter measurements in **Risk Analysis**.
 8. Review **Model Performance** and **Dataset Information** for evaluation context.
-9. Use the sidebar globe button for English/Turkish. Selection persists locally.
 
 For a driver-free demonstration, explicitly select **Synthetic packet replay**
 instead of an interface. These are test packets, never live observations. No packets

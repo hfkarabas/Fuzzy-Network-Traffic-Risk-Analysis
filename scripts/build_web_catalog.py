@@ -18,12 +18,12 @@ def build():
     predictions=model.predict_batch(data[INPUTS])
     data=data.copy(); data['score']=predictions['risk_score']; data['level']=predictions['risk_level']; data['alert']=predictions['alert']
     data['priority']=data.source_row_id.map(lambda v:hashlib.sha256(f'web-catalog-v1|{v}'.encode()).hexdigest())
-    predicates=[('low','Düşük risk örneği',data.level=='Low'),('medium','Orta risk örneği',data.level=='Medium'),
-                ('high','Yüksek risk örneği',data.level=='High'),('critical','Kritik risk örneği',data.level=='Critical'),
-                ('benign','BENIGN etiketli akış',data[LABEL]=='BENIGN'),('attack','Saldırı etiketli akış',data[LABEL]!='BENIGN'),
-                ('false-positive','Yanlış alarm örneği',(data[LABEL]=='BENIGN')&data.alert.astype(bool)),
-                ('false-negative','Kaçırılan saldırı örneği',(data[LABEL]!='BENIGN')&~data.alert.astype(bool)),
-                ('policy-contrast','Politika karşılaştırma örneği',(data.score>=model.threshold)&(data.score<policies['policies']['Conservative']['threshold']))]
+    predicates=[('low','Low-risk record',data.level=='Low'),('medium','Medium-risk record',data.level=='Medium'),
+                ('high','High-risk record',data.level=='High'),('critical','Critical-risk record',data.level=='Critical'),
+                ('benign','BENIGN-labeled flow',data[LABEL]=='BENIGN'),('attack','Attack-labeled flow',data[LABEL]!='BENIGN'),
+                ('false-positive','False-alarm record',(data[LABEL]=='BENIGN')&data.alert.astype(bool)),
+                ('false-negative','Missed-attack record',(data[LABEL]!='BENIGN')&~data.alert.astype(bool)),
+                ('policy-contrast','Policy comparison record',(data.score>=model.threshold)&(data.score<policies['policies']['Conservative']['threshold']))]
     examples=[]; used=set(); unavailable=[]
     for key,title,mask in predicates:
         matching=data.loc[mask&~data.source_row_id.isin(used)].sort_values('priority')

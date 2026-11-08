@@ -6,9 +6,9 @@ it('validates actual Python responses and rejects nonfinite memberships', () => 
   const actual = fixture.analyses['policy-contrast'].Balanced as Analysis
   expect(validateAnalysis(actual)).toBe(actual)
   const bad = structuredClone(actual); bad.membership_degrees[' Flow Packets/s'].sparse = Infinity
-  expect(() => validateAnalysis(bad)).toThrow('Üyelik dereceleri geçersiz')
+  expect(() => validateAnalysis(bad)).toThrow('Membership degrees are invalid')
 })
 it('rejects unavailable results containing a numerical score', () => {
   const bad = { ...fixture.analyses['policy-contrast'].Balanced, status: 'invalid_input' } as Analysis
-  expect(() => validateAnalysis(bad)).toThrow('Geçersiz girdi için sayısal sonuç')
+  expect(() => validateAnalysis(bad)).toThrow('A numeric result was returned for invalid input')
 })

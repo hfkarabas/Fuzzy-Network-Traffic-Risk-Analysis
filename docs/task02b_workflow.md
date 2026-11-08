@@ -94,7 +94,7 @@ Only the approved five inputs are accepted; labels and provenance are never inpu
 ## Educational UI recommendation
 
 Load the frozen model and policy once in a local backend; validate five numerical
-inputs; call PolicyRiskModel; render structured evidence through a Turkish message
+inputs; call PolicyRiskModel; render structured evidence through an English message
 catalog. Keep scores separate from alert policy controls. Show missing-data status,
 model/policy IDs and the documented weak detection performance. No model fitting
 or threshold optimization should occur in a request handler. Stream outer batches

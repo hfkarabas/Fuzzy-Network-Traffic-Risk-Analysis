@@ -35,7 +35,7 @@ Use the existing project Python setup, then verify the downloaded artifact:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-web.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-research.txt
 .\.venv\Scripts\python.exe scripts/verify_dataset_archive.py
 ```
 

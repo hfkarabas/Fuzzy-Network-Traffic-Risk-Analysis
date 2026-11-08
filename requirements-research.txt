@@ -1,0 +1,42 @@
+# Offline research pipeline: dataset acquisition/preparation (scripts/data),
+# fuzzy fitting/evaluation and reports (scripts/fuzzy, scripts/research) and
+# Git LFS archive verification/restoration. Not needed to run the application.
+-r requirements.txt
+pyarrow==26.0.0
+duckdb==2.0.0
+PyYAML==6.0.3
+datasets==5.1.0
+huggingface_hub==2.4.0
+hf-xet==1.8.0
+fsspec==2026.7.0
+filelock==4.2.7
+dill==0.4.1
+multiprocess==0.70.19
+xxhash==4.0.2
+tqdm==4.70.1
+# tqdm's console dependency on Windows; harmless elsewhere.
+colorama==0.4.6
+packaging==26.3
+httpx2==2.16.0
+httpcore2==2.16.0
+truststore==0.10.5
+aiohttp==3.14.5
+aiohappyeyeballs==2.7.1
+aiosignal==1.4.0
+attrs==26.1.0
+frozenlist==1.8.0
+multidict==7.2.1
+propcache==0.5.4
+yarl==1.25.1
+anyio==4.16.0
+click==8.5.0
+h11==0.16.0
+idna==3.20
+typing_extensions==4.16.0
+matplotlib==3.11.2
+contourpy==1.4.0
+cycler==0.12.1
+fonttools==4.68.0
+kiwisolver==1.5.1
+pillow==13.0.0
+pyparsing==3.3.3

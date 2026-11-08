@@ -129,8 +129,12 @@ Without Make, the same orchestrator is available as `python scripts/dev.py run`
 
 ## Dependency state and recovery
 
-Python declarations include `requirements-web.txt`, its recursive pinned includes
-and `pyproject.toml`. They are hashed with interpreter/platform identity. Installed
+Python declarations are profile specific: `run`, `setup`, `backend` and `build`
+use `requirements-web.txt`; `test` uses `requirements-dev.txt` (web, optional
+capture, research modules and pytest). Each profile's recursive pinned includes
+and `pyproject.toml` are hashed into its own marker, so switching between `run`
+and `test` does not reinstall anything. Conflicting pins across includes are
+rejected. They are hashed with interpreter/platform identity. Installed
 distribution versions and actual web imports are checked every time. Healthy
 existing environments can be adopted without reinstallation; declaration changes
 synchronize through that environment's own `python -m pip`. Missing pip is bootstrapped

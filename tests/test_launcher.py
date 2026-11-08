@@ -36,6 +36,41 @@ def test_requirement_graph_changes_and_unpinned_rejection(tmp_path):
     with pytest.raises(dev.LaunchError,match='Unsupported'): dev.requirements(tmp_path)
 
 
+def test_conflicting_pins_across_includes_rejected(tmp_path):
+    declarations(tmp_path)
+    (tmp_path/'requirements-dev.txt').write_text('-r requirements-web.txt\ndemo_package==9.9.9\n')
+    with pytest.raises(dev.LaunchError,match='Conflicting pins'): dev.requirements(tmp_path,'requirements-dev.txt')
+
+
+def test_test_profile_installs_dev_declarations_with_separate_marker(monkeypatch,tmp_path):
+    declarations(tmp_path)
+    (tmp_path/'requirements-dev.txt').write_text('-r requirements-web.txt\ntest_tool==2.0\n')
+    executable=tmp_path/'.venv/bin/python'
+    monkeypatch.setattr(dev,'valid_venv',lambda _: (executable,{'version':[3,14,0]}))
+    seen=[]; monkeypatch.setattr(dev,'python_health',lambda exe,pins,root: seen.append(pins) or {'ok':False,'mismatch':pins})
+    monkeypatch.setattr(dev,'capture',lambda *_args,**_kwargs:'pip 26')
+    calls=[]; monkeypatch.setattr(dev,'run_command',lambda cmd,root:calls.append(cmd))
+    with pytest.raises(dev.LaunchError,match='verification failed'): dev.ensure_python(tmp_path,'dev')
+    assert calls[-1][-2:]==['-r',tmp_path/'requirements-dev.txt']
+    assert seen[0]=={'demo-package':'1.2.3','test-tool':'2.0'}
+    monkeypatch.setattr(dev,'python_health',lambda *_:{'ok':True})
+    dev.ensure_python(tmp_path,'dev'); dev.ensure_python(tmp_path)
+    assert (tmp_path/'.tmp/launcher/python-dev.json').is_file() and (tmp_path/'.tmp/launcher/python.json').is_file()
+
+
+def test_repository_lock_files_are_consistent_and_layered():
+    root=Path(__file__).resolve().parents[1]
+    profiles={name:dev.requirements(root,name)[0] for name in
+              ['requirements.txt','requirements-web.txt','requirements-live.txt','requirements-research.txt','requirements-dev.txt']}
+    core=profiles['requirements.txt']
+    assert {'numpy','pandas'}<=set(core) and not {'fastapi','pytest','duckdb','scapy'}&set(core)
+    assert core.items()<=profiles['requirements-web.txt'].items()<=profiles['requirements-live.txt'].items()<=profiles['requirements-dev.txt'].items()
+    assert core.items()<=profiles['requirements-research.txt'].items()<=profiles['requirements-dev.txt'].items()
+    web=profiles['requirements-web.txt']
+    assert {'fastapi','uvicorn'}<=set(web) and not {'pytest','httpx','duckdb','datasets','matplotlib','pyarrow','scapy'}&set(web)
+    assert {'pytest','httpx','scapy','pyarrow','datasets'}<=set(profiles['requirements-dev.txt'])
+
+
 def test_platform_paths_and_no_manager_autoinstall(tmp_path):
     assert str(dev.venv_python(tmp_path,True)).endswith('Scripts\\python.exe') or str(dev.venv_python(tmp_path,True)).endswith('Scripts/python.exe')
     assert dev.venv_python(tmp_path,False)==tmp_path/'.venv/bin/python'

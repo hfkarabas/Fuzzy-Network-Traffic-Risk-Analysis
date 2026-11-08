@@ -165,6 +165,23 @@ See the [launcher guide](docs/launcher.md) for prerequisite installation and man
 commands. Native Windows startup is verified; Linux/macOS and Apple Silicon paths
 are implemented but have not received equivalent native capture/startup validation.
 
+### Dependency profiles
+
+Python dependencies are split by purpose. Each `requirements*.txt` file is an exact,
+tested lock (transitive packages included); `pyproject.toml` declares the matching
+abstract ranges as optional extras.
+
+| Lock file | Extra | Contents | Installed by |
+|---|---|---|---|
+| `requirements.txt` | — | Core fuzzy engine: NumPy, pandas | Included by every profile |
+| `requirements-web.txt` | `[web]` | Core + FastAPI/Uvicorn | `scripts/dev.py setup`, `make`, `start-web.ps1 -Install` |
+| `requirements-live.txt` | `[live]` | Web + Scapy for capture/replay | Manually (below) |
+| `requirements-research.txt` | `[research]` | Core + dataset/LFS, fitting and report tooling | `scripts/setup.ps1` or manually |
+| `requirements-dev.txt` | `[dev]` | Live + research + pytest/httpx | `make test` / `scripts/dev.py test` |
+
+Running the dashboard needs only the web profile; the research and test tooling
+(`datasets`, DuckDB, Arrow, Matplotlib, pytest) is no longer installed for it.
+
 ### Optional capture support
 
 After normal setup, install Scapy into the existing local environment:
@@ -276,7 +293,8 @@ Sources: [retained-model comparison](reports/fuzzy/task02b/comparison_summary.cs
 ```powershell
 npm.cmd --prefix web test
 npm.cmd --prefix web run build
-# Python regression tests; optional packet tests need requirements-live.txt:
+# Python regression tests need the contributor profile (includes optional packet tests):
+py -m pip --python .venv install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 

@@ -1,0 +1,13 @@
+# Contributor environment: everything needed to run the full test suite
+# (`make test`), including optional packet tests and research-module tests.
+-r requirements-live.txt
+-r requirements-research.txt
+pytest==9.2.0
+iniconfig==2.3.1
+pluggy==1.7.0
+Pygments==2.21.0
+packaging==26.3
+# FastAPI TestClient transport.
+httpx==0.28.1
+httpcore==1.0.9
+certifi==2026.10.23

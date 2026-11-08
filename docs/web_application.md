@@ -54,8 +54,9 @@ npm --prefix web run build
 npm --prefix web run dev
 ```
 
-Python 3.14 and Node 24 were used in this environment. Existing project requirements
-remain untouched; requirements-web.txt adds exact web dependency pins. package-lock.json
+Python 3.14 and Node 24 were used in this environment. requirements-web.txt is the
+exact lock for the web application (core engine + FastAPI/Uvicorn); see the
+dependency profiles in the README. package-lock.json
 locks frontend dependencies. No environment variables or secrets need configuring.
 Node/npm are needed for installation/build/development, not to serve an existing
 production build. `web/dist` is generated and ignored, so a fresh checkout needs

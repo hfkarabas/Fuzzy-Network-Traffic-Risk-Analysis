@@ -1,9 +1,0 @@
-source_file,capture_day,start_row_inclusive,end_row_exclusive,rows
-Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv,Friday,0,225745,225745
-Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv,Friday,225745,512212,286467
-Friday-WorkingHours-Morning.pcap_ISCX.csv,Friday,512212,703245,191033
-Monday-WorkingHours.pcap_ISCX.csv,Monday,703245,1233163,529918
-Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv,Thursday,1233163,1521765,288602
-Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv,Thursday,1521765,1692131,170366
-Tuesday-WorkingHours.pcap_ISCX.csv,Tuesday,1692131,2138040,445909
-Wednesday-workingHours.pcap_ISCX.csv,Wednesday,2138040,2830743,692703

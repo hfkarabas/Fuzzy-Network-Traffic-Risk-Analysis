@@ -1,5 +1,0 @@
-scenario,weighting,test_rows,threshold,precision,recall,f1,false_positive_rate,false_negative_rate,balanced_accuracy,roc_auc,pr_auc_average_precision
-grouped,rows,1750,25.0,0.925684,0.8875,0.90619,0.76,0.1125,0.56375,0.532175,0.912546
-grouped,observation groups,1750,25.0,0.920455,0.878049,0.898752,0.756757,0.121951,0.560646,0.511328,0.898603
-day,rows,666572,75.0,0.006309,6.3e-05,0.000124,0.007483,0.999937,0.49629,0.742552,0.602872
-day,observation groups,666572,75.0,0.006345,8.2e-05,0.000161,0.007514,0.999918,0.496284,0.700521,0.498976

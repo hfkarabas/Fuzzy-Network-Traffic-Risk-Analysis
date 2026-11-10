@@ -1,8 +1,0 @@
-{
-  "selected": "A_frozen",
-  "highest_internal_recall_experiment": "C_hierarchy",
-  "production_change_authorized_by_gate": false,
-  "criterion": "Balanced mean group recall >= BOTH A_frozen and A_refit +0.05, each fold recall >= A_frozen-0.02, mean group FPR<=0.075 and each fold<=0.10, no abstentions, paired signature-bootstrap recall gain lower95>0 vs both. Additionally every Tuesday/Wednesday/Thursday group-disjoint day stress has FPR<=0.10 and recall>=day-clean A_refit-0.02. Prefer fewer rules/layers within 0.02 mean recall among passing candidates; otherwise retain current production.",
-  "protocol_sha256": "0f37b86726b456611b8755465929a8d324cbd3ebdae4766297e0619ea599dafb",
-  "scope": "reused development validation plus registered internal day stress; no independent holdout"
-}

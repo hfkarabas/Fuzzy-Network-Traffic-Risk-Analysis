@@ -1,9 +1,0 @@
-{
-  "status": "PASS",
-  "real_rows_verified": 9,
-  "all_values_labels_and_provenance_exactly_match": true,
-  "all_records_in_eligible_design_panel": true,
-  "source_sha256": "6d075afbb8a88c76d0cec5aa8783bd93997e2cd78adad7d9fbf3bb3ab4d9f187",
-  "runtime_requires_source_parquet": false,
-  "unavailable_categories": []
-}

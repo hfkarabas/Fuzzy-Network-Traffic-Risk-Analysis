@@ -288,23 +288,29 @@ Verification and offline reconstruction use the research profile and the
 
 ## Evaluation and limitations
 
-Recorded **signature-group-weighted means across three internal folds**, with
-fold-specific calibrated Balanced thresholds. They are neither a new test of the
-single deployed threshold nor independent live-deployment results.
+The accuracy study compared models on **45,958 flows across three group-disjoint
+internal folds**. Research thresholds were selected on separate calibration
+folds. Raw accuracy pools flows across the assessment folds. Balanced accuracy,
+attack recall and false-positive rate (FPR) are signature-group-weighted fold
+means.
 
-| Configuration | Precision | Recall | F1 | FPR | ROC-AUC |
-|---|---:|---:|---:|---:|---:|
-| Retained flat baseline (deployed) | 17.46% | 21.08% | 0.1910 | 4.91% | 0.6383 |
-| Research hierarchy (not deployed) | 25.76% | 31.66% | 0.2838 | 4.53% | 0.6553 |
+| Model and threshold | Raw accuracy | Balanced accuracy | Attack recall | FPR |
+|---|---:|---:|---:|---:|
+| Always predict benign | 85.21% | 50.00% | 0.00% | 0.00% |
+| Deployed flat model, default threshold | 74.87% | 58.10% | 21.03% | 4.83% |
+| Flat model, calibrated for raw accuracy | 85.46% | 51.26% | 2.59% | 0.07% |
+| Research hierarchy, calibrated for raw accuracy | **93.51%** | 63.33% | 26.76% | 0.10% |
+| Research hierarchy, calibrated for balanced accuracy | 93.15% | **64.67%** | **30.30%** | 0.97% |
 
-The frozen baseline overlaps historical training and the internal folds were
-reused adaptively. The hierarchy failed the day-stability gate (zero recall in
-Tuesday/Wednesday stress checks) and was not deployed. Group-weighted rates
-differ from pooled flow rates: the baseline's pooled flow FPR is **15.71%**.
-Sources: [retained-model comparison](reports/fuzzy/task02b/comparison_summary.csv),
-[architecture comparison](reports/fuzzy/task05/comparison.csv),
-[partition integrity](reports/fuzzy/task02b/evaluation_integrity.md) and the
-[selection decision](reports/fuzzy/task05/final_report.md).
+Calibrating the flat model for raw accuracy raised that metric while reducing
+attack recall from 21.03% to 2.59%. Fitting rule weights on training data also
+fell short of the deployed model. The hierarchy achieved the best results on
+the reused panel, but its balanced-accuracy policy had **zero attack recall**
+when Tuesday, Wednesday and Thursday were each held out in internal day tests.
+The five-input flat Mamdani model and its existing alert policies remain deployed.
+The panel was used in earlier research and overlaps the frozen model's historical
+training data. [Study and reproduction instructions](reports/fuzzy/accuracy-study/report.md)
+· [Metrics by fold and capture day](reports/fuzzy/accuracy-study/metrics.json)
 
 **Limitations**
 

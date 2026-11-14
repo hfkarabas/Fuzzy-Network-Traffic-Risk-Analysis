@@ -1,0 +1,34 @@
+{
+  "rows": 2830743,
+  "columns": 79,
+  "missing_rows": 1358,
+  "infinite_rows": 2867,
+  "negative_rows": 1444427,
+  "any_unavailable_rows": 1445413,
+  "exact_duplicates_excess": 308381,
+  "exact_duplicate_groups": 95169,
+  "exact_duplicate_member_rows": 403550,
+  "observation_duplicates_excess": 309079,
+  "observation_duplicate_groups": 95479,
+  "contradictory_observation_groups": 698,
+  "contradictory_observation_rows": 7020,
+  "duplicate_column_names": 0,
+  "constants": [
+    " Bwd PSH Flags",
+    " Bwd URG Flags",
+    "Fwd Avg Bytes/Bulk",
+    " Fwd Avg Packets/Bulk",
+    " Fwd Avg Bulk Rate",
+    " Bwd Avg Bytes/Bulk",
+    " Bwd Avg Packets/Bulk",
+    "Bwd Avg Bulk Rate"
+  ],
+  "near_constants": [
+    " Fwd URG Flags",
+    " RST Flag Count",
+    " CWE Flag Count",
+    " ECE Flag Count"
+  ],
+  "non_numeric_numeric_cells": 0,
+  "non_numeric_note": "Arrow source schema is entirely numeric except Label; source loader successfully parsed every row."
+}

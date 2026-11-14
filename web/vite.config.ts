@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 const informationFiles = [
   '../reports/dataset/preprocessing.json', '../reports/dataset/quality.json',
   '../reports/dataset/classes.csv', '../reports/fuzzy/task05/comparison.csv',
+  '../reports/fuzzy/accuracy-study/metrics.json',
   '../config/fuzzy/task04/selected_policies.json', '../config/fuzzy/task04/selected_v4.json',
 ].map(path => fileURLToPath(new URL(path, import.meta.url)))
 // Vite 8 checks both physical and query-bearing IDs for raw imports.

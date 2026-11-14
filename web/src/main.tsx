@@ -1,15 +1,17 @@
-import React from 'react'
+import { Component } from 'react'
+import type { ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App'
-import './styles.css'
+import Workspace from './console/Workspace'
+import './console/console.css'
 
-function FatalError() {
-  return (<main className="fatal"><h1>Unable to render this view</h1><p>An unexpected data or rendering error occurred. You can reload the page.</p><button onClick={() => location.reload()}>Reload</button></main>)
-}
-
-class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { failed: boolean }> {
+class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() { return { failed: true } }
-  render() { return this.state.failed ? <FatalError /> : this.props.children }
+  render() {
+    return this.state.failed
+      ? <main className="offline"><h1>Workspace unavailable</h1><button className="button" onClick={() => location.reload()}>Reload</button></main>
+      : this.props.children
+  }
 }
-createRoot(document.getElementById('root')!).render(<ErrorBoundary><App /></ErrorBoundary>)
+
+createRoot(document.getElementById('root')!).render(<Boundary><Workspace/></Boundary>)
